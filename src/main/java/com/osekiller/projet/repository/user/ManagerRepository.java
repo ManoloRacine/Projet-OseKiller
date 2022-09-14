@@ -1,4 +1,4 @@
-package com.osekiller.projet.repository;
+package com.osekiller.projet.repository.user;
 
 import com.osekiller.projet.model.Manager;
 import org.springframework.data.jpa.repository.JpaRepository;
