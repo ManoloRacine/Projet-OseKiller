@@ -1,4 +1,10 @@
 package com.osekiller.projet.controller.request;
 
-public record ManagerSignUpRequest(String firstName, String lastname, String email, String password) {
+import javax.validation.constraints.NotBlank;
+
+public record ManagerSignUpRequest(
+        @NotBlank(message = "firstname-is-mandatory") String firstName,
+        @NotBlank(message = "lastname-is-mandatory") String lastname,
+        @NotBlank(message = "email-is-mandatory") String email,
+        @NotBlank(message = "password-is-mandatory") String password) {
 }
