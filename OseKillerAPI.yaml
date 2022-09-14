@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: OSE Killer API
+  description: |-
+    
+  
+    
+  version: 1.0.0
+
+paths:
+  /student/signUp:
+    post:
+      tags:
+        - Authentication
+      summary: Demande d'inscription
+      description: Demande d'inscription
+      operationId: studentSignUp
+      requestBody:
+        description: Créer une demande d'inscription
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentSignUpRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/StudentSignUpRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/StudentSignUpRequest'
+        required: true
+      responses:
+        '202':
+          description: Demande en attente d'acceptation
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '409':
+          description: Email non disponible
+  /manager/signUp:
+    post:
+      tags:
+        - Authentication
+      summary: Demande d'inscription
+      description: Demande d'inscription
+      operationId: managerSignUp
+      requestBody:
+        description: Créer une demande d'inscription
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManagerSignUpRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ManagerSignUpRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ManagerSignUpRequest'
+        required: true
+      responses:
+        '202':
+          description: Demande en attente d'acceptation
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '409':
+          description: Email non disponible
+  /company/signUp:
+    post:
+      tags:
+        - Authentication
+      summary: Demande d'inscription
+      description: Demande d'inscription
+      operationId: companySignUp
+      requestBody:
+        description: Créer une demande d'inscription
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanySignUpRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CompanySignUpRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CompanySignUpRequest'
+        required: true
+      responses:
+        '202':
+          description: Demande en attente d'acceptation
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '409':
+          description: Email non disponible
+components:
+  schemas:
+    StudentSignUpRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Hugo
+        lastName:
+          type: string
+          example: Lantier
+        email:
+          type: string
+          format: email
+          example: hugol@example.com
+        password:
+          type: string
+          example: vant8L52ANAp7U
+      xml:
+        name: userSignUpRequest
+    ManagerSignUpRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Hugo
+        lastName:
+          type: string
+          example: Lantier
+        email:
+          type: string
+          format: email
+          example: hugol@example.com
+        password:
+          type: string
+          example: vant8L52ANAp7U
+      xml:
+        name: userSignUpRequest
+    CompanySignUpRequest:
+      type: object
+      properties:
+        companyName:
+          type: string
+          example: Lantier
+        email:
+          type: string
+          format: email
+          example: hugol@example.com
+        password:
+          type: string
+          example: vant8L52ANAp7U
+      xml:
+        name: userSignUpRequest
