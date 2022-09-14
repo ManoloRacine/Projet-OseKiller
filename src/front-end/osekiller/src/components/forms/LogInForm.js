@@ -5,8 +5,26 @@ const LogInForm = (props) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = () => {
-    console.log("Logging in...");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    fetch("http://localhost:8000/users")
+      .then((res) => {
+        if (!res.ok) {
+          throw Error("could not fetch the data for that resource");
+        }
+        res.json();
+      })
+      .then((json) => {
+        console.log(json);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          console.log("Erreur:" + err);
+          setIsLoading(false);
+        }
+      });
   };
 
   return (
@@ -51,7 +69,9 @@ const LogInForm = (props) => {
           <div className="mb-3">
             {isLoading ? (
               <button className="btn btn-info" disabled>
-                Loading...
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
               </button>
             ) : (
               <button type="submit" className="btn btn-info">
