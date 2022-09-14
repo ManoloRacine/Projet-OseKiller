@@ -23,6 +23,12 @@ const SignUpForm = (props) => {
                         <div className="input-group pb-2">
                             <input className="form-control" placeholder="CONFIRMATION MOT DE PASSE"></input>
                         </div>
+                        <div className="my-3">
+                            <p>Vous avez déjà un compte?</p>
+                            <button className="btn btn-primary" onClick={props.changeForm}>
+                                Se connecter
+                            </button>
+                        </div>
                     </div>
             case "compagnie":
                 return <div className="col sm-8">
@@ -37,6 +43,12 @@ const SignUpForm = (props) => {
                     </div>
                     <div className="input-group pb-2">
                         <input className="form-control" placeholder="CONFIRMATION MOT DE PASSE"></input>
+                    </div>
+                    <div className="my-3">
+                        <p>Vous avez déjà un compte?</p>
+                        <button className="btn btn-primary" onClick={props.changeForm}>
+                            Se connecter
+                        </button>
                     </div>
                 </div>
             default:
@@ -58,7 +70,7 @@ const SignUpForm = (props) => {
     }
 
     return (
-        <div className="container">
+        <div className="container" style={{textAlign: "center"}}>
             <h1>{props.title}</h1>
             {userTypesInFrench(userType)}
             <div className="row">
