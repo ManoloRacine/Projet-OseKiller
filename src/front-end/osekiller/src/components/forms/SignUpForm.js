@@ -54,59 +54,65 @@ const SignUpForm = (props) => {
                             <input name="nom"
                             id="nom"
                             type="text"
+                            className={`form-control ` + (formikNormal.touched.nom && formikNormal.errors.nom ? `is-invalid` : ``) + (formikNormal.touched.nom && !formikNormal.errors.nom ? `is-valid` : ``)}
                             onChange={formikNormal.handleChange}
                             value={formikNormal.values.nom} 
                             onBlur={formikNormal.handleBlur}
                             placeholder="NOM">
                             </input>
-                            {formikNormal.touched.nom && formikNormal.errors.nom ? <div>{formikNormal.errors.nom}</div> : null}
+                            {formikNormal.touched.nom && formikNormal.errors.nom ? <div className="invalid-feedback">{formikNormal.errors.nom}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                         <input name="prenom"
                             id="prenom"
                             type="text"
+                            className={`form-control ` + (formikNormal.touched.prenom && formikNormal.errors.prenom ? `is-invalid` : ``) + (formikNormal.touched.prenom && !formikNormal.errors.prenom ? `is-valid` : ``)}
                             onChange={formikNormal.handleChange}
                             value={formikNormal.values.prenom} 
                             onBlur={formikNormal.handleBlur}
                             placeholder="PRÉNOM">
                             </input>
-                            {formikNormal.touched.prenom && formikNormal.errors.prenom ? <div>{formikNormal.errors.prenom}</div> : null}
+                            {formikNormal.touched.prenom && formikNormal.errors.prenom ? <div className="invalid-feedback">{formikNormal.errors.prenom}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                         <input name="email"
                             id="email"
                             type="text"
+                            className={`form-control ` + (formikNormal.touched.email && formikNormal.errors.email ? `is-invalid` : ``) + (formikNormal.touched.email && !formikNormal.errors.email ? `is-valid` : ``)}
                             onChange={formikNormal.handleChange}
                             value={formikNormal.values.email} 
                             onBlur={formikNormal.handleBlur}
                             placeholder="E-MAIL">
                             </input>
-                            {formikNormal.touched.email && formikNormal.errors.email ? <div>{formikNormal.errors.email}</div> : null}
+                            {formikNormal.touched.email && formikNormal.errors.email ? <div className="invalid-feedback">{formikNormal.errors.email}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                         <input name="password"
                             id="password"
                             type="password"
+                            className={`form-control ` + (formikNormal.touched.password && formikNormal.errors.password ? `is-invalid` : ``) + (formikNormal.touched.password && !formikNormal.errors.password ? `is-valid` : ``)}
                             onChange={formikNormal.handleChange}
                             value={formikNormal.values.password} 
                             onBlur={formikNormal.handleBlur}
                             placeholder="MOT DE PASSE">
                             </input>
-                            {formikNormal.touched.password && formikNormal.errors.password ? <div>{formikNormal.errors.password}</div> : null}
+                            {formikNormal.touched.password && formikNormal.errors.password ? <div className="invalid-feedback">{formikNormal.errors.password}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                         <input name="passwordConfirmation"
                             id="passwordConfirmation"
                             type="password"
+                            className={`form-control ` + (formikNormal.touched.passwordConfirmation && formikNormal.errors.passwordConfirmation ? `is-invalid` : ``) + 
+                            (formikNormal.touched.passwordConfirmation && !formikNormal.errors.passwordConfirmation ? `is-valid` : ``)}
                             onChange={formikNormal.handleChange}
                             value={formikNormal.values.passwordConfirmation} 
                             onBlur={formikNormal.handleBlur}
                             placeholder="CONFIRMATION MOT DE PASSE">
                             </input>
-                            {formikNormal.touched.passwordConfirmation && formikNormal.errors.passwordConfirmation ? <div>{formikNormal.errors.passwordConfirmation}</div> : null}
+                            {formikNormal.touched.passwordConfirmation && formikNormal.errors.passwordConfirmation ? <div className="invalid-feedback">{formikNormal.errors.passwordConfirmation}</div> : null}
                         </div>
                         <div className="input-group">
-                            <button type="submit">Soumettre</button>
+                            <button className="btn btn-primary" type="submit">Soumettre</button>
                         </div>
                     </form>
             case "compagnie":
@@ -115,48 +121,53 @@ const SignUpForm = (props) => {
                         <input name="nom"
                         id="nom"
                         type="text"
+                        className={`form-control ` + (formikCompany.touched.nom && formikCompany.errors.nom ? `is-invalid` : ``) + (formikCompany.touched.nom && !formikCompany.errors.nom ? `is-valid` : ``)}
                         onChange={formikCompany.handleChange}
                         value={formikCompany.values.nom} 
                         onBlur={formikCompany.handleBlur}
                         placeholder="NOM DE LA COMPAGNIE">
                         </input>
-                        {formikCompany.touched.nom && formikCompany.errors.nom ? <div>{formikCompany.errors.nom}</div> : null}
+                        {formikCompany.touched.nom && formikCompany.errors.nom ? <div className="invalid-feedback">{formikCompany.errors.nom}</div> : null}
                     </div>
                     <div className="input-group pb-2">
                     <input name="email"
                         id="email"
                         type="text"
+                        className={`form-control ` + (formikCompany.touched.email && formikCompany.errors.email ? `is-invalid` : ``) + (formikCompany.touched.email && !formikCompany.errors.email ? `is-valid` : ``)}
                         onChange={formikCompany.handleChange}
                         value={formikCompany.values.email} 
                         onBlur={formikCompany.handleBlur}
                         placeholder="E-MAIL">
                         </input>
-                        {formikCompany.touched.email && formikCompany.errors.email ? <div>{formikCompany.errors.email}</div> : null}
+                        {formikCompany.touched.email && formikCompany.errors.email ? <div className="invalid-feedback">{formikCompany.errors.email}</div> : null}
                     </div>
                     <div className="input-group pb-2">
                     <input name="password"
                         id="password"
-                        type="text"
+                        type="password"
+                        className={`form-control ` + (formikCompany.touched.password && formikCompany.errors.password ? `is-invalid` : ``) + (formikCompany.touched.password && !formikCompany.errors.password ? `is-valid` : ``)}
                         onChange={formikCompany.handleChange}
                         value={formikCompany.values.password} 
                         onBlur={formikCompany.handleBlur}
                         placeholder="MOT DE PASSE">
                         </input>
-                        {formikCompany.touched.password && formikCompany.errors.password ? <div>{formikCompany.errors.password}</div> : null}
+                        {formikCompany.touched.password && formikCompany.errors.password ? <div className="invalid-feedback">{formikCompany.errors.password}</div> : null}
                     </div>
                     <div className="input-group pb-2">
                     <input name="passwordConfirmation"
                         id="passwordConfirmation"
-                        type="text"
+                        type="password"
+                        className={`form-control ` + (formikCompany.touched.passwordConfirmation && formikCompany.errors.passwordConfirmation ? `is-invalid` : ``) +
+                         (formikCompany.touched.passwordConfirmation && !formikCompany.errors.passwordConfirmation ? `is-valid` : ``)}
                         onChange={formikCompany.handleChange}
                         value={formikCompany.values.passwordConfirmation} 
                         onBlur={formikCompany.handleBlur}
                         placeholder="CONFIRMATION MOT DE PASSE">
                         </input>
-                        {formikCompany.touched.passwordConfirmation && formikCompany.errors.passwordConfirmation ? <div>{formikCompany.errors.passwordConfirmation}</div> : null}
+                        {formikCompany.touched.passwordConfirmation && formikCompany.errors.passwordConfirmation ? <div className="invalid-feedback">{formikCompany.errors.passwordConfirmation}</div> : null}
                     </div>
                     <div className="input-group">
-                        <button type="submit">Soumettre</button>
+                        <button className="btn btn-primary" type="submit">Soumettre</button>
                     </div>
                 </form>
             default:
