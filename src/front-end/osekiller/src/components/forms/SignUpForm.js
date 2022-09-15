@@ -22,7 +22,7 @@ const SignUpForm = (props) => {
             passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
         }),
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+            console.log(`${process.env.REACT_APP_SERVER_ADRESS}`)
           },
     });
 
@@ -86,7 +86,7 @@ const SignUpForm = (props) => {
                         <div className="input-group pb-2">
                         <input name="password"
                             id="password"
-                            type="text"
+                            type="password"
                             onChange={formikNormal.handleChange}
                             value={formikNormal.values.password} 
                             onBlur={formikNormal.handleBlur}
@@ -97,7 +97,7 @@ const SignUpForm = (props) => {
                         <div className="input-group pb-2">
                         <input name="passwordConfirmation"
                             id="passwordConfirmation"
-                            type="text"
+                            type="password"
                             onChange={formikNormal.handleChange}
                             value={formikNormal.values.passwordConfirmation} 
                             onBlur={formikNormal.handleBlur}
