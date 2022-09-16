@@ -2,9 +2,27 @@ import { useState } from "react";
 import React from "react";
 import { useFormik } from 'formik';
 import * as Yup from "yup"
+import axios from "axios";
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
 
 const SignUpForm = (props) => {
     const [userType, setUserType] = useState("etudiant");
+    const [open, setOpen] = useState(false)
+    const [openError, setOpenError] = useState(false)
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenError(false)
+        setOpen(false);
+    };
     
     const formikNormal = useFormik({
         initialValues : {
@@ -22,9 +40,22 @@ const SignUpForm = (props) => {
             passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
         }),
         onSubmit: values => {
-            console.log(`${process.env.REACT_APP_SERVER_ADRESS}`)
+            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/${userType === "etudiant" ? "student" : "manager"}/signUp`, {
+                firstName : values.prenom,
+                lastName : values.nom,
+                email : values.email,
+                password : values.password
+            })
+            .then((response) => {
+                console.log(response.data)
+                setOpen(true)
+            })
+            .catch((error) => {
+                console.log(error)
+                setOpenError(true)
+            })
           },
-    });
+          });
 
     const formikCompany = useFormik({
         initialValues : {
@@ -40,7 +71,19 @@ const SignUpForm = (props) => {
             passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
         }),
         onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/company/signUp`, {
+                companyName : values.nom,
+                email : values.email,
+                password : values.password
+            })
+            .then((response) => {
+                console.log(response.data)
+                setOpen(true)
+            })
+            .catch((error) => {
+                console.log(error)
+                setOpenError(true)
+            })
           },
     });
 
@@ -112,7 +155,7 @@ const SignUpForm = (props) => {
                             {formikNormal.touched.passwordConfirmation && formikNormal.errors.passwordConfirmation ? <div className="invalid-feedback">{formikNormal.errors.passwordConfirmation}</div> : null}
                         </div>
                         <div className="input-group">
-                            <button className="btn btn-primary" type="submit">Soumettre</button>
+                            <button className="btn" style={{backgroundColor : "#ee7600"}} type="submit">Soumettre</button>
                         </div>
                     </form>
             case "compagnie":
@@ -167,7 +210,7 @@ const SignUpForm = (props) => {
                         {formikCompany.touched.passwordConfirmation && formikCompany.errors.passwordConfirmation ? <div className="invalid-feedback">{formikCompany.errors.passwordConfirmation}</div> : null}
                     </div>
                     <div className="input-group">
-                        <button className="btn btn-primary" type="submit">Soumettre</button>
+                        <button className="btn" style={{backgroundColor : "#ee7600"}} type="submit">Soumettre</button>
                     </div>
                 </form>
             default:
@@ -189,24 +232,40 @@ const SignUpForm = (props) => {
     }
 
     return (
-        <div className="container">
-            <h1>{props.title}</h1>
-            {userTypesInFrench(userType)}
-            <div className="row">
-                <div className="col sm-2"></div>
-                {formType(userType)}
-                <div className="col sm-2">
-                    <div className="row">
-                        <div onClick={() => setUserType("etudiant")} className="mx-3 mb-2 btn btn-primary">Étudiant</div>
-                    </div>
-                    <div className="row">
-                        <div onClick={() => setUserType("gestionnaire")} className="mx-3 mb-2 btn btn-primary">Gestionnaire</div>
-                    </div>
-                    <div className="row">
-                        <div onClick={() => setUserType("compagnie")} className="mx-3 mb-2 btn btn-primary">Compagnie</div>
+        <div className="d-flex flex-column justify-content-evenly align-items-center"
+        style={{minHeight : "90vh"}}>
+            <div>
+                <h1 className="display-1">{props.title}</h1>
+                {userTypesInFrench(userType)}
+            </div>
+            
+            <div className="container py-5 text-white rounded" style={{backgroundColor : "#2C324C"}}>
+                <div className="row">
+                    <div className="col sm-2"></div>
+                    {formType(userType)}
+                    <div className="col sm-2">
+                        <div className="row">
+                            <div onClick={() => setUserType("etudiant")} className="mx-3 mb-2 w-50 btn" style={{backgroundColor : "#ee7600"}}>Étudiant</div>
+                        </div>
+                        <div className="row">
+                            <div onClick={() => setUserType("gestionnaire")} className="mx-3 mb-2 w-50 btn" style={{backgroundColor : "#ee7600"}}>Gestionnaire</div>
+                        </div>
+                        <div className="row">
+                            <div onClick={() => setUserType("compagnie")} className="mx-3 mb-2 w-50 btn" style={{backgroundColor : "#ee7600"}}>Compagnie</div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                Votre demande a été envoyé !
+                </Alert>
+            </Snackbar>
+            <Snackbar open={openError} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                Il y a eu une erreur, la demande n'as pas été envoyé
+                </Alert>
+            </Snackbar>
         </div>
         
     ) ;

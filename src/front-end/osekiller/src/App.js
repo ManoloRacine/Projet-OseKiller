@@ -1,10 +1,9 @@
 import './App.css';
 import Home from './components/Home';
-import SignUpForm from "./components/forms/SignUpForm.js"
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{backgroundColor : '#da8362', minHeight : "100vh", color : "#2C324C"}}>
       < Home />
     </div>
   );
