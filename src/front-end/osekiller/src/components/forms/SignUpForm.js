@@ -54,30 +54,6 @@ const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, ha
                 </>
                 }
                 <div className="input-group pb-2">
-                    <input name="nom"
-                    id="nom"
-                    type="text"
-                    className={`form-control ` + (formikStudentOrManager.touched.nom && formikStudentOrManager.errors.nom ? `is-invalid` : ``) + (formikStudentOrManager.touched.nom && !formikStudentOrManager.errors.nom ? `is-valid` : ``)}
-                    onChange={formikStudentOrManager.handleChange}
-                    value={formikStudentOrManager.values.nom} 
-                    onBlur={formikStudentOrManager.handleBlur}
-                    placeholder="NOM">
-                    </input>
-                    {formikStudentOrManager.touched.nom && formikStudentOrManager.errors.nom ? <div className="invalid-feedback">{formikStudentOrManager.errors.nom}</div> : null}
-                </div>
-                <div className="input-group pb-2">
-                    <input name="prenom"
-                        id="prenom"
-                        type="text"
-                        className={`form-control ` + (formikStudentOrManager.touched.prenom && formikStudentOrManager.errors.prenom ? `is-invalid` : ``) + (formikStudentOrManager.touched.prenom && !formikStudentOrManager.errors.prenom ? `is-valid` : ``)}
-                        onChange={formikStudentOrManager.handleChange}
-                        value={formikStudentOrManager.values.prenom} 
-                        onBlur={formikStudentOrManager.handleBlur}
-                        placeholder="PRÉNOM">
-                    </input>
-                    {formikStudentOrManager.touched.prenom && formikStudentOrManager.errors.prenom ? <div className="invalid-feedback">{formikStudentOrManager.errors.prenom}</div> : null}
-                </div>
-                <div className="input-group pb-2">
                     <input name="email"
                         id="email"
                         type="text"
