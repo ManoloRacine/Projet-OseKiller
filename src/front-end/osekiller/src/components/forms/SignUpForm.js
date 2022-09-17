@@ -1,8 +1,6 @@
-import { useState } from "react";
+
 import React from "react";
-import { useFormik } from 'formik';
-import * as Yup from "yup"
-import axios from "axios";
+
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
@@ -10,149 +8,73 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-const SignUpForm = (props) => {
-    const [userType, setUserType] = useState("etudiant");
-    const [open, setOpen] = useState(false)
-    const [openError, setOpenError] = useState(false)
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
-        setOpenError(false)
-        setOpen(false);
-    };
-    
-    const formikNormal = useFormik({
-        initialValues : {
-            nom : "",
-            prenom : "",
-            email : "",
-            password : "",
-            passwordConfirmation : ""
-        },
-        validationSchema : Yup.object({
-            nom : Yup.string().required("Requis"),
-            prenom : Yup.string().required("Requis"),
-            email : Yup.string().required("Requis").email("Pas un email valide"),
-            password : Yup.string().required("Requis"),
-            passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
-        }),
-        onSubmit: values => {
-            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/${userType === "etudiant" ? "student" : "manager"}/signUp`, {
-                firstName : values.prenom,
-                lastName : values.nom,
-                email : values.email,
-                password : values.password
-            })
-            .then((response) => {
-                console.log(response.data)
-                setOpen(true)
-            })
-            .catch((error) => {
-                console.log(error)
-                setOpenError(true)
-            })
-          },
-          });
-
-    const formikCompany = useFormik({
-        initialValues : {
-            nom : "",
-            email : "",
-            password : "",
-            passwordConfirmation : ""
-        },
-        validationSchema : Yup.object({
-            nom : Yup.string().required("Requis"),
-            email : Yup.string().required("Requis").email("Pas un email valide"),
-            password : Yup.string().required("Requis"),
-            passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
-        }),
-        onSubmit: values => {
-            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/company/signUp`, {
-                companyName : values.nom,
-                email : values.email,
-                password : values.password
-            })
-            .then((response) => {
-                console.log(response.data)
-                setOpen(true)
-            })
-            .catch((error) => {
-                console.log(error)
-                setOpenError(true)
-            })
-          },
-    });
-
+const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, hasOpenError, handleClose, setUserType, title}, props) => {
 
     function formType(value) {
         switch (value) {
             case "etudiant":
             case "gestionnaire":
-                return <form className="col sm-8" onSubmit={formikNormal.handleSubmit}>
+                return <form className="col sm-8" onSubmit={formikStudentOrManager.handleSubmit}>
                         <div className="input-group pb-2">
                             <input name="nom"
                             id="nom"
                             type="text"
-                            className={`form-control ` + (formikNormal.touched.nom && formikNormal.errors.nom ? `is-invalid` : ``) + (formikNormal.touched.nom && !formikNormal.errors.nom ? `is-valid` : ``)}
-                            onChange={formikNormal.handleChange}
-                            value={formikNormal.values.nom} 
-                            onBlur={formikNormal.handleBlur}
+                            className={`form-control ` + (formikStudentOrManager.touched.nom && formikStudentOrManager.errors.nom ? `is-invalid` : ``) + (formikStudentOrManager.touched.nom && !formikStudentOrManager.errors.nom ? `is-valid` : ``)}
+                            onChange={formikStudentOrManager.handleChange}
+                            value={formikStudentOrManager.values.nom} 
+                            onBlur={formikStudentOrManager.handleBlur}
                             placeholder="NOM">
                             </input>
-                            {formikNormal.touched.nom && formikNormal.errors.nom ? <div className="invalid-feedback">{formikNormal.errors.nom}</div> : null}
+                            {formikStudentOrManager.touched.nom && formikStudentOrManager.errors.nom ? <div className="invalid-feedback">{formikStudentOrManager.errors.nom}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                             <input name="prenom"
                                 id="prenom"
                                 type="text"
-                                className={`form-control ` + (formikNormal.touched.prenom && formikNormal.errors.prenom ? `is-invalid` : ``) + (formikNormal.touched.prenom && !formikNormal.errors.prenom ? `is-valid` : ``)}
-                                onChange={formikNormal.handleChange}
-                                value={formikNormal.values.prenom} 
-                                onBlur={formikNormal.handleBlur}
+                                className={`form-control ` + (formikStudentOrManager.touched.prenom && formikStudentOrManager.errors.prenom ? `is-invalid` : ``) + (formikStudentOrManager.touched.prenom && !formikStudentOrManager.errors.prenom ? `is-valid` : ``)}
+                                onChange={formikStudentOrManager.handleChange}
+                                value={formikStudentOrManager.values.prenom} 
+                                onBlur={formikStudentOrManager.handleBlur}
                                 placeholder="PRÉNOM">
                             </input>
-                            {formikNormal.touched.prenom && formikNormal.errors.prenom ? <div className="invalid-feedback">{formikNormal.errors.prenom}</div> : null}
+                            {formikStudentOrManager.touched.prenom && formikStudentOrManager.errors.prenom ? <div className="invalid-feedback">{formikStudentOrManager.errors.prenom}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                             <input name="email"
                                 id="email"
                                 type="text"
-                                className={`form-control ` + (formikNormal.touched.email && formikNormal.errors.email ? `is-invalid` : ``) + (formikNormal.touched.email && !formikNormal.errors.email ? `is-valid` : ``)}
-                                onChange={formikNormal.handleChange}
-                                value={formikNormal.values.email} 
-                                onBlur={formikNormal.handleBlur}
+                                className={`form-control ` + (formikStudentOrManager.touched.email && formikStudentOrManager.errors.email ? `is-invalid` : ``) + (formikStudentOrManager.touched.email && !formikStudentOrManager.errors.email ? `is-valid` : ``)}
+                                onChange={formikStudentOrManager.handleChange}
+                                value={formikStudentOrManager.values.email} 
+                                onBlur={formikStudentOrManager.handleBlur}
                                 placeholder="E-MAIL">
                             </input>
-                            {formikNormal.touched.email && formikNormal.errors.email ? <div className="invalid-feedback">{formikNormal.errors.email}</div> : null}
+                            {formikStudentOrManager.touched.email && formikStudentOrManager.errors.email ? <div className="invalid-feedback">{formikStudentOrManager.errors.email}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                             <input name="password"
                                 id="password"
                                 type="password"
-                                className={`form-control ` + (formikNormal.touched.password && formikNormal.errors.password ? `is-invalid` : ``) + (formikNormal.touched.password && !formikNormal.errors.password ? `is-valid` : ``)}
-                                onChange={formikNormal.handleChange}
-                                value={formikNormal.values.password} 
-                                onBlur={formikNormal.handleBlur}
+                                className={`form-control ` + (formikStudentOrManager.touched.password && formikStudentOrManager.errors.password ? `is-invalid` : ``) + (formikStudentOrManager.touched.password && !formikStudentOrManager.errors.password ? `is-valid` : ``)}
+                                onChange={formikStudentOrManager.handleChange}
+                                value={formikStudentOrManager.values.password} 
+                                onBlur={formikStudentOrManager.handleBlur}
                                 placeholder="MOT DE PASSE">
                             </input>
-                            {formikNormal.touched.password && formikNormal.errors.password ? <div className="invalid-feedback">{formikNormal.errors.password}</div> : null}
+                            {formikStudentOrManager.touched.password && formikStudentOrManager.errors.password ? <div className="invalid-feedback">{formikStudentOrManager.errors.password}</div> : null}
                         </div>
                         <div className="input-group pb-2">
                             <input name="passwordConfirmation"
                                 id="passwordConfirmation"
                                 type="password"
-                                className={`form-control ` + (formikNormal.touched.passwordConfirmation && formikNormal.errors.passwordConfirmation ? `is-invalid` : ``) + 
-                                (formikNormal.touched.passwordConfirmation && !formikNormal.errors.passwordConfirmation ? `is-valid` : ``)}
-                                onChange={formikNormal.handleChange}
-                                value={formikNormal.values.passwordConfirmation} 
-                                onBlur={formikNormal.handleBlur}
+                                className={`form-control ` + (formikStudentOrManager.touched.passwordConfirmation && formikStudentOrManager.errors.passwordConfirmation ? `is-invalid` : ``) + 
+                                (formikStudentOrManager.touched.passwordConfirmation && !formikStudentOrManager.errors.passwordConfirmation ? `is-valid` : ``)}
+                                onChange={formikStudentOrManager.handleChange}
+                                value={formikStudentOrManager.values.passwordConfirmation} 
+                                onBlur={formikStudentOrManager.handleBlur}
                                 placeholder="CONFIRMATION MOT DE PASSE">
                             </input>
-                            {formikNormal.touched.passwordConfirmation && formikNormal.errors.passwordConfirmation ? <div className="invalid-feedback">{formikNormal.errors.passwordConfirmation}</div> : null}
+                            {formikStudentOrManager.touched.passwordConfirmation && formikStudentOrManager.errors.passwordConfirmation ? <div className="invalid-feedback">{formikStudentOrManager.errors.passwordConfirmation}</div> : null}
                         </div>
                         <div className="input-group">
                             <button className="btn" style={{backgroundColor : "#ee7600"}} type="submit">Soumettre</button>
@@ -218,7 +140,7 @@ const SignUpForm = (props) => {
         }
     }
 
-    function userTypesInFrench(type) {
+    function userTypesUpperCase(type) {
         switch (type) {
             case "etudiant":
                 return <h2>Étudiant</h2>
@@ -235,8 +157,8 @@ const SignUpForm = (props) => {
         <div className="d-flex flex-column justify-content-evenly align-items-center"
         style={{minHeight : "90vh"}}>
             <div>
-                <h1 className="display-1">{props.title}</h1>
-                {userTypesInFrench(userType)}
+                <h1 className="display-1">{title}</h1>
+                {userTypesUpperCase(userType)}
             </div>
             
             <div className="container py-5 text-white rounded" style={{backgroundColor : "#2C324C"}}>
@@ -256,12 +178,12 @@ const SignUpForm = (props) => {
                     </div>
                 </div>
             </div>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={isOpen} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                 Votre demande a été envoyé !
                 </Alert>
             </Snackbar>
-            <Snackbar open={openError} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={hasOpenError} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
                 Il y a eu une erreur, la demande n'as pas été envoyé
                 </Alert>
