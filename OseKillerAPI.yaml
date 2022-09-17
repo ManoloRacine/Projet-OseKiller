@@ -110,14 +110,14 @@ paths:
               $ref: '#/components/schemas/ValidatingUserRequest'
         required: true
       responses:
-        '202':
+        '200':
           description: Validation a été complété
         '400':
           description: Format invalide / Attribut(s) manquant(s)
         '401':
           description: Requête non autorisée
-  /user/getNewUsers:
-    post:
+  /users:
+    get:
       tags:
         - Authentication
       summary: Les utilisateurs pas encore validés
@@ -137,7 +137,7 @@ paths:
               $ref: '#/components/schemas/GetNewUsersRequest'
         required: true
       responses:
-        '202':
+        '200':
           description: Les utilisateurs ont été envoyés
         '400':
           description: Format invalide / Attribut(s) manquant(s)
