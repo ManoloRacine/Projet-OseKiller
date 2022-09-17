@@ -121,21 +121,8 @@ paths:
       tags:
         - Authentication
       summary: Les utilisateurs pas encore validés
-      description: Les utilisateurs pas encore validés
+      description: Retourne tous les utilisateurs
       operationId: getNewUsers
-      requestBody:
-        description: Retourner une liste des users qui n'ont pas encore été validés
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GetNewUsersRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/GetNewUsersRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/GetNewUsersRequest'
-        required: true
       responses:
         '200':
           description: Les utilisateurs ont été envoyés
@@ -209,9 +196,3 @@ components:
         valid:
           type: boolean
           example: true
-    GetNewUsersRequest:
-      type: object
-      properties:
-        token:
-          type: string
-          example: as7df83n48s9an39

@@ -61,7 +61,7 @@ public class AuthController {
         return ResponseEntity.accepted().build() ;
     }
 
-    @GetMapping("/user/getNewUsers")
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getNewUsers(@Valid @RequestBody GetNewUsersRequest request) {
         return authService.getNewUsers(request);
     }
