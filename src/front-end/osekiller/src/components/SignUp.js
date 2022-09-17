@@ -6,16 +6,15 @@ import { useState } from "react";
 
 const SignUp = (props) => {
     const [userType, setUserType] = useState("etudiant");
-    const [isOpen, setOpen] = useState(false)
-    const [hasOpenError, setOpenError] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
+    const [hasOpenError, setHasOpenError] = useState(false)
 
-    const handleClose = (event, reason) => {
+    const handleClose = (reason) => {
         if (reason === 'clickaway') {
           return;
-        }
-    
-        setOpenError(false)
-        setOpen(false);
+        } 
+        setHasOpenError(false)
+        setIsOpen(false);
     };
     
     const formikStudentOrManager = useFormik({
@@ -42,11 +41,11 @@ const SignUp = (props) => {
             })
             .then((response) => {
                 console.log(response.data)
-                setOpen(true)
+                setIsOpen(true)
             })
             .catch((error) => {
                 console.log(error)
-                setOpenError(true)
+                setHasOpenError(true)
             })
           },
           });
@@ -72,19 +71,27 @@ const SignUp = (props) => {
             })
             .then((response) => {
                 console.log(response.data)
-                setOpen(true)
+                setIsOpen(true)
             })
             .catch((error) => {
                 console.log(error)
-                setOpenError(true)
+                setHasOpenError(true)
             })
           },
     });
 
 
     return (
-        <SignUpForm changeForm={props.handleChangeForm} formikCompany={formikCompany} formikStudentOrManager={formikStudentOrManager}
-         userType={userType} isOpen={isOpen} hasOpenError={hasOpenError} handleClose={handleClose} setUserType={setUserType} title={props.title}></SignUpForm>
+        <SignUpForm 
+        changeForm={props.handleChangeForm} 
+        formikCompany={formikCompany} 
+        formikStudentOrManager={formikStudentOrManager}
+        userType={userType} 
+        isOpen={isOpen} 
+        hasOpenError={hasOpenError} 
+        handleClose={handleClose} 
+        setUserType={setUserType} 
+        title={props.title} />
     )
 }
 
