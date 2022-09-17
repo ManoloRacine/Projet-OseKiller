@@ -120,7 +120,7 @@ paths:
     get:
       tags:
         - Authentication
-      summary: Les utilisateurs pas encore validés
+      summary: Retourne tous les utilisateurs
       description: Retourne tous les utilisateurs
       operationId: getNewUsers
       responses:
