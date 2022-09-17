@@ -89,6 +89,47 @@ paths:
           description: Format invalide / Attribut(s) manquant(s)
         '409':
           description: Email non disponible
+  /user/validate:
+    post:
+      tags:
+        - Authentication
+      summary: Validation de l'inscription
+      description: Validation de l'inscription
+      operationId: validateUser
+      requestBody:
+        description: Valider l'inscription d'un nouveau user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidatingUserRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ValidatingUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ValidatingUserRequest'
+        required: true
+      responses:
+        '200':
+          description: Validation a été complété
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '401':
+          description: Requête non autorisée
+  /users:
+    get:
+      tags:
+        - Authentication
+      summary: Retourne tous les utilisateurs
+      description: Retourne tous les utilisateurs
+      operationId: getNewUsers
+      responses:
+        '200':
+          description: Les utilisateurs ont été envoyés
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '401':
+          description: Requête non autorisée
 components:
   schemas:
     StudentSignUpRequest:
@@ -142,3 +183,16 @@ components:
           example: vant8L52ANAp7U
       xml:
         name: userSignUpRequest
+    ValidatingUserRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          example: as7df83n48s9an39
+        email:
+          type: string
+          format: email
+          example: hugol@example.com
+        valid:
+          type: boolean
+          example: true

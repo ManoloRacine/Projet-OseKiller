@@ -21,7 +21,7 @@ public class AuthService {
     private StudentRepository studentRepository;
     private ManagerRepository managerRepository;
 
-    //TODO Refaire l'inscription pour inclure une conformation d'un gestionnaire
+    //TODO Refaire l'inscription pour inclure une confirmation d'un gestionnaire
     public void signUpStudent(StudentSignUpRequest request){
         if(studentRepository.findByEmail(request.email()).isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT,"email-taken");

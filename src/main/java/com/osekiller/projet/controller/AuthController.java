@@ -1,9 +1,8 @@
 package com.osekiller.projet.controller;
 
 
-import com.osekiller.projet.controller.request.CompanySignUpRequest;
-import com.osekiller.projet.controller.request.ManagerSignUpRequest;
-import com.osekiller.projet.controller.request.StudentSignUpRequest;
+import com.osekiller.projet.controller.request.*;
+import com.osekiller.projet.model.User;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/manager/signUp")
-    public ResponseEntity<Void> signUpManger(@Valid @RequestBody ManagerSignUpRequest request){
+    public ResponseEntity<Void> signUpManager(@Valid @RequestBody ManagerSignUpRequest request){
 
         authService.signUpManager(request);
         return ResponseEntity.accepted().build();
@@ -53,5 +53,16 @@ public class AuthController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @PostMapping("/user/validate")
+    public ResponseEntity<Void> validateUser(@Valid @RequestBody ValidatingUserRequest request) {
+        authService.validateUser(request);
+        return ResponseEntity.accepted().build() ;
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getNewUsers(@Valid @RequestBody GetNewUsersRequest request) {
+        return authService.getNewUsers(request);
     }
 }
