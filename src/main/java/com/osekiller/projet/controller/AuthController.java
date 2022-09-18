@@ -1,13 +1,13 @@
 package com.osekiller.projet.controller;
 
-
-import com.osekiller.projet.controller.request.CompanySignUpRequest;
-import com.osekiller.projet.controller.request.ManagerSignUpRequest;
-import com.osekiller.projet.controller.request.StudentSignUpRequest;
-import com.osekiller.projet.service.implementation.AuthServiceImplementation;
+import com.osekiller.projet.controller.request.SignInDto;
+import com.osekiller.projet.controller.request.SignUpDto;
+import com.osekiller.projet.model.User;
+import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -19,31 +19,17 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 public class AuthController {
-    AuthServiceImplementation authService;
-    @PostMapping("/student/signUp")
-    public ResponseEntity<Void> signUpStudent(@Valid @RequestBody StudentSignUpRequest request){
-
-        authService.signUpStudent(request);
+    AuthService authService;
+    @PostMapping("/sign-up")
+    public ResponseEntity<User> signUp(@Valid @RequestBody SignUpDto dto){
+        authService.signUp(dto);
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("/manager/signUp")
-    public ResponseEntity<Void> signUpManger(@Valid @RequestBody ManagerSignUpRequest request){
-
-        authService.signUpManager(request);
-        return ResponseEntity.accepted().build();
+    @PostMapping("/sign-in")
+    public ResponseEntity<String> signin(@Valid @RequestBody SignInDto dto){
+       return ResponseEntity.ok(authService.signIn(dto));
     }
-
-    @PostMapping("/company/signUp")
-    public ResponseEntity<Void> signUpCompany(@Valid @RequestBody CompanySignUpRequest request){
-        authService.signUpCompany(request);
-        return ResponseEntity.accepted().build();
-    }
-
-//    @PostMapping("/signin")
-//    public ResponseEntity<String> signin(){
-//
-//    }
 
     //https://www.baeldung.com/spring-boot-bean-validation
     @ResponseStatus(HttpStatus.BAD_REQUEST)

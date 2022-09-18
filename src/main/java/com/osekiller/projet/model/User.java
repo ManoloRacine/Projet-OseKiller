@@ -1,30 +1,20 @@
 package com.osekiller.projet.model;
+import lombok.*;
+import javax.persistence.*;
 
-
-import lombok.Data;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-
+@Entity
+@NoArgsConstructor
 @Data
-@MappedSuperclass
-public abstract class User implements UserDetails {
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String name;
-    private String email;
-    private String password;
+    private Long id;
 
-    protected User(){
-
-    }
-    protected User(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
+    @NonNull private String name;
+    @NonNull private String email;
+    @NonNull private String password;
+    private boolean isActive = false;
 }

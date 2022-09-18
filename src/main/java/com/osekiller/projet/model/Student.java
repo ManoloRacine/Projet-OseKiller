@@ -1,27 +1,15 @@
 package com.osekiller.projet.model;
 
-import com.osekiller.projet.controller.request.StudentSignUpRequest;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper=true)
 @Data
 public class Student extends User{
-
-    private Long id;
-
-    public Student() {
-    }
-
-    public Student(String name, String email, String password) {
+    public Student(@NonNull String name, @NonNull String email, @NonNull String password) {
         super(name, email, password);
-    }
-
-    public static Student from(StudentSignUpRequest request) {
-        return new Student(request.firstName(), request.lastname(), request.email(), request.password());
     }
 }

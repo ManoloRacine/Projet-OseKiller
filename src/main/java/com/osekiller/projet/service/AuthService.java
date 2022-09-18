@@ -1,8 +1,12 @@
 package com.osekiller.projet.service;
 
-public interface AuthService {
-    String login(String email, String password);
+import com.osekiller.projet.controller.request.SignInDto;
+import com.osekiller.projet.controller.request.SignUpDto;
+import com.osekiller.projet.model.User;
 
-    String signUp();
+public interface AuthService {
+    String signIn(SignInDto dto);
+
+    User signUp(SignUpDto dto);
 
 }
