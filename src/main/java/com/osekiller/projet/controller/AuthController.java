@@ -14,6 +14,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -71,5 +72,16 @@ public class AuthController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+    @PostMapping("/user/validate")
+    public ResponseEntity<Void> validateUser(@Valid @RequestBody ValidatingUserRequest request) {
+        authService.validateUser(request);
+        return ResponseEntity.accepted().build() ;
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getNewUsers(@Valid @RequestBody GetNewUsersRequest request) {
+        return authService.getNewUsers(request);
     }
 }
