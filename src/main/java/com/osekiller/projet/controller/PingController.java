@@ -14,4 +14,9 @@ public class PingController {
     public ResponseEntity<Void> ping() {
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/token")
+    public ResponseEntity<Void> pingToken() {
+        return ResponseEntity.ok().build();
+    }
 }

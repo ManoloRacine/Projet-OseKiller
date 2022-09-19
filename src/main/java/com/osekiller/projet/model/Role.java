@@ -1,21 +1,16 @@
 package com.osekiller.projet.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @NonNull private String name;
 }

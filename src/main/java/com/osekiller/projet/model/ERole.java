@@ -1,6 +1,6 @@
 package com.osekiller.projet.model;
 
-public enum Roles {
+public enum ERole {
     STUDENT,
     MANAGER,
     COMPANY;

@@ -8,9 +8,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -20,15 +24,27 @@ import java.util.Map;
 @AllArgsConstructor
 public class AuthController {
     AuthService authService;
+    AuthenticationManager authManager;
     @PostMapping("/sign-up")
-    public ResponseEntity<User> signUp(@Valid @RequestBody SignUpDto dto){
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpDto dto){
         authService.signUp(dto);
         return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<String> signin(@Valid @RequestBody SignInDto dto){
+    public ResponseEntity<String> signIn(@Valid @RequestBody SignInDto dto) {
+        authenticate(dto.email(), dto.password());
        return ResponseEntity.ok(authService.signIn(dto));
+    }
+
+    private void authenticate(String username, String password) {
+        try {
+            authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid-credentials");
+        } catch (DisabledException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"user-disabled");
+        }
     }
 
     //https://www.baeldung.com/spring-boot-bean-validation
