@@ -1,8 +1,9 @@
 package com.osekiller.projet.controller;
 
-import com.osekiller.projet.controller.request.SignInDto;
-import com.osekiller.projet.controller.request.SignUpDto;
-import com.osekiller.projet.model.User;
+import com.osekiller.projet.controller.payload.request.JwtRequestDto;
+import com.osekiller.projet.controller.payload.request.SignInDto;
+import com.osekiller.projet.controller.payload.request.SignUpDto;
+import com.osekiller.projet.controller.payload.response.JwtResponseDto;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,9 +33,20 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<String> signIn(@Valid @RequestBody SignInDto dto) {
+    public ResponseEntity<JwtResponseDto> signIn(@Valid @RequestBody SignInDto dto) {
         authenticate(dto.email(), dto.password());
        return ResponseEntity.ok(authService.signIn(dto));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtResponseDto> refresh(@Valid @RequestBody JwtRequestDto dto){
+        return ResponseEntity.ok(authService.refresh(dto.refreshToken()));
+    }
+
+    @PostMapping("/sign-out")
+    public ResponseEntity<JwtResponseDto> signOut(@Valid @RequestBody JwtRequestDto dto){
+        authService.signOut(dto.refreshToken());
+        return ResponseEntity.noContent().build();
     }
 
     private void authenticate(String username, String password) {

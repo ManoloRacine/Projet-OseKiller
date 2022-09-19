@@ -1,10 +1,8 @@
 package com.osekiller.projet;
 
-import com.osekiller.projet.controller.request.SignUpDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Manager;
 import com.osekiller.projet.model.Role;
-import com.osekiller.projet.model.User;
 import com.osekiller.projet.repository.user.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationListener;
@@ -12,6 +10,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 @Component
@@ -51,7 +50,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     void createManagerIfNotFound(Manager manager){
         if(managerRepository.findByEmail(manager.getEmail()).isPresent()) return;
-        manager.setActive(true);
+        manager.setEnabled(true);
+        Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
+        manager.setRole(managerRole);
         managerRepository.save(manager);
     }
 

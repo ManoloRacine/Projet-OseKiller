@@ -1,12 +1,14 @@
 package com.osekiller.projet.service;
 
-import com.osekiller.projet.controller.request.SignInDto;
-import com.osekiller.projet.controller.request.SignUpDto;
-import com.osekiller.projet.model.User;
+import com.osekiller.projet.controller.payload.request.SignInDto;
+import com.osekiller.projet.controller.payload.request.SignUpDto;
+import com.osekiller.projet.controller.payload.response.AuthPingDto;
+import com.osekiller.projet.controller.payload.response.JwtResponseDto;
 
 public interface AuthService {
-    String signIn(SignInDto dto);
-
-    User signUp(SignUpDto dto);
-
+    JwtResponseDto signIn(SignInDto dto);
+    void signUp(SignUpDto dto);
+    void signOut(String token);
+    JwtResponseDto refresh(String refreshToken);
+    AuthPingDto authPing(String refreshToken);
 }

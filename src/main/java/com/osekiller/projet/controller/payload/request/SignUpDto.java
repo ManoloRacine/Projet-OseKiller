@@ -1,4 +1,4 @@
-package com.osekiller.projet.controller.request;
+package com.osekiller.projet.controller.payload.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

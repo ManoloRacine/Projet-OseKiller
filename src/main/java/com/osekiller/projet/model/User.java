@@ -23,18 +23,16 @@ public abstract class User implements UserDetails {
     @NonNull private String name;
     @NonNull private String email;
     @NonNull @JsonIgnore private String password;
-    private boolean isActive = true;
+    private boolean enabled = true;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<>();
+    @ManyToOne
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
+        authorities.add(new SimpleGrantedAuthority(role.getName()));
 
         return authorities;
     }
@@ -61,6 +59,6 @@ public abstract class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isActive;
+        return enabled;
     }
 }

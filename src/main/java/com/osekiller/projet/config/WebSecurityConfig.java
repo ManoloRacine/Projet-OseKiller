@@ -36,9 +36,10 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(
-                        //Autoriser ses routes de base
                         (requests) -> requests
-                                .antMatchers("/ping","/sign-in","/sign-up").permitAll()
+                                //Autoriser ses routes de base
+                                .antMatchers("/ping","/sign-in","/sign-up","sign-out").permitAll()
+                                //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
