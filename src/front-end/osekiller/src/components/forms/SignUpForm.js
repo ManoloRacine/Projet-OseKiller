@@ -1,62 +1,104 @@
 import { useState } from "react";
 
-const SignUpForm = (props) => {
-    const [userType, setUserType] = useState("etudiant");
+import React from "react";
 
-    function formType(value) {
-        switch (value) {
-            case "etudiant":
-            case "gestionnaire":
-                return <div className="col sm-8">
-                        <div className="input-group pb-2">
-                            <input className="form-control" placeholder="NOM"></input>
-                        </div>
-                        <div className="input-group pb-2">
-                            <input className="form-control" placeholder="PRÉNOM"></input>
-                        </div>
-                        <div className="input-group pb-2">
-                            <input className="form-control" placeholder="E-MAIL"></input>
-                        </div>
-                        <div className="input-group pb-2">
-                            <input className="form-control" placeholder="MOT DE PASSE"></input>
-                        </div>
-                        <div className="input-group pb-2">
-                            <input className="form-control" placeholder="CONFIRMATION MOT DE PASSE"></input>
-                        </div>
-                        <div className="my-3">
-                            <p>Vous avez déjà un compte?</p>
-                            <button className="btn btn-primary" onClick={props.changeForm}>
-                                Se connecter
-                            </button>
-                        </div>
-                    </div>
-            case "compagnie":
-                return <div className="col sm-8">
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, hasOpenError, handleClose, setUserType, title}, props) => {
+
+    const formType = () => {
+        return (
+            <form className="col sm-8" onSubmit={formikStudentOrManager.handleSubmit}>
+                {userType === "compagnie" ? 
+                <div className="input-group pb-2">
+                    <input name="nom"
+                        id="nom"
+                        type="text"
+                        className={`form-control ` + (formikCompany.touched.nom && formikCompany.errors.nom ? `is-invalid` : ``) + (formikCompany.touched.nom && !formikCompany.errors.nom ? `is-valid` : ``)}
+                        onChange={formikCompany.handleChange}
+                        value={formikCompany.values.nom} 
+                        onBlur={formikCompany.handleBlur}
+                        placeholder="NOM DE LA COMPAGNIE">
+                    </input>
+                    {formikCompany.touched.nom && formikCompany.errors.nom ? <div className="invalid-feedback">{formikCompany.errors.nom}</div> : null}
+                </div> :
+                <>
                     <div className="input-group pb-2">
-                        <input className="form-control" placeholder="NOM DE LA COMPAGNIE"></input>
+                        <input name="nom"
+                        id="nom"
+                        type="text"
+                        className={`form-control ` + (formikStudentOrManager.touched.nom && formikStudentOrManager.errors.nom ? `is-invalid` : ``) + (formikStudentOrManager.touched.nom && !formikStudentOrManager.errors.nom ? `is-valid` : ``)}
+                        onChange={formikStudentOrManager.handleChange}
+                        value={formikStudentOrManager.values.nom} 
+                        onBlur={formikStudentOrManager.handleBlur}
+                        placeholder="NOM">
+                        </input>
+                        {formikStudentOrManager.touched.nom && formikStudentOrManager.errors.nom ? <div className="invalid-feedback">{formikStudentOrManager.errors.nom}</div> : null}
                     </div>
                     <div className="input-group pb-2">
-                        <input className="form-control" placeholder="E-MAIL"></input>
+                        <input name="prenom"
+                            id="prenom"
+                            type="text"
+                            className={`form-control ` + (formikStudentOrManager.touched.prenom && formikStudentOrManager.errors.prenom ? `is-invalid` : ``) + (formikStudentOrManager.touched.prenom && !formikStudentOrManager.errors.prenom ? `is-valid` : ``)}
+                            onChange={formikStudentOrManager.handleChange}
+                            value={formikStudentOrManager.values.prenom} 
+                            onBlur={formikStudentOrManager.handleBlur}
+                            placeholder="PRÉNOM">
+                        </input>
+                        {formikStudentOrManager.touched.prenom && formikStudentOrManager.errors.prenom ? <div className="invalid-feedback">{formikStudentOrManager.errors.prenom}</div> : null}
                     </div>
-                    <div className="input-group pb-2">
-                        <input className="form-control" placeholder="MOT DE PASSE"></input>
-                    </div>
-                    <div className="input-group pb-2">
-                        <input className="form-control" placeholder="CONFIRMATION MOT DE PASSE"></input>
-                    </div>
-                    <div className="my-3">
-                        <p>Vous avez déjà un compte?</p>
-                        <button className="btn btn-primary" onClick={props.changeForm}>
-                            Se connecter
-                        </button>
-                    </div>
+                </>
+                }
+                <div className="input-group pb-2">
+                    <input name="email"
+                        id="email"
+                        type="text"
+                        className={`form-control ` + (formikStudentOrManager.touched.email && formikStudentOrManager.errors.email ? `is-invalid` : ``) + (formikStudentOrManager.touched.email && !formikStudentOrManager.errors.email ? `is-valid` : ``)}
+                        onChange={formikStudentOrManager.handleChange}
+                        value={formikStudentOrManager.values.email} 
+                        onBlur={formikStudentOrManager.handleBlur}
+                        placeholder="E-MAIL">
+                    </input>
+                    {formikStudentOrManager.touched.email && formikStudentOrManager.errors.email ? <div className="invalid-feedback">{formikStudentOrManager.errors.email}</div> : null}
                 </div>
-            default:
-                return <h1>ERROR</h1>
-        }
+                <div className="input-group pb-2">
+                    <input name="password"
+                        id="password"
+                        type="password"
+                        className={`form-control ` + (formikStudentOrManager.touched.password && formikStudentOrManager.errors.password ? `is-invalid` : ``) + (formikStudentOrManager.touched.password && !formikStudentOrManager.errors.password ? `is-valid` : ``)}
+                        onChange={formikStudentOrManager.handleChange}
+                        value={formikStudentOrManager.values.password} 
+                        onBlur={formikStudentOrManager.handleBlur}
+                        placeholder="MOT DE PASSE">
+                    </input>
+                    {formikStudentOrManager.touched.password && formikStudentOrManager.errors.password ? <div className="invalid-feedback">{formikStudentOrManager.errors.password}</div> : null}
+                </div>
+                <div className="input-group pb-2">
+                    <input name="passwordConfirmation"
+                        id="passwordConfirmation"
+                        type="password"
+                        className={`form-control ` + (formikStudentOrManager.touched.passwordConfirmation && formikStudentOrManager.errors.passwordConfirmation ? `is-invalid` : ``) + 
+                        (formikStudentOrManager.touched.passwordConfirmation && !formikStudentOrManager.errors.passwordConfirmation ? `is-valid` : ``)}
+                        onChange={formikStudentOrManager.handleChange}
+                        value={formikStudentOrManager.values.passwordConfirmation} 
+                        onBlur={formikStudentOrManager.handleBlur}
+                        placeholder="CONFIRMATION MOT DE PASSE">
+                    </input>
+                    {formikStudentOrManager.touched.passwordConfirmation && formikStudentOrManager.errors.passwordConfirmation ? <div className="invalid-feedback">{formikStudentOrManager.errors.passwordConfirmation}</div> : null}
+                </div>
+                <div className="input-group">
+                    <button className="btn" style={{backgroundColor : "#ee7600"}} type="submit">Soumettre</button>
+                </div>
+            </form>
+        )
     }
 
-    function userTypesInFrench(type) {
+    const userTypesCapitalized = (type) => {
         switch (type) {
             case "etudiant":
                 return <h2>Étudiant</h2>
@@ -70,26 +112,41 @@ const SignUpForm = (props) => {
     }
 
     return (
-        <div className="container" style={{textAlign: "center"}}>
-            <h1>{props.title}</h1>
-            {userTypesInFrench(userType)}
-            <div className="row">
-                <div className="col sm-2"></div>
-                {formType(userType)}
-                <div className="col sm-2">
-                    <div className="row">
-                        <div onClick={() => setUserType("etudiant")} className="mx-3 mb-2 btn btn-primary">Étudiant</div>
-                    </div>
-                    <div className="row">
-                        <div onClick={() => setUserType("gestionnaire")} className="mx-3 mb-2 btn btn-primary">Gestionnaire</div>
-                    </div>
-                    <div className="row">
-                        <div onClick={() => setUserType("compagnie")} className="mx-3 mb-2 btn btn-primary">Compagnie</div>
+        <div className="d-flex flex-column justify-content-evenly align-items-center"
+        style={{minHeight : "90vh"}}>
+            <div>
+                <h1 className="display-1">{title}</h1>
+                {userTypesCapitalized(userType)}
+            </div>
+            
+            <div className="container py-5 text-white rounded" style={{backgroundColor : "#2C324C"}}>
+                <div className="row">
+                    <div className="col sm-2"></div>
+                    {formType(userType)}
+                    <div className="col sm-2">
+                        <div className="row">
+                            <div onClick={() => setUserType("etudiant")} className="mx-3 mb-2 w-50 btn" style={{backgroundColor : "#ee7600"}}>Étudiant</div>
+                        </div>
+                        <div className="row">
+                            <div onClick={() => setUserType("gestionnaire")} className="mx-3 mb-2 w-50 btn" style={{backgroundColor : "#ee7600"}}>Gestionnaire</div>
+                        </div>
+                        <div className="row">
+                            <div onClick={() => setUserType("compagnie")} className="mx-3 mb-2 w-50 btn" style={{backgroundColor : "#ee7600"}}>Compagnie</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
+            <Snackbar open={isOpen} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Votre demande a été envoyée !
+                </Alert>
+            </Snackbar>
+            <Snackbar open={hasOpenError} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+                    Il y a eu une erreur, la demande n'a pas été envoyée.
+                </Alert>
+            </Snackbar>
+        </div>     
     ) ;
 }
 

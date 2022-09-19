@@ -1,6 +1,6 @@
 import { useState } from "react";
-import LogInForm from "./forms/LogInForm";
-import SignUpForm from "./forms/SignUpForm";
+import LogInForm from "./forms/LogInForm"
+import SignUp from "./SignUp"
 
 const Home = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,10 +11,10 @@ const Home = () => {
   };
 
   return isLogin ? (
-    <LogInForm title={title} changeForm={handleChangeForm} />
+    <SignUp title={title} changeForm={handleChangeForm}/>
     
   ) : (
-    <SignUpForm title={title} changeForm={handleChangeForm} />
+    <LogInForm title={title} changeForm={handleChangeForm} />
   );
 };
 
