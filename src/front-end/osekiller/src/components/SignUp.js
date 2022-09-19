@@ -83,7 +83,7 @@ const SignUp = (props) => {
 
     return (
         <SignUpForm 
-        changeForm={props.handleChangeForm} 
+        changeForm={props.changeForm} 
         formikCompany={formikCompany} 
         formikStudentOrManager={formikStudentOrManager}
         userType={userType} 

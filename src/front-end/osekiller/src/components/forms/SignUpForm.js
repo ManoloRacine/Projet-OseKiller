@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import React from "react";
 
 import Snackbar from '@mui/material/Snackbar';
@@ -9,7 +7,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, hasOpenError, handleClose, setUserType, title}, props) => {
+const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, hasOpenError, handleClose, setUserType, title, changeForm}) => {
 
     const formType = () => {
         return (
@@ -114,14 +112,19 @@ const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, ha
     return (
         <div className="d-flex flex-column justify-content-evenly align-items-center"
         style={{minHeight : "90vh"}}>
-            <div>
+            <div className="text-center">
                 <h1 className="display-1">{title}</h1>
                 {userTypesCapitalized(userType)}
             </div>
             
             <div className="container py-5 text-white rounded" style={{backgroundColor : "#2C324C"}}>
                 <div className="row">
-                    <div className="col sm-2"></div>
+                    <div className="col sm-2 d-flex flex-column align-items-center justify-content-center">   
+                        <p>Vous avez déjà un compte?</p>
+                        <button className="btn" style={{backgroundColor : "#ee7600"}} onClick={changeForm}>
+                            Se connecter
+                        </button>
+                    </div>
                     {formType(userType)}
                     <div className="col sm-2">
                         <div className="row">
