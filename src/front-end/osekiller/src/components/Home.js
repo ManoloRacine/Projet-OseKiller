@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LogInForm from "./forms/LogInForm";
+import LogIn from "./LogIn";
 import SignUp from "./SignUp";
 
 const Home = () => {
@@ -11,7 +11,7 @@ const Home = () => {
   };
 
   return isLogin ? (
-    <LogInForm title={title} changeForm={handleChangeForm} />
+    <LogIn title={title} changeForm={handleChangeForm} />
   ) : (
     <SignUp title={title} changeForm={handleChangeForm} />
   );

@@ -1,13 +1,8 @@
 import React from "react";
 
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import ErrorMessage from "../ErrorMessage";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
-const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, hasOpenError, handleClose, setUserType, title, changeForm}) => {
+const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, hasOpenError, setUserType, title, changeForm}) => {
 
     const formType = () => {
         return (
@@ -139,16 +134,8 @@ const SignUpForm = ({formikCompany, formikStudentOrManager, userType, isOpen, ha
                     </div>
                 </div>
             </div>
-            <Snackbar open={isOpen} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                    Votre demande a été envoyée !
-                </Alert>
-            </Snackbar>
-            <Snackbar open={hasOpenError} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-                    Il y a eu une erreur, la demande n'a pas été envoyée.
-                </Alert>
-            </Snackbar>
+            {isOpen && <ErrorMessage message={"Votre demande a été envoyée !"} severity="success" />}
+            {hasOpenError && <ErrorMessage message={"Il y a eu une erreur, la demande n'a pas été envoyée."} severity="error" />}
         </div>     
     ) ;
 }

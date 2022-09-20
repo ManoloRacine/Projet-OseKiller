@@ -1,31 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import ErrorMessage from "../ErrorMessage";
 
-const LogInForm = (props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const userInfo = { email: email, password: password };
-    setIsLoading(true);
-    axios
-      .post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-in`, userInfo)
-      .then((response) => {
-        setIsLoading(false);     
-        navigate("/dashboard", {state: response.data});
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.log(error.response);
-        setHasError(true);
-      });
-  };
+const LogInForm = (props) => {  
 
   return (
     <div
@@ -36,7 +11,7 @@ const LogInForm = (props) => {
       <form
         className="d-flex justify-content-between align-items-center w-50 p-5 text-white rounded"
         style={{ backgroundColor: "#2C324C" }}
-        onSubmit={handleSubmit}
+        onSubmit={props.onSubmit}
       >
         <div className="col-sm-5">
           <div className="mb-3">
@@ -47,8 +22,8 @@ const LogInForm = (props) => {
               className="form-control"
               type="email"
               id="email"
-              value={email}
-              onChange={({ target }) => setEmail(target.value)}
+              value={props.email}
+              onChange={props.setEmail}
               required
             />
           </div>
@@ -61,14 +36,14 @@ const LogInForm = (props) => {
               className="form-control"
               id="password"
               type="password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
+              value={props.password}
+              onChange={props.setPassword}
               required
             />
           </div>
 
           <div className="mb-3">
-            {isLoading ? (
+            {props.isLoading ? (
               <button
                 className="btn"
                 style={{ backgroundColor: "#ee7600" }}
@@ -103,7 +78,7 @@ const LogInForm = (props) => {
           </div>
         </div>
       </form>
-      {hasError && <ErrorMessage message="Une erreur s'est produite." severity="error"/>}
+      {props.hasError && <ErrorMessage message="Une erreur s'est produite." severity="error"/>}
     </div>
   );
 };
