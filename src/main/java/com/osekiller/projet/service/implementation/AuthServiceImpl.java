@@ -4,6 +4,7 @@ import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
 import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
+import com.osekiller.projet.controller.payload.response.UsersDto;
 import com.osekiller.projet.model.*;
 import com.osekiller.projet.repository.RefreshTokenRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -136,5 +138,12 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         }
 
         return token;
+    }
+
+    @Override
+    public List<UsersDto> getUsers() {
+        return userRepository.findAll().stream().map(
+                user -> new UsersDto(user.getEmail(), user.getName(), user.isEnabled())
+        ).toList() ;
     }
 }

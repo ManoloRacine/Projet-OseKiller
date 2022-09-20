@@ -4,6 +4,7 @@ import com.osekiller.projet.controller.payload.request.JwtRequestDto;
 import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
+import com.osekiller.projet.controller.payload.response.UsersDto;
 import com.osekiller.projet.model.User;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -81,9 +82,9 @@ public class AuthController {
 //        authService.validateUser(request);
 //        return ResponseEntity.accepted().build() ;
 //    }
-//
-//    @GetMapping("/users")
-//    public ResponseEntity<List<User>> getNewUsers() {
-//        return authService.getNewUsers(request);
-//    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UsersDto>> getUsers() {
+        return ResponseEntity.ok(authService.getUsers()) ;
+    }
 }
