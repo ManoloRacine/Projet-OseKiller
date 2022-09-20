@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import ErrorMessage from "../ErrorMessage";
 
 const LogInForm = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -22,7 +23,7 @@ const LogInForm = (props) => {
       .catch((error) => {
         setIsLoading(false);
         console.log(error.response);
-        
+        setHasError(true);
       });
   };
 
@@ -102,6 +103,7 @@ const LogInForm = (props) => {
           </div>
         </div>
       </form>
+      {hasError && <ErrorMessage message="Une erreur s'est produite." severity="error"/>}
     </div>
   );
 };
