@@ -17,13 +17,12 @@ const LogInForm = (props) => {
       .post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-in`, userInfo)
       .then((response) => {
         setIsLoading(false);     
-        console.log(response.data);
-        navigate("/dashboard");
+        navigate("/dashboard", {state: response.data});
       })
       .catch((error) => {
         setIsLoading(false);
         console.log(error.response);
-        navigate("/dashboard");
+        
       });
   };
 
