@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 const LogInForm = (props) => {
   const [email, setEmail] = useState("");
@@ -7,23 +8,17 @@ const LogInForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const userInfo = { email: email, password: password };
     setIsLoading(true);
-    fetch("http://localhost:8000/users")
-      .then((res) => {
-        if (!res.ok) {
-          throw Error("could not fetch the data for that resource");
-        }
-        res.json();
-      })
-      .then((json) => {
-        console.log(json);
+    axios
+      .post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-in`, userInfo)
+      .then((response) => {
+        console.log(response.data);
         setIsLoading(false);
       })
-      .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.log("Erreur:" + err);
-          setIsLoading(false);
-        }
+      .catch((error) => {
+        console.log(error.response);
+        setIsLoading(false);
       });
   };
 
@@ -35,7 +30,7 @@ const LogInForm = (props) => {
       <h1 className="display-1">{props.title}</h1>
       <form
         className="d-flex justify-content-between align-items-center w-50 p-5 text-white rounded"
-        style={{backgroundColor : "#2C324C"}}
+        style={{ backgroundColor: "#2C324C" }}
         onSubmit={handleSubmit}
       >
         <div className="col-sm-5">
@@ -69,13 +64,21 @@ const LogInForm = (props) => {
 
           <div className="mb-3">
             {isLoading ? (
-              <button className="btn" style={{backgroundColor : "#ee7600"}} disabled>
+              <button
+                className="btn"
+                style={{ backgroundColor: "#ee7600" }}
+                disabled
+              >
                 <div className="spinner-border" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </div>
               </button>
             ) : (
-              <button type="submit" className="btn" style={{backgroundColor : "#ee7600"}}>
+              <button
+                type="submit"
+                className="btn"
+                style={{ backgroundColor: "#ee7600" }}
+              >
                 Se connecter
               </button>
             )}
@@ -85,7 +88,11 @@ const LogInForm = (props) => {
         <div className="col-sm-5">
           <div className="my-3">
             <p>Vous n'avez pas de compte?</p>
-            <button className="btn" style={{backgroundColor : "#ee7600"}} onClick={props.changeForm}>
+            <button
+              className="btn"
+              style={{ backgroundColor: "#ee7600" }}
+              onClick={props.changeForm}
+            >
               S'inscrire
             </button>
           </div>
