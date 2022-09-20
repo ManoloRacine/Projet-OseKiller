@@ -1,9 +1,12 @@
-package com.osekiller.projet.repository;
+package com.osekiller.projet.repository.user;
 
 import com.osekiller.projet.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
+    Optional<Student> findByEmail(String email);
 }
