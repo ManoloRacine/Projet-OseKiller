@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 
 const LogInForm = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -13,12 +16,14 @@ const LogInForm = (props) => {
     axios
       .post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-in`, userInfo)
       .then((response) => {
+        setIsLoading(false);     
         console.log(response.data);
-        setIsLoading(false);
+        navigate("/dashboard");
       })
       .catch((error) => {
-        console.log(error.response);
         setIsLoading(false);
+        console.log(error.response);
+        navigate("/dashboard");
       });
   };
 
