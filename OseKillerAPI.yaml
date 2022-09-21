@@ -57,6 +57,63 @@ paths:
           description: Format invalide / Attribut(s) manquant(s)
         '401':
           description: Informations d'identification invalides
+  /sign-out:
+    post:
+      tags:
+        - Authentication
+      summary: Demande de révocation du refresh token
+      description: Demande de révocation du refresh token
+      operationId: signOut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Demande de révocation accepté
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '401':
+          description: Token Invalide
+        '403':
+          description: Le token n'appartient pas à l'utilisateur
+      security:
+      - bearerAuth: []
+  /refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Demande d'un nouveau JWT Valide
+      description: Demande d'un nouveau JWT
+      operationId: refresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Demande d'un nouveau JWT Valide accepté
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '401':
+          description: Token Invalide ou Expiré
+        
   /user/validate:
     post:
       tags:
@@ -69,21 +126,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ValidatingUserRequest'
+              $ref: '#/components/schemas/UserValidationRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ValidatingUserRequest'
+              $ref: '#/components/schemas/UserValidationRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ValidatingUserRequest'
+              $ref: '#/components/schemas/UserValidationRequest'
         required: true
       responses:
         '200':
           description: Validation a été complété
         '400':
           description: Format invalide / Attribut(s) manquant(s)
-        '401':
+        '403':
           description: Requête non autorisée
+      security:
+        - bearerAuth: []
   /users:
     get:
       tags:
@@ -91,19 +150,47 @@ paths:
       summary: Retourne tous les utilisateurs
       description: Retourne tous les utilisateurs
       operationId: getUsers
-      parameters:
-      - in: query
-        name: isActive
-        schema:
-          type: boolean
       responses:
         '200':
           description: Les utilisateurs ont été envoyés
         '400':
           description: Format invalide / Attribut(s) manquant(s)
-        '401':
+        '403':
           description: Requête non autorisée
+      security:
+        - bearerAuth: []
+  
+  /ping:
+    get:
+      tags:
+        - Ping
+      summary: Demande de ping
+      description: Demande de ping
+      operationId: ping
+      responses:
+        '200':
+          description: Demande de ping reçu
+  /ping/token:
+    get:
+      tags:
+        - Ping
+      summary: Demande de ping par un l'utilisateur autentifié
+      description: Demande de ping par un l'utilisateur autentifié
+      operationId: ping
+      responses:
+        '200':
+          description: Demande de ping reçu
+        '401':
+          description: Non autentifié
+      security:
+        - bearerAuth: []
+
 components:
+  securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
   schemas:
     SignUpRequest:
       type: object
@@ -139,12 +226,17 @@ components:
           example: vant8L52ANAp7U
       xml:
         name: signInRequest
-    ValidatingUserRequest:
+    TokenRequest:
       type: object
       properties:
-        token:
+        refreshToken: 
           type: string
-          example: as7df83n48s9an39
+          example: 123e4567-e89b-12d3-a456-426614174000
+      xml:
+        name: signInRequest
+    UserValidationRequest:
+      type: object
+      properties:
         email:
           type: string
           format: email
