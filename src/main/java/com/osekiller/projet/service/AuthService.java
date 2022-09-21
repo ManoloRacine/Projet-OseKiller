@@ -8,13 +8,12 @@ import com.osekiller.projet.controller.payload.response.UsersDto;
 
 import java.util.List;
 
-public interface AuthService {
+public interface AuthService extends UserDetailsService {
     JwtResponseDto signIn(SignInDto dto);
     void signUp(SignUpDto dto);
     void signOut(String token);
-    JwtResponseDto refresh(String refreshToken);
-    AuthPingDto authPing(String refreshToken);
-
     List<UsersDto> getUsers();
     void validateUser(String emailValidated);
+    JwtResponseDto refresh(String token);
+    AuthPingDto authPing(String token);
 }

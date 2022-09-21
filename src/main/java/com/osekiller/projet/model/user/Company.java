@@ -1,5 +1,4 @@
-package com.osekiller.projet.model;
-
+package com.osekiller.projet.model.user;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,8 +10,8 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Data
-public class Manager extends User{
-    public Manager(@NonNull String name, @NonNull String email, @NonNull String password) {
+public class Company extends User {
+    public Company(@NonNull String name, @NonNull String email, @NonNull String password) {
         super(name, email, password);
     }
 }

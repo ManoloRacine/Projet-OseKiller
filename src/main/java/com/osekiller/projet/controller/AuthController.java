@@ -17,13 +17,11 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -54,7 +52,8 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    private void authenticate(String username, String password) {
+    private void authenticate(String username, //En réalité on passe le email ici vu que le nom des utilisateurs ne sont pas forcément unique ...
+                              String password) {
         try {
             authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (BadCredentialsException e) {

@@ -1,13 +1,16 @@
-package com.osekiller.projet.model;
+package com.osekiller.projet.model.user;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.osekiller.projet.model.Role;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -25,7 +28,7 @@ public abstract class User implements UserDetails {
     @NonNull @JsonIgnore private String password;
     private boolean enabled = false;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Role role;
 
     @Override

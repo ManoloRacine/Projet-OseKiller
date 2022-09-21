@@ -6,29 +6,33 @@ import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
 import com.osekiller.projet.controller.payload.response.UsersDto;
 import com.osekiller.projet.model.*;
+import com.osekiller.projet.model.ERole;
+import com.osekiller.projet.model.RefreshToken;
+import com.osekiller.projet.model.Role;
+import com.osekiller.projet.model.user.Company;
+import com.osekiller.projet.model.user.Manager;
+import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.RefreshTokenRepository;
-import com.osekiller.projet.repository.user.CompanyRepository;
-import com.osekiller.projet.repository.user.ManagerRepository;
-import com.osekiller.projet.repository.user.StudentRepository;
-import com.osekiller.projet.repository.user.UserRepository;
+import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class AuthServiceImpl implements AuthService, UserDetailsService {
+public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
     private RefreshTokenRepository refreshTokenRepository;
     private JwtUtils jwtUtils;
@@ -36,6 +40,8 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     private StudentRepository studentRepository;
     private ManagerRepository managerRepository;
     private UserRepository userRepository;
+
+    private RoleRepository roleRepository;
 
     @Override
     public JwtResponseDto signIn(SignInDto dto) {
@@ -50,13 +56,11 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         refreshToken = refreshTokenRepository.save(refreshToken);
         String accessToken = jwtUtils.generateToken(user);
 
-        JwtResponseDto response = new JwtResponseDto(
+        return new JwtResponseDto(
                 accessToken,
                 refreshToken.getToken(),
                 "Bearer"
         );
-
-        return response;
     }
 
     @Override
@@ -68,15 +72,24 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
         //Sauvegarder l'utilisateur en fonction de son role
         if(dto.role().equals(ERole.STUDENT.name())){
-            studentRepository.save(new Student(dto.name(), dto.email(), passwordEncoder.encode(dto.password())));
+            Student student = new Student(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
+            Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
+            student.setRole(studentRole);
+            studentRepository.save(student);
             return;
         }
         if (dto.role().equals(ERole.MANAGER.name())){
-            managerRepository.save(new Manager(dto.name(), dto.email(), passwordEncoder.encode(dto.password())));
+            Manager manager = new Manager(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
+            Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
+            manager.setRole(managerRole);
+            managerRepository.save(manager);
             return;
         }
         if(dto.role().equals(ERole.COMPANY.name())){
-            companyRepository.save(new Company(dto.name(), dto.email(), passwordEncoder.encode(dto.password())));
+            Company company = new Company(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
+            Role companyRole = roleRepository.findByName(ERole.COMPANY.name()).orElseThrow(EntityNotFoundException::new);
+            company.setRole(companyRole);
+            companyRepository.save(company);
             return;
         }
 
@@ -105,12 +118,11 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     public JwtResponseDto refresh(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         refreshToken = verifyExpiration(refreshToken);
-        JwtResponseDto response = new JwtResponseDto(
+        return new JwtResponseDto(
                 jwtUtils.generateToken(refreshToken.getUser()),
                 refreshToken.getToken(),
                 "Bearer"
         );
-        return response;
     }
 
     @Override
