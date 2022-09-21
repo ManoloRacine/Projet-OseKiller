@@ -49,7 +49,8 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
-    private void authenticate(String username, String password) {
+    private void authenticate(String username, //En réalité on passe le email ici vu que le nom des utilisateurs ne sont pas forcément unique ...
+                              String password) {
         try {
             authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (BadCredentialsException e) {
