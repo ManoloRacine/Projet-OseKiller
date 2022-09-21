@@ -1,6 +1,6 @@
 package com.osekiller.projet.repository.user;
 
-import com.osekiller.projet.model.Manager;
+import com.osekiller.projet.model.user.Manager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
