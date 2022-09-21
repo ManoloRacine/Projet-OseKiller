@@ -25,7 +25,7 @@ public abstract class User implements UserDetails {
     @NonNull @JsonIgnore private String password;
     private boolean enabled = true;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Role role;
 
     @Override

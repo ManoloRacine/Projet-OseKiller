@@ -6,10 +6,7 @@ import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
 import com.osekiller.projet.model.*;
 import com.osekiller.projet.repository.RefreshTokenRepository;
-import com.osekiller.projet.repository.user.CompanyRepository;
-import com.osekiller.projet.repository.user.ManagerRepository;
-import com.osekiller.projet.repository.user.StudentRepository;
-import com.osekiller.projet.repository.user.UserRepository;
+import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -21,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -34,6 +32,8 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     private StudentRepository studentRepository;
     private ManagerRepository managerRepository;
     private UserRepository userRepository;
+
+    private RoleRepository roleRepository;
 
     @Override
     public JwtResponseDto signIn(SignInDto dto) {
@@ -66,15 +66,24 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
         //Sauvegarder l'utilisateur en fonction de son role
         if(dto.role().equals(ERole.STUDENT.name())){
-            studentRepository.save(new Student(dto.name(), dto.email(), passwordEncoder.encode(dto.password())));
+            Student student = new Student(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
+            Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
+            student.setRole(studentRole);
+            studentRepository.save(student);
             return;
         }
         if (dto.role().equals(ERole.MANAGER.name())){
-            managerRepository.save(new Manager(dto.name(), dto.email(), passwordEncoder.encode(dto.password())));
+            Manager manager = new Manager(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
+            Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
+            manager.setRole(managerRole);
+            managerRepository.save(manager);
             return;
         }
         if(dto.role().equals(ERole.COMPANY.name())){
-            companyRepository.save(new Company(dto.name(), dto.email(), passwordEncoder.encode(dto.password())));
+            Company company = new Company(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
+            Role companyRole = roleRepository.findByName(ERole.COMPANY.name()).orElseThrow(EntityNotFoundException::new);
+            company.setRole(companyRole);
+            companyRepository.save(company);
             return;
         }
 
