@@ -1,32 +1,29 @@
 openapi: 3.0.3
 info:
   title: OSE Killer API
-  description: |-
-    
-  
-    
   version: 1.0.0
-
+servers:
+  - url: https://localhost:8080
 paths:
-  /student/signUp:
+  /sign-up:
     post:
       tags:
         - Authentication
-      summary: Demande d'inscription
-      description: Demande d'inscription
-      operationId: studentSignUp
+      summary: Envoyer une demande d'inscription
+      description: Envoyer une demande d'inscription
+      operationId: signUp
       requestBody:
-        description: Créer une demande d'inscription
+        description: Demande d'inscription
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StudentSignUpRequest'
+              $ref: '#/components/schemas/SignUpRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/StudentSignUpRequest'
+              $ref: '#/components/schemas/SignUpRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/StudentSignUpRequest'
+              $ref: '#/components/schemas/SignUpRequest'
         required: true
       responses:
         '202':
@@ -35,60 +32,94 @@ paths:
           description: Format invalide / Attribut(s) manquant(s)
         '409':
           description: Email non disponible
-  /manager/signUp:
+  /sign-in:
     post:
       tags:
         - Authentication
-      summary: Demande d'inscription
-      description: Demande d'inscription
-      operationId: managerSignUp
+      summary: Envoyer une demande de connection
+      description: Envoyer une demande de connection
+      operationId: signIn
       requestBody:
-        description: Créer une demande d'inscription
+        description: Demande de connection
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ManagerSignUpRequest'
+              $ref: '#/components/schemas/SignInRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ManagerSignUpRequest'
+              $ref: '#/components/schemas/SignInRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ManagerSignUpRequest'
+              $ref: '#/components/schemas/SignInRequest'
         required: true
       responses:
-        '202':
-          description: Demande en attente d'acceptation
+        '200':
+          description: Demande de connection accepté
         '400':
           description: Format invalide / Attribut(s) manquant(s)
-        '409':
-          description: Email non disponible
-  /company/signUp:
+        '401':
+          description: Informations d'identification invalides
+  /sign-out:
     post:
       tags:
         - Authentication
-      summary: Demande d'inscription
-      description: Demande d'inscription
-      operationId: companySignUp
+      summary: Demande de révocation du refresh token
+      description: Demande de révocation du refresh token
+      operationId: signOut
       requestBody:
-        description: Créer une demande d'inscription
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CompanySignUpRequest'
+              $ref: '#/components/schemas/TokenRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/CompanySignUpRequest'
+              $ref: '#/components/schemas/TokenRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/CompanySignUpRequest'
+              $ref: '#/components/schemas/TokenRequest'
         required: true
       responses:
-        '202':
-          description: Demande en attente d'acceptation
+        '200':
+          description: Demande de révocation accepté
         '400':
           description: Format invalide / Attribut(s) manquant(s)
-        '409':
-          description: Email non disponible
+        '401':
+          description: Token Invalide
+        '403':
+          description: Le token n'appartient pas à l'utilisateur
+      security:
+      - bearerAuth: []
+  /refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Demande d'un nouveau JWT Valide
+      description: Demande d'un nouveau JWT
+      operationId: refresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+        required: true
+      responses:
+        '200':
+          description: Demande d'un nouveau JWT Valide accepté
+        '400':
+          description: Format invalide / Attribut(s) manquant(s)
+        '401':
+          description: Token Invalide ou Expiré
+        '403':
+          description: Le token n'appartient pas à l'utilisateur
+      security:
+        - bearerAuth: []
+        
   /user/validate:
     post:
       tags:
@@ -101,46 +132,78 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ValidatingUserRequest'
+              $ref: '#/components/schemas/UserValidationRequest'
           application/xml:
             schema:
-              $ref: '#/components/schemas/ValidatingUserRequest'
+              $ref: '#/components/schemas/UserValidationRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ValidatingUserRequest'
+              $ref: '#/components/schemas/UserValidationRequest'
         required: true
       responses:
         '200':
           description: Validation a été complété
         '400':
           description: Format invalide / Attribut(s) manquant(s)
-        '401':
+        '403':
           description: Requête non autorisée
+      security:
+        - bearerAuth: []
   /users:
     get:
       tags:
         - Authentication
       summary: Retourne tous les utilisateurs
       description: Retourne tous les utilisateurs
-      operationId: getNewUsers
+      operationId: getUsers
       responses:
         '200':
           description: Les utilisateurs ont été envoyés
         '400':
           description: Format invalide / Attribut(s) manquant(s)
-        '401':
+        '403':
           description: Requête non autorisée
+      security:
+        - bearerAuth: []
+  
+  /ping:
+    get:
+      tags:
+        - Ping
+      summary: Demande de ping
+      description: Demande de ping
+      operationId: ping
+      responses:
+        '200':
+          description: Demande de ping reçu
+  /ping/token:
+    get:
+      tags:
+        - Ping
+      summary: Demande de ping par un l'utilisateur autentifié
+      description: Demande de ping par un l'utilisateur autentifié
+      operationId: ping
+      responses:
+        '200':
+          description: Demande de ping reçu
+        '401':
+          description: Non autentifié
+      security:
+        - bearerAuth: []
+
 components:
+  securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
   schemas:
-    StudentSignUpRequest:
+    SignUpRequest:
       type: object
       properties:
-        firstName:
+        name:
           type: string
-          example: Hugo
-        lastName:
-          type: string
-          example: Lantier
+          example: Hugo Lantier
         email:
           type: string
           format: email
@@ -148,47 +211,38 @@ components:
         password:
           type: string
           example: vant8L52ANAp7U
+        role:
+          type: string
+          example: STUDENT
+          enum:
+            - STUDENT
+            - MANAGER
+            - COMPANY
       xml:
-        name: userSignUpRequest
-    ManagerSignUpRequest:
+        name: signUpRequest
+    SignInRequest:
       type: object
       properties:
-        firstName:
-          type: string
-          example: Hugo
-        lastName:
-          type: string
-          example: Lantier
         email:
           type: string
           format: email
-          example: hugol@example.com
+          example: tesla.internship@example.com
         password:
           type: string
           example: vant8L52ANAp7U
       xml:
-        name: userSignUpRequest
-    CompanySignUpRequest:
+        name: signInRequest
+    TokenRequest:
       type: object
       properties:
-        companyName:
+        refreshToken: 
           type: string
-          example: Lantier
-        email:
-          type: string
-          format: email
-          example: hugol@example.com
-        password:
-          type: string
-          example: vant8L52ANAp7U
+          example: 123e4567-e89b-12d3-a456-426614174000
       xml:
-        name: userSignUpRequest
-    ValidatingUserRequest:
+        name: signInRequest
+    UserValidationRequest:
       type: object
       properties:
-        token:
-          type: string
-          example: as7df83n48s9an39
         email:
           type: string
           format: email
@@ -196,3 +250,5 @@ components:
         valid:
           type: boolean
           example: true
+      xml:
+        name: userValidationRequest
