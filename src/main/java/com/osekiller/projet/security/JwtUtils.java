@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,9 +61,17 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
+    private Boolean isTokenExpiredForTokenExpirationTime(String token){
+        return getExpirationDateFromToken(token).toInstant().isBefore(Instant.now().minusMillis(TOKEN_EXPIRATION));
+    }
+
     //validate token
     public Boolean validateToken(String token, UserDetails user, HttpServletRequest request) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(user.getUsername()) && (!isTokenExpired(token) || request.getRequestURI().equals("/refresh")));
+        return (username.equals(
+                user.getUsername()) &&
+                (!isTokenExpired(token)
+                        ||
+                        request.getRequestURI().equals("/refresh") && !isTokenExpiredForTokenExpirationTime(token)));
     }
 }

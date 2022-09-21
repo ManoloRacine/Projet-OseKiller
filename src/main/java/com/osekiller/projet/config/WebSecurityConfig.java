@@ -38,7 +38,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         (requests) -> requests
                                 //Autoriser ses routes de base
-                                .antMatchers("/ping","/sign-in","/sign-up","sign-out").permitAll()
+                                .antMatchers("/ping","/sign-in","/sign-up").permitAll()
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )
