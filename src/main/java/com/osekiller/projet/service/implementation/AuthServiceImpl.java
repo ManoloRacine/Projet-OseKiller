@@ -146,4 +146,10 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
                 user -> new UsersDto(user.getEmail(), user.getName(), user.isEnabled())
         ).toList() ;
     }
+
+    public void validateUser(String emailValidated) {
+        User user = userRepository.findByEmail(emailValidated).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        user.setEnabled(true);
+        userRepository.save(user) ;
+    }
 }

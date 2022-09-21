@@ -23,7 +23,7 @@ public abstract class User implements UserDetails {
     @NonNull private String name;
     @NonNull private String email;
     @NonNull @JsonIgnore private String password;
-    private boolean enabled = true;
+    private boolean enabled = false;
 
     @ManyToOne
     private Role role;

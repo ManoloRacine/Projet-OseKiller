@@ -3,6 +3,7 @@ package com.osekiller.projet.controller;
 import com.osekiller.projet.controller.payload.request.JwtRequestDto;
 import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
+import com.osekiller.projet.controller.payload.request.UserValidationDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
 import com.osekiller.projet.controller.payload.response.UsersDto;
 import com.osekiller.projet.model.User;
@@ -77,11 +78,11 @@ public class AuthController {
         return errors;
     }
 
-//    @PostMapping("/user/validate")
-//    public ResponseEntity<Void> validateUser(@Valid @RequestBody UserValidationRequest request) {
-//        authService.validateUser(request);
-//        return ResponseEntity.accepted().build() ;
-//    }
+    @PostMapping("/user/validate")
+    public ResponseEntity<Void> validateUser(@Valid @RequestBody UserValidationDto dto) {
+        authService.validateUser(dto.email());
+        return ResponseEntity.accepted().build() ;
+    }
 
     @GetMapping("/users")
     public ResponseEntity<List<UsersDto>> getUsers() {

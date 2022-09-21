@@ -16,4 +16,5 @@ public interface AuthService {
     AuthPingDto authPing(String refreshToken);
 
     List<UsersDto> getUsers();
+    void validateUser(String emailValidated);
 }
