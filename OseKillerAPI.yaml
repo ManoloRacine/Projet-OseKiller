@@ -2,6 +2,8 @@ openapi: 3.0.3
 info:
   title: OSE Killer API
   version: 1.0.0
+servers:
+  - url: https://localhost:8080
 paths:
   /sign-up:
     post:
@@ -113,6 +115,10 @@ paths:
           description: Format invalide / Attribut(s) manquant(s)
         '401':
           description: Token Invalide ou Expiré
+        '403':
+          description: Le token n'appartient pas à l'utilisateur
+      security:
+        - bearerAuth: []
         
   /user/validate:
     post:
