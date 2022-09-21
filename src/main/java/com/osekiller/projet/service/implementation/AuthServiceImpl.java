@@ -124,11 +124,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthPingDto authPing(String token) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-        refreshToken = verifyExpiration(refreshToken);
+        String email = jwtUtils.getUsernameFromToken(token);
+        User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
         return new AuthPingDto(
-                refreshToken.getUser().getEmail(),
-                refreshToken.getUser().getRole().getName()
+                user.getEmail(),
+                user.getRole().getName()
         );
     }
 
