@@ -1,5 +1,6 @@
 package com.osekiller.projet.model;
 
+import com.osekiller.projet.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;

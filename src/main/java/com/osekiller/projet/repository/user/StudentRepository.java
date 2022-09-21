@@ -1,6 +1,6 @@
 package com.osekiller.projet.repository.user;
 
-import com.osekiller.projet.model.Student;
+import com.osekiller.projet.model.user.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -4,7 +4,13 @@ import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
 import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
-import com.osekiller.projet.model.*;
+import com.osekiller.projet.model.ERole;
+import com.osekiller.projet.model.RefreshToken;
+import com.osekiller.projet.model.Role;
+import com.osekiller.projet.model.user.Company;
+import com.osekiller.projet.model.user.Manager;
+import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.RefreshTokenRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
@@ -12,7 +18,6 @@ import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +29,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class AuthServiceImpl implements AuthService, UserDetailsService {
+public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
     private RefreshTokenRepository refreshTokenRepository;
     private JwtUtils jwtUtils;
@@ -48,13 +53,11 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
         refreshToken = refreshTokenRepository.save(refreshToken);
         String accessToken = jwtUtils.generateToken(user);
 
-        JwtResponseDto response = new JwtResponseDto(
+        return new JwtResponseDto(
                 accessToken,
                 refreshToken.getToken(),
                 "Bearer"
         );
-
-        return response;
     }
 
     @Override
@@ -112,12 +115,11 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
     public JwtResponseDto refresh(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         refreshToken = verifyExpiration(refreshToken);
-        JwtResponseDto response = new JwtResponseDto(
+        return new JwtResponseDto(
                 jwtUtils.generateToken(refreshToken.getUser()),
                 refreshToken.getToken(),
                 "Bearer"
         );
-        return response;
     }
 
     @Override

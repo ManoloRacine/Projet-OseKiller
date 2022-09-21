@@ -1,8 +1,8 @@
 package com.osekiller.projet;
 
 import com.osekiller.projet.model.ERole;
-import com.osekiller.projet.model.Manager;
 import com.osekiller.projet.model.Role;
+import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.repository.user.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationListener;

@@ -1,6 +1,5 @@
 package com.osekiller.projet.security;
 
-import com.osekiller.projet.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
