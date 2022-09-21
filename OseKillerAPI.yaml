@@ -184,13 +184,7 @@ components:
     ValidatingUserRequest:
       type: object
       properties:
-        token:
-          type: string
-          example: as7df83n48s9an39
         email:
           type: string
           format: email
           example: hugol@example.com
-        valid:
-          type: boolean
-          example: true
