@@ -1,44 +1,63 @@
 package com.osekiller.projet.controller;
 
-
-import com.osekiller.projet.controller.request.*;
-import com.osekiller.projet.model.User;
+import com.osekiller.projet.controller.payload.request.JwtRequestDto;
+import com.osekiller.projet.controller.payload.request.SignInDto;
+import com.osekiller.projet.controller.payload.request.SignUpDto;
+import com.osekiller.projet.controller.payload.response.JwtResponseDto;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
 public class AuthController {
     AuthService authService;
-    @PostMapping("/student/signUp")
-    public ResponseEntity<Void> signUpStudent(@Valid @RequestBody StudentSignUpRequest request){
-
-        authService.signUpStudent(request);
+    AuthenticationManager authManager;
+    @PostMapping("/sign-up")
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpDto dto){
+        authService.signUp(dto);
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("/manager/signUp")
-    public ResponseEntity<Void> signUpManager(@Valid @RequestBody ManagerSignUpRequest request){
-
-        authService.signUpManager(request);
-        return ResponseEntity.accepted().build();
+    @PostMapping("/sign-in")
+    public ResponseEntity<JwtResponseDto> signIn(@Valid @RequestBody SignInDto dto) {
+        authenticate(dto.email(), dto.password());
+       return ResponseEntity.ok(authService.signIn(dto));
     }
 
-    @PostMapping("/company/signUp")
-    public ResponseEntity<Void> signUpCompany(@Valid @RequestBody CompanySignUpRequest request){
-        authService.signUpCompany(request);
-        return ResponseEntity.accepted().build();
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtResponseDto> refresh(@Valid @RequestBody JwtRequestDto dto){
+        return ResponseEntity.ok(authService.refresh(dto.refreshToken()));
+    }
+
+    @PostMapping("/sign-out")
+    public ResponseEntity<JwtResponseDto> signOut(@Valid @RequestBody JwtRequestDto dto){
+        authService.signOut(dto.refreshToken());
+        return ResponseEntity.noContent().build();
+    }
+
+    private void authenticate(String username, //En réalité on passe le email ici vu que le nom des utilisateurs ne sont pas forcément unique ...
+                              String password) {
+        try {
+            authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid-credentials");
+        } catch (DisabledException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"user-disabled");
+        }
     }
 
     //https://www.baeldung.com/spring-boot-bean-validation
@@ -53,16 +72,5 @@ public class AuthController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
-    }
-
-    @PostMapping("/user/validate")
-    public ResponseEntity<Void> validateUser(@Valid @RequestBody ValidatingUserRequest request) {
-        authService.validateUser(request);
-        return ResponseEntity.accepted().build() ;
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getNewUsers(@Valid @RequestBody GetNewUsersRequest request) {
-        return authService.getNewUsers(request);
     }
 }
