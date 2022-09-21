@@ -5,6 +5,7 @@ import com.osekiller.projet.controller.payload.request.SignUpDto;
 import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
 import com.osekiller.projet.controller.payload.response.UsersDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
