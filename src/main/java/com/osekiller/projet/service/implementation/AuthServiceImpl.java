@@ -128,7 +128,8 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
         return new AuthPingDto(
                 user.getEmail(),
-                user.getRole().getName()
+                user.getRole().getName(),
+                user.getName()
         );
     }
 

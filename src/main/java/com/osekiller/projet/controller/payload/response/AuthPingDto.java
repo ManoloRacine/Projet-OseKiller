@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 
 public record AuthPingDto(
         @NotBlank String email,
-        @NotBlank String role
+        @NotBlank String role,
+        @NotBlank String userName
 ) {
 }
