@@ -78,7 +78,7 @@ const LogInForm = (props) => {
           </div>
         </div>
       </form>
-      {props.hasError && <ErrorMessage message="Une erreur s'est produite." severity="error"/>}
+      {props.hasError && <ErrorMessage message={props.errorMessage} severity="error"/>}
     </div>
   );
 };
