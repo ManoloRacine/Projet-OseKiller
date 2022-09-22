@@ -1,7 +1,7 @@
 import SignUpForm from "./forms/SignUpForm";
 import { useFormik } from 'formik';
 import * as Yup from "yup"
-import axios from "axios";
+import axios from "../api/axios";
 import { useState } from "react";
 
 const SignUp = (props) => {
@@ -33,7 +33,7 @@ const SignUp = (props) => {
             passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
         }),
         onSubmit: values => {
-            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-up`, {
+            axios.post("/sign-up", {
                 name : values.prenom + " " + values.nom,
                 email : values.email,
                 password : values.password,
@@ -64,7 +64,7 @@ const SignUp = (props) => {
             passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
         }),
         onSubmit: values => {
-            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-up`, {
+            axios.post("sign-up", {
                 name : values.nom,
                 email : values.email,
                 password : values.password,

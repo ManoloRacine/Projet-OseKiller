@@ -32,11 +32,11 @@ const LogIn = (props) => {
           //<ErrorMessage message="No Server Response" severity="err" />;
       } else if (err.response?.status === 400) {
           setHasError(true);
-          setErrorMessage("Courriel ou mot de passe invalide (error 400)");
+          setErrorMessage("Courriel ou mot de passe invalide");
           //<ErrorMessage message="Username Taken" severity="err" />;
       } else {
           setHasError(true);
-          setErrorMessage("Registration Failed");
+          setErrorMessage("La connexion à échouée");
           //<ErrorMessage message="Registration Failed" severity="err" />;
       }
       });
