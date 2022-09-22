@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import ErrorMessage from "./ErrorMessage";
 import LogInForm from "./forms/LogInForm";
 
 const LogIn = (props) => {
@@ -21,8 +20,10 @@ const LogIn = (props) => {
         setIsLoading(false);
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        const tokenType = response.data.tokenType;
+        localStorage.setItem("accessToken", `${tokenType} ${accessToken}`);
+        localStorage.setItem("refreshToken", `${tokenType} ${refreshToken}`);
+        navigate("/dashboard", {state: {"email": email}});
       }).catch((err) => {
         setIsLoading(false);
       if (!err?.response) {
