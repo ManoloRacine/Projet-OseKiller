@@ -5,5 +5,5 @@ import javax.validation.constraints.NotBlank;
 public record AuthPingDto(
         @NotBlank String email,
         @NotBlank String role
-) {
+){
 }
