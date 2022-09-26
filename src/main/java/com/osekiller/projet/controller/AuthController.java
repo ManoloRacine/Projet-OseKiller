@@ -26,6 +26,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin
 public class AuthController {
     AuthService authService;
     AuthenticationManager authManager;

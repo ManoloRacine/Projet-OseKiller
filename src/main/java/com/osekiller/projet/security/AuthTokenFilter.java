@@ -2,6 +2,7 @@ package com.osekiller.projet.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +26,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String requestTokenHeader = request.getHeader("Authorization");
+        final String requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         String username = null;
         String jwtToken = null;
@@ -36,9 +37,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtils.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
+                logger.warn("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+                logger.warn("JWT Token has expired");
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
@@ -51,7 +52,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
             // if token is valid configure Spring Security to manually set
             // authentication
-            if (jwtUtils.validateToken(jwtToken, userDetails)) {
+            if (jwtUtils.validateToken(jwtToken, userDetails, request)) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
