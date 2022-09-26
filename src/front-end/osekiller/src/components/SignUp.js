@@ -1,8 +1,8 @@
 import SignUpForm from "./forms/SignUpForm";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "../api/axios";
 import { useState } from "react";
+import { userSignUp } from "../services/AuthService";
 
 const SignUp = (props) => {
     const [userType, setUserType] = useState("etudiant");
@@ -38,13 +38,14 @@ const SignUp = (props) => {
                 ),
         }),
         onSubmit: (values) => {
-            axios
-                .post("/sign-up", {
-                    name: values.prenom + " " + values.nom,
-                    email: values.email,
-                    password: values.password,
-                    role: userType === "etudiant" ? "STUDENT" : "MANAGER",
-                })
+            const userInfo = {
+                name: values.prenom + " " + values.nom,
+                email: values.email,
+                password: values.password,
+                role: userType === "etudiant" ? "STUDENT" : "MANAGER",
+            };
+
+            userSignUp(userInfo)
                 .then((response) => {
                     console.log(response.data);
                     setIsOpen(true);
@@ -75,13 +76,15 @@ const SignUp = (props) => {
                 ),
         }),
         onSubmit: (values) => {
-            axios
-                .post("sign-up", {
-                    name: values.nom,
-                    email: values.email,
-                    password: values.password,
-                    role: "COMPANY",
-                })
+            console.log("allo toi");
+            const userInfo = {
+                name: values.nom,
+                email: values.email,
+                password: values.password,
+                role: "COMPANY",
+            };
+
+            userSignUp(userInfo)
                 .then((response) => {
                     console.log(response.data);
                     setIsOpen(true);
@@ -96,8 +99,11 @@ const SignUp = (props) => {
     return (
         <SignUpForm
             changeForm={props.changeForm}
-            formikCompany={formikCompany}
-            formikStudentOrManager={formikStudentOrManager}
+            usedFormik={
+                userType === "compagnie"
+                    ? formikCompany
+                    : formikStudentOrManager
+            }
             userType={userType}
             isOpen={isOpen}
             hasOpenError={hasOpenError}
