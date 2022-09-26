@@ -7,10 +7,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/ping")
+@CrossOrigin
 public class PingController {
     AuthService authService;
     @GetMapping
