@@ -77,15 +77,4 @@ public class AuthController {
         });
         return errors;
     }
-
-    @PostMapping("/user/validate")
-    public ResponseEntity<Void> validateUser(@Valid @RequestBody UserValidationDto dto) {
-        authService.validateUser(dto.email());
-        return ResponseEntity.accepted().build() ;
-    }
-
-    @GetMapping("/users")
-    public ResponseEntity<List<UsersDto>> getUsers() {
-        return ResponseEntity.ok(authService.getUsers()) ;
-    }
 }

@@ -152,16 +152,7 @@ public class AuthServiceImpl implements AuthService {
         return token;
     }
 
-    @Override
-    public List<UsersDto> getUsers() {
-        return userRepository.findAll().stream().map(
-                user -> new UsersDto(user.getEmail(), user.getName(), user.isEnabled())
-        ).toList() ;
-    }
 
-    public void validateUser(String emailValidated) {
-        User user = userRepository.findByEmail(emailValidated).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        user.setEnabled(true);
-        userRepository.save(user) ;
-    }
+
+
 }

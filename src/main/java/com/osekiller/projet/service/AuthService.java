@@ -13,8 +13,8 @@ public interface AuthService extends UserDetailsService {
     JwtResponseDto signIn(SignInDto dto);
     void signUp(SignUpDto dto);
     void signOut(String token);
-    List<UsersDto> getUsers();
-    void validateUser(String emailValidated);
     JwtResponseDto refresh(String token);
     AuthPingDto authPing(String token);
+
+
 }
