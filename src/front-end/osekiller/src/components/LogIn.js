@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { userLogin } from "../services/AuthService";
 import LogInForm from "./forms/LogInForm";
 
-const LogIn = (props) => {
+const LogIn = ({ changeForm, title }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +49,8 @@ const LogIn = (props) => {
 
     return (
         <LogInForm
-            changeForm={props.changeForm}
-            title={props.title}
+            changeForm={changeForm}
+            title={title}
             onSubmit={handleSubmit}
             email={email}
             setEmail={({ target }) => setEmail(target.value)}

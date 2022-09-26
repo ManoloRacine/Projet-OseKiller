@@ -1,19 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calLogo from "../calLogo.jpg";
-import axios from "../api/axios";
+import { pingToken } from "../services/AuthService";
 
 const Dashboard = () => {
     const [userName, setUserName] = useState("");
+    const navigate = useNavigate();
+
+    const logout = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        navigate("/");
+    };
 
     useEffect(() => {
-            axios.get("/ping/token", {
-                headers: {
-                  "Access-Control-Allow-Origin": "*",
-                    Authorization: localStorage.getItem("accessToken"),
-                    
-                },
-            })
+        pingToken()
             .then((response) => {
                 setUserName(response.data.userName);
             })
@@ -21,7 +22,7 @@ const Dashboard = () => {
                 console.log(err);
             });
     }, []);
-    
+
     return (
         <div className="p-3">
             <nav
@@ -43,6 +44,11 @@ const Dashboard = () => {
                         Link 3
                     </Link>
                 </div>
+
+                {/* Bouton à améliorer */}
+                <button className="btn btn-primary" onClick={logout}>
+                    Déconnexion
+                </button>
             </nav>
             <h1>{`Bonjour, ${userName}`}</h1>
         </div>

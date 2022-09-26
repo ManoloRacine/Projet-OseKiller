@@ -9,7 +9,7 @@ export const userSignUp = async (userInfo) => {
 };
 
 export const pingToken = async () => {
-    axios.get("/ping/token", {
+    return axios.get("/ping/token", {
         headers: {
             Authorization: localStorage.getItem("accessToken"),
         },
