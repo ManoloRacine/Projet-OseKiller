@@ -33,11 +33,11 @@ const SignUp = (props) => {
             passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
         }),
         onSubmit: values => {
-            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-up`, {
+            axios.post(`http://${process.env.REACT_APP_SERVER_ADRESS}/sign-up`, {
                 name : values.prenom + " " + values.nom,
                 email : values.email,
                 password : values.password,
-                role : userType == "etudiant" ? "STUDENT" : "MANAGER" 
+                role : userType === "etudiant" ? "STUDENT" : "MANAGER" 
             })
             .then((response) => {
                 console.log(response.data)
@@ -64,7 +64,7 @@ const SignUp = (props) => {
             passwordConfirmation : Yup.string().required("Requis").oneOf([Yup.ref('password')], "le mot de passe n'est pas le même"),
         }),
         onSubmit: values => {
-            axios.post(`https://${process.env.REACT_APP_SERVER_ADRESS}/sign-up`, {
+            axios.post(`http://${process.env.REACT_APP_SERVER_ADRESS}/sign-up`, {
                 name : values.nom,
                 email : values.email,
                 password : values.password,
