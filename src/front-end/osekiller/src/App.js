@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./vues/Home";
-import Dashboard from "./vues/Dashboard";
+import Home from "./views/Home";
+import Dashboard from "./views/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {

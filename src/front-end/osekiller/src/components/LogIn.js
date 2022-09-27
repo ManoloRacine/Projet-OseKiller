@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { pingToken, userLogin } from "../services/AuthService";
+import { userLogin } from "../services/AuthService";
 import LogInForm from "./forms/LogInForm";
 
 const LogIn = ({ changeForm, title }) => {
@@ -10,18 +10,6 @@ const LogIn = ({ changeForm, title }) => {
     const [hasError, setHasError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-
-    useEffect(() => {
-        pingToken()
-            .then(() => {
-                navigate("/dashboard");
-            })
-            .catch((err) => {
-                if (err.response.status === 403) {
-                    console.log("Token expiré");
-                }
-            });
-    }, [navigate]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
