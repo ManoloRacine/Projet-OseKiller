@@ -34,6 +34,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthTokenFilter authTokenFilter) throws Exception {
         http
+                .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests(
                         (requests) -> requests
@@ -42,8 +43,7 @@ public class WebSecurityConfig {
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )
-                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout((logout) -> logout.permitAll());
+                .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
