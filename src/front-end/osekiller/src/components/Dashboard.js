@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import calLogo from "../calLogo.jpg";
+import calLogo from "../assets/calLogo.jpg";
 import { pingToken } from "../services/AuthService";
 
 const Dashboard = () => {
