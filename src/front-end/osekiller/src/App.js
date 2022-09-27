@@ -14,14 +14,7 @@ function App() {
             }}
         >
             <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <ProtectedRoute>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    }
-                >
+                <Route path="/" element={<ProtectedRoute />}>
                     <Route path="/" element={<Home />} />
                 </Route>
                 <Route path="/dashboard" element={<Dashboard />} />

@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = () => {
     if (localStorage.getItem("accessToken")) {
         return <Navigate to={"/dashboard"} />;
     }
