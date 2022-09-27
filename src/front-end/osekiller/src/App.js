@@ -14,10 +14,15 @@ function App() {
             }}
         >
             <Routes>
-                <Route path="/" element={<ProtectedRoute />}>
-                    <Route path="/" element={<Home />} />
-                </Route>
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/" element={<Home />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </div>
     );

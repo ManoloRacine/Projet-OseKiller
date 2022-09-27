@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { userLogin } from "../services/AuthService";
 import LogInForm from "./forms/LogInForm";
 
@@ -10,6 +10,12 @@ const LogIn = ({ changeForm, title }) => {
     const [hasError, setHasError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (localStorage.getItem("accessToken")) {
+            navigate("/dashboard");
+        }
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
