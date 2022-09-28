@@ -130,7 +130,7 @@ public class AuthServiceImpl implements AuthService {
         return new UserDto(
                 user.getEmail(),
                 user.getName(),
-                true,
+                user.isEnabled(), 
                 user.getId(),
                 user.getRole().getName()
         );
