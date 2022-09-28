@@ -34,14 +34,11 @@ const Dashboard = () => {
                     <h1 className="ps-4 display-4">Ose killer</h1>
                 </div>
                 <div className="links d-flex mx-auto">
-                    <Link to="/" className="m-4 fs-2 d-flex align-items-center">
-                        Link 1
-                    </Link>
-                    <Link to="/" className="m-4 fs-2 d-flex align-items-center">
-                        Link 2
-                    </Link>
-                    <Link to="/" className="m-4 fs-2 d-flex align-items-center">
-                        Link 3
+                    <Link
+                        to="/upload-cv"
+                        className="m-4 fs-2 d-flex align-items-center"
+                    >
+                        Téléverser votre CV
                     </Link>
                 </div>
 
