@@ -1,6 +1,6 @@
 package com.osekiller.projet.service.implementation;
 
-import com.osekiller.projet.controller.payload.response.UsersDto;
+import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.UserService;
@@ -17,20 +17,20 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<UsersDto> getUsers() {
+    public List<UserDto> getUsers() {
         return userRepository.findAll().stream().map(
-                user -> new UsersDto(user.getEmail(), user.getName(), user.isEnabled())
+                user -> new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName())
         ).toList() ;
     }
 
-    public void validateUser(String emailValidated) {
-        User user = userRepository.findByEmail(emailValidated).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public void validateUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         user.setEnabled(true);
         userRepository.save(user) ;
     }
 
-    public void invalidateUser(String invalidatedEmail) {
-        User user = userRepository.findByEmail(invalidatedEmail).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public void invalidateUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         userRepository.delete(user);
     }
 }

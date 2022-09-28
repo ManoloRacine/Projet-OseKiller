@@ -1,11 +1,11 @@
 package com.osekiller.projet.service;
 
-import com.osekiller.projet.controller.payload.response.UsersDto;
+import com.osekiller.projet.controller.payload.response.UserDto;
 
 import java.util.List;
 
 public interface UserService {
-    List<UsersDto> getUsers();
-    void invalidateUser(String email);
-    void validateUser(String emailValidated);
+    List<UserDto> getUsers();
+    void invalidateUser(Long email);
+    void validateUser(Long email);
 }

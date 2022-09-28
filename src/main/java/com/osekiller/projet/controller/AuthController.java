@@ -3,9 +3,7 @@ package com.osekiller.projet.controller;
 import com.osekiller.projet.controller.payload.request.JwtRequestDto;
 import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
-import com.osekiller.projet.controller.payload.request.UserValidationDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
-import com.osekiller.projet.controller.payload.response.UsersDto;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
