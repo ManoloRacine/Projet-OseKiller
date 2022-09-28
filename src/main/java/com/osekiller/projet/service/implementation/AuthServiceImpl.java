@@ -4,8 +4,7 @@ import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
 import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
-import com.osekiller.projet.controller.payload.response.UsersDto;
-import com.osekiller.projet.model.*;
+import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.RefreshToken;
 import com.osekiller.projet.model.Role;
@@ -27,7 +26,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -126,11 +124,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthPingDto authPing(String token) {
+    public UserDto getUserFromToken(String token) {
         String email = jwtUtils.getUsernameFromToken(token);
         User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
-        return new AuthPingDto(
+        return new UserDto(
                 user.getEmail(),
+                user.getName(),
+                true,
+                user.getId(),
                 user.getRole().getName()
         );
     }
