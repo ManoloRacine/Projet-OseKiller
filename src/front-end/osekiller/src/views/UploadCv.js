@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { faArrowLeft, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { uploadCv } from "../services/UploadService";
 
 const UploadCv = () => {
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -11,9 +12,15 @@ const UploadCv = () => {
         const uploadedFiles = Array.from(target.files);
         const uploadedFilesName = [];
         uploadedFiles.forEach((file) => {
-            uploadedFilesName.push(file.name);
+            uploadedFilesName.push(file);
         });
         setSelectedFiles(uploadedFilesName);
+    };
+
+    const handleSubmit = () => {
+        uploadCv(selectedFiles, 1) // TODO : Changer le 1 pour le id du user
+            .then((response) => console.log("Success:", response))
+            .catch((err) => console.log("Error:", err));
     };
 
     return (
@@ -58,8 +65,15 @@ const UploadCv = () => {
                         />
                     ) : (
                         <ul className="p-0">
-                            {selectedFiles.map((fileName, i) => (
-                                <li key={i}>{fileName}</li>
+                            {selectedFiles.map((file, i) => (
+                                <li key={i}>
+                                    <div className="d-flex justify-content-between">
+                                        <p>{file.name}</p>
+                                        <p>
+                                            {(file.size / 1000).toFixed(1)} Ko
+                                        </p>
+                                    </div>
+                                </li>
                             ))}
                         </ul>
                     )}
@@ -74,6 +88,7 @@ const UploadCv = () => {
                     <button
                         className="btn"
                         style={{ backgroundColor: "#ee7600" }}
+                        onClick={handleSubmit}
                     >
                         Envoyer
                     </button>
