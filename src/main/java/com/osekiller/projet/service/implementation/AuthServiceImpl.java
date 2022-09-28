@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
     public void signUp(SignUpDto dto) {
         //Valider que le email est disponble
         if(userRepository.findByEmail(dto.email()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"email-taken");
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
 
         //Sauvegarder l'utilisateur en fonction de son role
