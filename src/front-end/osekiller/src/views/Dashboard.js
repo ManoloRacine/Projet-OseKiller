@@ -5,6 +5,7 @@ import { pingToken } from "../services/AuthService";
 
 const Dashboard = () => {
     const [userName, setUserName] = useState("");
+    const [userId, setUserId] = useState("");
     const navigate = useNavigate();
 
     const logout = () => {
@@ -17,6 +18,7 @@ const Dashboard = () => {
         pingToken()
             .then((response) => {
                 setUserName(response.data.userName);
+                setUserId(response.data.id);
             })
             .catch((err) => {
                 console.log(err);
@@ -35,7 +37,10 @@ const Dashboard = () => {
                 </div>
                 <div className="links d-flex mx-auto">
                     <Link
-                        to="/upload-cv"
+                        to={{
+                            pathname: "/upload-cv",
+                            state: { userId: userId },
+                        }}
                         className="m-4 fs-2 d-flex align-items-center"
                     >
                         Téléverser votre CV

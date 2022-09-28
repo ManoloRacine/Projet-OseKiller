@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { faArrowLeft, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { uploadCv } from "../services/UploadService";
@@ -7,6 +7,8 @@ import { uploadCv } from "../services/UploadService";
 const UploadCv = () => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const navigate = useNavigate();
+    // const location = useLocation();     // À ajouter quand OS-43 terminé
+    // const { userId } = location.state;  // À ajouter quand OS-43 terminé
 
     const showSelectedFiles = ({ target }) => {
         const uploadedFiles = Array.from(target.files);
@@ -18,7 +20,7 @@ const UploadCv = () => {
     };
 
     const handleSubmit = () => {
-        uploadCv(selectedFiles, 1) // TODO : Changer le 1 pour le id du user
+        uploadCv(selectedFiles, 1) // Changer pour userID lorsque OS-43 terminé
             .then((response) => console.log("Success:", response))
             .catch((err) => console.log("Error:", err));
     };
