@@ -7,8 +7,8 @@ import { uploadCv } from "../services/UploadService";
 const UploadCv = () => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const navigate = useNavigate();
-    // const location = useLocation();     // À ajouter quand OS-43 terminé
-    // const { userId } = location.state;  // À ajouter quand OS-43 terminé
+    const location = useLocation();
+    const { userId } = location.state;
 
     const showSelectedFiles = ({ target }) => {
         const uploadedFiles = Array.from(target.files);
@@ -20,7 +20,7 @@ const UploadCv = () => {
     };
 
     const handleSubmit = () => {
-        uploadCv(selectedFiles, 1) // Changer pour userID lorsque OS-43 terminé
+        uploadCv(selectedFiles, userId)
             .then((response) => console.log("Success:", response))
             .catch((err) => console.log("Error:", err));
     };
