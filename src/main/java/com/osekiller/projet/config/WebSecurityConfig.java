@@ -1,5 +1,6 @@
 package com.osekiller.projet.config;
 
+import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.security.AuthTokenFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,7 @@ public class WebSecurityConfig {
                         (requests) -> requests
                                 //Autoriser ses routes de base
                                 .antMatchers("/ping","/sign-in","/sign-up").permitAll()
+                                .antMatchers("/user/validate").hasAuthority(ERole.MANAGER.name())
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )

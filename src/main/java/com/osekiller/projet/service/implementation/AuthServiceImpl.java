@@ -4,6 +4,7 @@ import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
 import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
+import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.RefreshToken;
 import com.osekiller.projet.model.Role;
@@ -42,13 +43,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponseDto signIn(SignInDto dto) {
-        User user = userRepository.findByEmail(dto.email()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        User user = userRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         RefreshToken refreshToken = new RefreshToken(
                 UUID.randomUUID().toString(),
                 user,
-                Instant.now().plusMillis(RefreshToken.TOKEN_EXPIRATION)
-        );
+                Instant.now().plusMillis(RefreshToken.TOKEN_EXPIRATION));
 
         refreshToken = refreshTokenRepository.save(refreshToken);
         String accessToken = jwtUtils.generateToken(user);
@@ -56,44 +57,46 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponseDto(
                 accessToken,
                 refreshToken.getToken(),
-                "Bearer"
-        );
+                "Bearer");
     }
 
     @Override
     public void signUp(SignUpDto dto) {
-        //Valider que le email est disponble
-        if(userRepository.findByEmail(dto.email()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"email-taken");
+        // Valider que le email est disponble
+        if (userRepository.findByEmail(dto.email()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
 
-        //Sauvegarder l'utilisateur en fonction de son role
-        if(dto.role().equals(ERole.STUDENT.name())){
+        // Sauvegarder l'utilisateur en fonction de son role
+        if (dto.role().equals(ERole.STUDENT.name())) {
             Student student = new Student(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
-            Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
+            Role studentRole = roleRepository.findByName(ERole.STUDENT.name())
+                    .orElseThrow(EntityNotFoundException::new);
             student.setRole(studentRole);
             studentRepository.save(student);
             return;
         }
-        if (dto.role().equals(ERole.MANAGER.name())){
+        if (dto.role().equals(ERole.MANAGER.name())) {
             Manager manager = new Manager(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
-            Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
+            Role managerRole = roleRepository.findByName(ERole.MANAGER.name())
+                    .orElseThrow(EntityNotFoundException::new);
             manager.setRole(managerRole);
             managerRepository.save(manager);
             return;
         }
-        if(dto.role().equals(ERole.COMPANY.name())){
+        if (dto.role().equals(ERole.COMPANY.name())) {
             Company company = new Company(dto.name(), dto.email(), passwordEncoder.encode(dto.password()));
-            Role companyRole = roleRepository.findByName(ERole.COMPANY.name()).orElseThrow(EntityNotFoundException::new);
+            Role companyRole = roleRepository.findByName(ERole.COMPANY.name())
+                    .orElseThrow(EntityNotFoundException::new);
             company.setRole(companyRole);
             companyRepository.save(company);
             return;
         }
 
-        //Lancer un 400 si le role n'existe pas
+        // Lancer un 400 si le role n'existe pas
         StringBuilder message = new StringBuilder("role not in: [ ");
 
-        for (ERole role: ERole.values()) {
+        for (ERole role : ERole.values()) {
             message.append("\"").append(role.name()).append("\", ");
         }
 
@@ -107,38 +110,38 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signOut(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
-        );
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         refreshTokenRepository.delete(refreshToken);
     }
+
     @Override
     public JwtResponseDto refresh(String token) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         refreshToken = verifyExpiration(refreshToken);
         return new JwtResponseDto(
                 jwtUtils.generateToken(refreshToken.getUser()),
                 refreshToken.getToken(),
-                "Bearer"
-        );
+                "Bearer");
     }
 
     @Override
-    public AuthPingDto authPing(String token) {
+    public UserDto getUserFromToken(String token) {
         String email = jwtUtils.getUsernameFromToken(token);
         User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
-        return new AuthPingDto(
+        return new UserDto(
                 user.getEmail(),
-                user.getRole().getName(),
-                user.getName()
-        );
+                user.getName(),
+                user.isEnabled(),
+                user.getId(),
+                user.getRole().getName());
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
                 .orElseThrow(
-                        () -> new UsernameNotFoundException("User " + username + " not found.")
-                );
+                        () -> new UsernameNotFoundException("User " + username + " not found."));
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
@@ -149,4 +152,5 @@ public class AuthServiceImpl implements AuthService {
 
         return token;
     }
+
 }
