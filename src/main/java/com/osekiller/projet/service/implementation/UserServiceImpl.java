@@ -19,8 +19,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getUsers() {
         return userRepository.findAll().stream().map(
-                user -> new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName())
+                this::userToDTO
         ).toList() ;
+    }
+
+    private UserDto userToDTO(User user) {
+        return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName()) ;
     }
 
     public void validateUser(Long id) {
