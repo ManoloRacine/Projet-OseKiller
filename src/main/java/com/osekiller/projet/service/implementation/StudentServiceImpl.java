@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -54,6 +55,18 @@ public class StudentServiceImpl implements StudentService {
         } catch (MalformedURLException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
         }
+    }
+
+    public void init() {
+        try {
+            Files.createDirectory(cvPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not initialize folder for upload!");
+        }
+    }
+
+    public void deleteAll() {
+        FileSystemUtils.deleteRecursively(cvPath.toFile());
     }
 
 }
