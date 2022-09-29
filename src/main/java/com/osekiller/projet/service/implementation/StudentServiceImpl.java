@@ -2,6 +2,7 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.user.UserRepository;
+import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -40,21 +41,19 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
-    @Override
-    public Resource getCV(Long studentId) {
+    public Resource getCV(Long studentId, ResourceFactory resourceFactory) {
         try {
             Path file = cvPath.resolve(studentId.toString() + ".pdf") ;
-            Resource resource = new UrlResource(file.toUri()) ;
-
-            if (resource.exists() || resource.isReadable()) {
+            Resource resource = resourceFactory.createResource(file.toUri());
+            if (resource.exists() && resource.isReadable()) {
                 return resource ;
             }
             else {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
             }
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
         }
     }
+
 }
