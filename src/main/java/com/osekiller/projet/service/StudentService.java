@@ -5,5 +5,5 @@ import org.springframework.core.io.Resource;
 
 public interface StudentService {
     void saveCV(MultipartFile cv, Long studentId) ;
-    Resource getCV() ;
+    Resource getCV(Long studentId) ;
 }
