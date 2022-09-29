@@ -23,8 +23,10 @@ public class WebSecurityConfig {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService)
+    public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder,
+            UserDetailsService userDetailsService)
             throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailsService)
@@ -32,6 +34,7 @@ public class WebSecurityConfig {
                 .and()
                 .build();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthTokenFilter authTokenFilter) throws Exception {
         http
@@ -39,12 +42,12 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(
                         (requests) -> requests
-                                //Autoriser ses routes de base
-                                .antMatchers("/ping","/sign-in","/sign-up").permitAll()
+                                // Autoriser ses routes de base
+                                .antMatchers("/ping", "/sign-in", "/sign-up").permitAll()
                                 .antMatchers("/user/validate").hasAuthority(ERole.MANAGER.name())
-                                //Le reste doivent être autentifié
-                                .anyRequest().authenticated()
-                )
+                                .antMatchers("/student").hasAuthority(ERole.STUDENT.name())
+                                // Le reste doivent être autentifié
+                                .anyRequest().authenticated())
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
