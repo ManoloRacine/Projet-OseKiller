@@ -19,10 +19,10 @@ public class StudentController {
     public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody StudentCvValidationDto dto,
                                                   @RequestParam(name = "id") Long id){
         if (dto.validation()) {
-            studentService.validateStudentCv(id);
+            studentService.validateCV(id);
         }
         else {
-            studentService.invalidateStudentCv(id);
+            studentService.invalidateCV(id);
         }
         return ResponseEntity.ok().build();
     }

@@ -29,12 +29,12 @@ public class StudentServiceImpl implements StudentService {
     private final Path cvPath = Paths.get("CV") ;
 
     @Override
-    public void validateStudentCv(Long studentId) {
+    public void validateCV(Long studentId) {
 
     }
 
     @Override
-    public void invalidateStudentCv(Long studentId) {
+    public void invalidateCV(Long studentId) {
 
     }
 
