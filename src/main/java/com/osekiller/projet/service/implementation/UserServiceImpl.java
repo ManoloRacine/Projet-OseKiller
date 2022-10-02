@@ -1,8 +1,10 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.model.user.User;
+import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private StudentRepository studentRepository;
 
     @Override
     public List<UserDto> getUsers() {
@@ -25,13 +28,21 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto userToDTO(User user) {
-        if (!user.getRole().getName().equals("STUDENT")) {
-            return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName(), false, false) ;
+        return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName()) ;
+    }
+
+    public List<StudentDto> getStudents() {
+        return studentRepository.findAll().stream().map(
+                this::studentToDto
+        ).toList() ;
+    }
+
+    private StudentDto studentToDto(Student student) {
+        boolean cvPresent = false ;
+        if (student.getCv().getPath() != null) {
+            cvPresent = true ;
         }
-        else {
-            Student student = (Student) user ;
-            return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName(), student.getCv().isValidated(), student.isCvRejected()) ;
-        }
+        return new StudentDto(student.getEmail(), student.getName(), student.getId(), student.isEnabled(), student.getCv().isValidated(), student.isCvRejected(), cvPresent) ;
     }
 
     public void validateUser(Long id) {

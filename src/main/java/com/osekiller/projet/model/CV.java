@@ -17,7 +17,7 @@ public class CV {
 
     @NonNull private String path;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @NonNull private Student owner;
 
     @NonNull private boolean isValidated;
