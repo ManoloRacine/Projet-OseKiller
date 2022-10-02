@@ -47,9 +47,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Transactional
     void initializeStudents() {
-        createStudentIfNotFound(new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("testPass123")));
-        createStudentIfNotFound(new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("testPass123")));
-        createStudentIfNotFound(new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("testPass123")));
+        createStudentIfNotFound(new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("123")));
+        createStudentIfNotFound(new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("123")));
+        createStudentIfNotFound(new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("123")));
     }
 
     void createStudentIfNotFound(Student student) {

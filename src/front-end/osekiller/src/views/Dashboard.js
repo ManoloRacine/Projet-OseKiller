@@ -2,10 +2,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calLogo from "../assets/calLogo.jpg";
 import { pingToken } from "../services/AuthService";
+import { getCV } from "../services/CvServices" ;
 
 const Dashboard = () => {
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState("");
+    const [userPdf, setUserPdf] = useState("");
     const navigate = useNavigate();
 
     const logout = () => {
@@ -19,10 +21,18 @@ const Dashboard = () => {
             .then((response) => {
                 setUserName(response.data.name);
                 setUserId(response.data.id);
+                getCV(response.data.id)
+                .then((response) => {
+                    if (response.status != 204) {
+                        var blob1 = new Blob([response.data], {type: "application/pdf"});
+                        var data_url = window.URL.createObjectURL(blob1) ;
+                        setUserPdf(data_url) ;
+                    }
+                })
             })
             .catch((err) => {
                 console.log(err);
-            });
+            })
     }, []);
 
     return (
@@ -60,6 +70,12 @@ const Dashboard = () => {
                 </button>
             </nav>
             <h1>{`Bonjour, ${userName}`}</h1>
+            <div className="row">
+                <div className="col-6"></div>
+                <div className="col-6">
+                    { userPdf !== "" ? (<iframe src={userPdf} height="600px" width="100%"></iframe>) : (<p>You do not have a CV uploaded</p>)}
+                </div>
+            </div>
         </div>
     );
 };

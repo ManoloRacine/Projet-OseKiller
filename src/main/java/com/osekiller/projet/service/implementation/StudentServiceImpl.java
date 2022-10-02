@@ -50,7 +50,11 @@ public class StudentServiceImpl implements StudentService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
 
         try {
-            Files.copy(cv.getInputStream(), cvPath.resolve(studentId + ".pdf"));
+            Path path = cvPath.resolve(studentId + ".pdf") ;
+            if (path.toFile().exists()) {
+                Files.delete(path);
+            }
+            Files.copy(cv.getInputStream(), path);
             CV newCV = cvRepository.save(new CV(cvPath.toString(), student.get(), false));
             student.get().setCv(newCV);
             student.get().setCvRejected(false);
@@ -71,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
                 return resource ;
             }
             else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT) ;
             }
         } catch (MalformedURLException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
