@@ -12,7 +12,9 @@ const UploadCv = () => {
     const { userId } = location.state;
 
     const handleSubmit = () => {
-        uploadCv(selectedFile, userId)
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        uploadCv(formData, userId)
             .then((response) => console.log("Success:", response))
             .catch((err) => console.log("Error:", err));
     };
