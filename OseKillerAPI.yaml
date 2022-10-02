@@ -227,6 +227,7 @@ paths:
                     format: binary
         '403':
           description: Requête non autorisée
+<<<<<<< HEAD
       security:
         - bearerAuth: []
   /student/{id}/cv/validate:
@@ -254,6 +255,8 @@ paths:
           description: Le CV à été Téléversé
         '403':
           description: Requête non autorisée
+=======
+>>>>>>> ae35b8fc9468ad3485127a1dafa326e403f6e870
       security:
         - bearerAuth: []
 components:
@@ -285,6 +288,7 @@ components:
         role:
           type: string
           example: STUDENT
+<<<<<<< HEAD
     CvValidationRequest:
       type: object
       required:
@@ -296,6 +300,8 @@ components:
         feedBack:
           type: string
           example: Votre CV est trop long
+=======
+>>>>>>> ae35b8fc9468ad3485127a1dafa326e403f6e870
     SignUpRequest:
       type: object
       required:
