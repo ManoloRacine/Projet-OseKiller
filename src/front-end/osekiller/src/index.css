@@ -13,10 +13,3 @@ code {
 }
 
 
-section[id="selectedCv"] li {
-  list-style-type: none;
-  margin: 10px 0px;
-  padding: 10px;
-  border: 1px solid white;
-  border-radius: 10px;
-}

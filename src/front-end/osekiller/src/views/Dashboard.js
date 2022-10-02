@@ -6,6 +6,7 @@ import { pingToken } from "../services/AuthService";
 const Dashboard = () => {
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState("");
+    const [role, setRole] = useState("");
     const navigate = useNavigate();
 
     const logout = () => {
@@ -19,6 +20,7 @@ const Dashboard = () => {
             .then((response) => {
                 setUserName(response.data.name);
                 setUserId(response.data.id);
+                setRole(response.data.role);
             })
             .catch((err) => {
                 console.log(err);
@@ -36,13 +38,15 @@ const Dashboard = () => {
                     <h1 className="ps-4 display-4">Ose killer</h1>
                 </div>
                 <div className="links d-flex mx-auto">
-                    <Link
-                        to={"/upload-cv"}
-                        state={{ userId: userId }}
-                        className="m-4 fs-2 d-flex align-items-center"
-                    >
-                        Téléverser votre CV
-                    </Link>
+                    {role === "MANAGER" && (
+                        <Link
+                            to={"/upload-cv"}
+                            state={{ userId: userId }}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Téléverser votre CV
+                        </Link>
+                    )}
                 </div>
 
                 {/* Bouton à améliorer */}
