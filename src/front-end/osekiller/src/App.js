@@ -3,6 +3,7 @@ import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import UploadCv from "./views/UploadCv";
+import ValidateCv from "./views/ValidateCv";
 
 function App() {
     return (
@@ -29,6 +30,14 @@ function App() {
                     element={
                         <ProtectedRoute>
                             <UploadCv />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/validate-cv"
+                    element={
+                        <ProtectedRoute>
+                            <ValidateCv />
                         </ProtectedRoute>
                     }
                 />

@@ -44,6 +44,15 @@ const Dashboard = () => {
                         Téléverser votre CV
                     </Link>
                 </div>
+                <div className="links d-flex mx-auto">
+                    <Link
+                        to={"/validate-cv"}
+                        state={{ userId: userId }}
+                        className="m-4 fs-2 d-flex align-items-center"
+                    >
+                        Valider des CV
+                    </Link>
+                </div>
 
                 {/* Bouton à améliorer */}
                 <button className="btn btn-primary" onClick={logout}>
