@@ -20,7 +20,9 @@ const UploadCv = () => {
     };
 
     const handleSubmit = () => {
-        uploadCv(selectedFiles, userId)
+        let formData = new FormData();
+        formData.append('file', selectedFiles[0]);
+        uploadCv(formData, userId)
             .then((response) => console.log("Success:", response))
             .catch((err) => console.log("Error:", err));
     };
