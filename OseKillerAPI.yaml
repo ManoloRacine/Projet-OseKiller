@@ -104,10 +104,16 @@ paths:
       security:
         - bearerAuth: []
         
-  /user/validate:
+  /user/{id}/validate:
     post:
       tags:
         - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       summary: Valider une inscription utilisateur
       description: Valider une inscription utilisateur
       operationId: validateUser
@@ -229,7 +235,33 @@ paths:
           description: Requête non autorisée
       security:
         - bearerAuth: []
-
+  /student/{id}/cv/validate:
+    post:
+      tags:
+      - Student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Valider le CV d'un étudiant
+      description: Valider le cv de format pdf d'un étudiant
+      operationId: validateCV
+      requestBody:
+        description: Valider le CV d'un étudiant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CvValidationRequest'
+        required: true
+      responses:
+        '200':
+          description: Le CV à été Téléversé
+        '403':
+          description: Requête non autorisée
+      security:
+        - bearerAuth: []
 components:
   securitySchemes:
       bearerAuth:
@@ -259,8 +291,24 @@ components:
         role:
           type: string
           example: STUDENT
+    CvValidationRequest:
+      type: object
+      required:
+        - valid
+      properties:
+        valid:
+          type: boolean
+          example: false
+        feedBack:
+          type: string
+          example: Votre CV est trop long
     SignUpRequest:
       type: object
+      required:
+        - name
+        - email
+        - password
+        - role
       properties:
         name:
           type: string
@@ -283,6 +331,9 @@ components:
         name: signUpRequest
     SignInRequest:
       type: object
+      required:
+        - email
+        - password
       properties:
         email:
           type: string
@@ -295,6 +346,8 @@ components:
         name: signInRequest
     TokenRequest:
       type: object
+      required:
+        - refreshToken
       properties:
         refreshToken: 
           type: string
@@ -303,11 +356,9 @@ components:
         name: signInRequest
     UserValidationRequest:
       type: object
+      required:
+        - valid
       properties:
-        email:
-          type: string
-          format: email
-          example: hugol@example.com
         valid:
           type: boolean
           example: true
