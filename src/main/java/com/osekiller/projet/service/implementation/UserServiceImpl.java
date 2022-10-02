@@ -1,6 +1,7 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.UserDto;
+import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.UserService;
@@ -24,7 +25,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto userToDTO(User user) {
-        return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName()) ;
+        if (!user.getRole().getName().equals("STUDENT")) {
+            return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName(), false, false) ;
+        }
+        else {
+            Student student = (Student) user ;
+            return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName(), student.getCv().isValidated(), student.isCvRejected()) ;
+        }
     }
 
     public void validateUser(Long id) {

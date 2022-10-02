@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.OneToOne;
 
 @Entity
 @NoArgsConstructor
@@ -17,8 +15,10 @@ import java.util.List;
 @Data
 public class Student extends User {
 
-    @OneToMany
-    List<CV> cvList = new ArrayList<>();
+    @OneToOne
+    CV cv = new CV() ;
+
+    private boolean cvRejected ;
 
     public Student(@NonNull String name, @NonNull String email, @NonNull String password) {
         super(name, email, password);

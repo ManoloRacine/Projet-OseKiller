@@ -17,7 +17,7 @@ public class CV {
 
     @NonNull private String path;
 
-    @ManyToOne
+    @OneToOne
     @NonNull private Student owner;
 
     @NonNull private boolean isValidated;

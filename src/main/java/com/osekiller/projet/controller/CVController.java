@@ -1,6 +1,5 @@
 package com.osekiller.projet.controller;
 
-import com.osekiller.projet.controller.payload.request.StudentCVValidationDto;
 import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
@@ -33,6 +32,7 @@ public class CVController {
                 header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFilename() + "\"").body(cv);
     }
 
+    /*
     @PostMapping("/student/{id}/cv/validate")
     public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody StudentCVValidationDto dto,
                                                   @RequestParam(name = "id") Long id){
@@ -43,5 +43,5 @@ public class CVController {
             studentService.invalidateCV(id);
         }
         return ResponseEntity.ok().build();
-    }
+    */
 }

@@ -51,8 +51,10 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             Files.copy(cv.getInputStream(), cvPath.resolve(studentId + ".pdf"));
-            CV newCV =  cvRepository.save(new CV(cvPath.toString(), student.get(), false));
-            student.get().getCvList().add(newCV);
+            CV newCV = cvRepository.save(new CV(cvPath.toString(), student.get(), false));
+            student.get().setCv(newCV);
+            student.get().setCvRejected(false);
+            studentRepository.save(student.get()) ;
         }
         catch (IOException e) {
             System.out.println(e);
