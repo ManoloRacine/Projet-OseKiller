@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
@@ -15,7 +16,7 @@ import javax.persistence.OneToOne;
 @Data
 public class Student extends User {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     CV cv = new CV() ;
 
     private boolean cvRejected ;
