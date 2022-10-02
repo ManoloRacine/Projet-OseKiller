@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +31,7 @@ public class CVController {
     public ResponseEntity<Resource> getCV(@PathVariable(name = "id") Long id) {
         ResourceFactory factory = UrlResource::new;
         Resource cv = studentService.getCV(id, factory) ;
-        return ResponseEntity.ok().
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF).
                 header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFilename() + "\"").body(cv);
     }
 }
