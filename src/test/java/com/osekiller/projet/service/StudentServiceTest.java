@@ -3,6 +3,8 @@ package com.osekiller.projet.service;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.repository.CVRepository;
+import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.implementation.StudentServiceImpl;
 import org.assertj.core.api.Assertions;
@@ -32,30 +34,41 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class StudentServiceTest {
-    @InjectMocks
-    private StudentServiceImpl studentService ;
 
     @Mock
     UserRepository userRepository ;
 
+    @Mock
+    StudentRepository studentRepository;
+
+    @Mock
+    CVRepository cvRepository;
+
+    @InjectMocks
+    private StudentServiceImpl studentService ;
+
     @Test
     void saveCVHappyDay() {
+        // Arrange
         Student mockStudent = new Student("Joe Biden","jbiden@osk.com","password");
-        mockStudent.setRole(new Role("STUDENT"));
-        MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
-        when(userRepository.findById(any())).thenReturn(Optional.of(mockStudent));
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "test".getBytes()
+        ) ;
+        when(studentRepository.findById(any())).thenReturn(Optional.of(mockStudent));
 
+        // Act
+        studentService.saveCV(mockFile, mockStudent.getId());
 
-        try (MockedStatic mockedStatic = mockStatic(Files.class)) {
-            studentService.saveCV(mockFile, 1L);
-            mockedStatic.verify(() -> Files.copy(any(ByteArrayInputStream.class), any(Path.class))) ;
-        }
-
-
+        // Assert
+        assertThat(cvRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
