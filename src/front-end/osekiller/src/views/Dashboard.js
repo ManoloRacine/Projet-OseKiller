@@ -38,7 +38,7 @@ const Dashboard = () => {
                     <h1 className="ps-4 display-4">Ose killer</h1>
                 </div>
                 <div className="links d-flex mx-auto">
-                    {role === "MANAGER" && (
+                    {role === "STUDENT" && (
                         <Link
                             to={"/upload-cv"}
                             state={{ userId: userId }}

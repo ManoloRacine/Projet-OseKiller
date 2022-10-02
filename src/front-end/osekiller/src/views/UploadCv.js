@@ -6,36 +6,22 @@ import { uploadCv } from "../services/UploadService";
 import SelectedCV from "../components/SelectedCV";
 
 const UploadCv = () => {
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [selectedFile, setSelectedFile] = useState({});
     const navigate = useNavigate();
     const location = useLocation();
     const { userId } = location.state;
 
-    const showSelectedFiles = ({ target }) => {
-        const uploadedFiles = Array.from(target.files[0]);
-        const uploadedFilesName = [];
-        uploadedFiles.forEach((file) => {
-            uploadedFilesName.push(file);
-        });
-        setSelectedFiles(uploadedFiles);
-    };
-
     const handleSubmit = () => {
-        uploadCv(selectedFiles, userId)
+        uploadCv(selectedFile, userId)
             .then((response) => console.log("Success:", response))
             .catch((err) => console.log("Error:", err));
     };
 
-    const handleDelete = (name) => {
-        setSelectedFiles(selectedFiles.filter((file) => file.name !== name));
-    };
-
     return (
-        <div className="d-flex justify-content-center  p-3">
-            {console.log(selectedFiles)}
+        <div className="d-flex justify-content-center align-items-center p-3 vh-100">
             <main
                 className="d-flex flex-column col-sm-10 p-4 rounded text-white"
-                style={{ backgroundColor: "#2C324C", minHeight: "90vh" }}
+                style={{ backgroundColor: "#2C324C" }}
             >
                 <section className="mb-4">
                     <button
@@ -47,62 +33,41 @@ const UploadCv = () => {
                     </button>
                     <h1 className="text-center">Téléverser votre CV</h1>
                 </section>
-                <form className="mb-3">
-                    <label htmlFor="cvInput" className="btn text-white">
-                        <FontAwesomeIcon
-                            icon={faCloudArrowUp}
-                            className="fa-10x d-flex mx-auto"
+                {selectedFile.name == null ? (
+                    <form className="d-flex justify-content-center">
+                        <label htmlFor="cvInput" className="btn text-white">
+                            <FontAwesomeIcon
+                                icon={faCloudArrowUp}
+                                className="fa-10x d-flex mx-auto"
+                            />
+                            <p>Choisir votre CV</p>
+                        </label>
+                        <input
+                            type="file"
+                            id="cvInput"
+                            accept="application/pdf"
+                            onChange={({ target }) =>
+                                setSelectedFile(Array.from(target.files)[0])
+                            }
+                            style={{ display: "none" }}
                         />
-                    </label>
-                    <input
-                        type="file"
-                        id="cvInput"
-                        accept="application/pdf"
-                        onChange={showSelectedFiles}
-                        style={{ display: "none" }}
-                    />
-                </form>
-                <section id="selectedCv">
-                    {selectedFiles.map((file, i) => (
+                    </form>
+                ) : (
+                    <section id="selectedCv">
                         <SelectedCV
-                            key={i}
-                            fileName={file.name}
-                            fileSize={file.size}
-                            deleteFile={handleDelete}
+                            fileName={selectedFile.name}
+                            fileSize={selectedFile.size}
+                            deleteFile={() => setSelectedFile({})}
                         />
-                        // <li key={i}>
-                        //     <div>
-                        //         <p>{file.name}</p>
-                        //         <span className="badge bg-primary rounded-pill">
-                        //             {(file.size / 1000).toFixed(1)} Ko
-                        //         </span>
-                        //     </div>
-                        //     <button
-                        //         className="btn"
-                        //         style={{ backgroundColor: "#ee7600" }}
-                        //         onClick={handleSubmit}
-                        //     >
-                        //         Envoyer
-                        //     </button>
-                        // </li>
-                    ))}
-                </section>
-                {/*  À décommenter si le prof veut plusieurs upload de CV
-                <section
-                    className={
-                        selectedFiles.length === 0
-                            ? "d-flex flex-row-reverse align-items-bottom"
-                            : "d-flex flex-row-reverse align-items-bottom mt-auto"
-                    }
-                >
-                    <button
-                        className="btn"
-                        style={{ backgroundColor: "#ee7600" }}
-                        onClick={handleSubmit}
-                    >
-                        Envoyer
-                    </button>
-                </section> */}
+                        <button
+                            className="btn"
+                            onClick={handleSubmit}
+                            style={{ backgroundColor: "#ee7600" }}
+                        >
+                            Soumettre
+                        </button>
+                    </section>
+                )}
             </main>
         </div>
     );
