@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -35,6 +36,14 @@ public class UserServiceImpl implements UserService {
         return studentRepository.findAll().stream().map(
                 this::studentToDto
         ).toList() ;
+    }
+
+    public StudentDto getStudent(Long id) {
+        Optional<Student> student = studentRepository.findById(id) ;
+
+        if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+
+        return studentToDto(student.get()) ;
     }
 
     private StudentDto studentToDto(Student student) {

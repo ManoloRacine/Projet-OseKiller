@@ -36,7 +36,7 @@ public class CVController {
 
     @PostMapping("/student/{id}/cv/validate")
     public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody StudentCVValidationDto dto,
-                                                  @RequestParam(name = "id") Long id) {
+                                                  @PathVariable(name = "id") Long id) {
         if (dto.validation()) {
             studentService.validateCV(id, dto.feedBack());
         } else {

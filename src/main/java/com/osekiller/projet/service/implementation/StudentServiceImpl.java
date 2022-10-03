@@ -42,6 +42,7 @@ public class StudentServiceImpl implements StudentService {
         student.get().setCvRejected(false);
         student.get().getCv().setValidated(true);
         student.get().getCv().setFeedback(feedback);
+        studentRepository.save(student.get()) ;
     }
 
     @Override
@@ -54,6 +55,7 @@ public class StudentServiceImpl implements StudentService {
         student.get().setCvRejected(true);
         student.get().getCv().setValidated(false);
         student.get().getCv().setFeedback(feedback);
+        studentRepository.save(student.get()) ;
     }
 
     @Override

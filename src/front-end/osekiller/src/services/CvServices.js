@@ -14,9 +14,12 @@ export const getCV = async (studentId) => {
 } ;
 
 export const validateCv = async (studentId, feedbackText) => {
-    console.log(feedbackText) ;
     return axios.post(
-        `/student/${studentId}/cv/validate`, {validation : true, feedBack : feedbackText}
+        `/student/${studentId}/cv/validate`, {validation : true, feedBack : feedbackText},
+            {headers : {
+                "Content-Type" : "application/json",
+                Authorization : localStorage.getItem("accessToken"),
+            }}, 
     ) ;
 }
 

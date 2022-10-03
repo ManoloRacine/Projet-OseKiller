@@ -10,4 +10,6 @@ public interface UserService {
     List<StudentDto> getStudents();
     void invalidateUser(Long email);
     void validateUser(Long email);
+
+    StudentDto getStudent(Long id);
 }

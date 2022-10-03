@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import calLogo from "../assets/calLogo.jpg";
 import { pingToken } from "../services/AuthService";
 import { getCV } from "../services/CvServices" ;
+import { getStudent } from "../services/UserServices" ;
 
 const Dashboard = () => {
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState("");
     const [userPdf, setUserPdf] = useState("");
     const [role, setRole] = useState("");
+    const [studentInfo, setStudentInfo] = useState({}) ;
     const navigate = useNavigate();
 
     const logout = () => {
@@ -24,12 +26,20 @@ const Dashboard = () => {
                 setUserId(response.data.id);
                 getCV(response.data.id)
                 .then((response) => {
-                    if (response.status != 204) {
+                    if (response.status !== 204) {
                         var blob1 = new Blob([response.data], {type: "application/pdf"});
                         var data_url = window.URL.createObjectURL(blob1) ;
                         setUserPdf(data_url) ;
                     }
                 })
+                if (response.data.role === "STUDENT") {
+                    getStudent(response.data.id).then(
+                        (response) => {
+                            setStudentInfo(response.data)
+                            console.log(response.data)
+                        }
+                    )
+                }
                 setRole(response.data.role);
                 console.log(response.data) ;
             })
@@ -83,6 +93,7 @@ const Dashboard = () => {
                 <div className="col-6"></div>
                 <div className="col-6">
                     {role === "STUDENT" ? userPdf !== "" ? (<iframe src={userPdf} height="600px" width="100%"></iframe>) : (<p>You do not have a CV uploaded</p>) : null}
+                    {role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] === true || studentInfo["cvValidated"] === true) ? <p>{studentInfo["feedback"]}</p> : null}
                 </div>
             </div>
         </div>
