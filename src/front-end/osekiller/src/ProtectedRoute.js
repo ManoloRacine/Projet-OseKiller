@@ -1,36 +1,37 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { pingToken } from "../src/services/AuthService";
-import Dashboard from "./views/Dashboard";
+import { Navigate } from "react-router-dom";
+import { pingToken } from "./services/AuthService";
 
-const ProtectedRoute = ({ children, allowedRole }) => {
-    const navigate = useNavigate();
-    const [isAllowed, setIsAllowed] = useState(false);
+const ProtectedRoute = ({
+    children,
+    redirectTo = "/",
+    authenticated = false,
+    allowedRoles,
+}) => {
+    const [userInfo, setUserInfo] = useState(undefined);
 
     useEffect(() => {
-        console.log(allowedRole);
         pingToken()
-            .then(({ data }) => {
-                console.log(data);
-                if (allowedRole.includes(data.role)) {
-                    setIsAllowed(true);
-                }
+            .then((response) => {
+                setUserInfo(response.data);
             })
-            .catch((err) => {
-                console.log(err);
-                if (err.response.status === 403) {
-                    console.log("Token expiré");
-                    navigate("/");
-                }
+            .catch(() => {
+                setUserInfo(undefined);
             });
-    }, [navigate, allowedRole]);
+    }, [authenticated, redirectTo, userInfo]);
 
-    if (isAllowed) {
+    if (!userInfo) {
+        if (authenticated) return <Navigate to={redirectTo} relative={false} />;
+
         return children;
-    } else {
-        window.history.replaceState(null, null, "/dashboard");
-        return <Dashboard />;
     }
+    if (!authenticated) return <Navigate to={redirectTo} relative={false} />;
+
+    if (!allowedRoles) return children;
+
+    if (allowedRoles.includes(userInfo.role)) return children;
+
+    return <Navigate to={redirectTo} relative={false} />;
 };
 
 export default ProtectedRoute;

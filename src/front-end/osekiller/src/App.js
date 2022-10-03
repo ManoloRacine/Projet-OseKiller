@@ -15,13 +15,18 @@ function App() {
             }}
         >
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute redirectTo="/dashboard">
+                            <Home />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/dashboard"
                     element={
-                        <ProtectedRoute
-                            allowedRole={["STUDENT", "MANAGER", "COMPANY"]}
-                        >
+                        <ProtectedRoute authenticated>
                             <Dashboard />
                         </ProtectedRoute>
                     }
@@ -29,7 +34,7 @@ function App() {
                 <Route
                     path="/upload-cv"
                     element={
-                        <ProtectedRoute allowedRole={["STUDENT"]}>
+                        <ProtectedRoute authenticated allowedRole={["STUDENT"]}>
                             <UploadCv />
                         </ProtectedRoute>
                     }
