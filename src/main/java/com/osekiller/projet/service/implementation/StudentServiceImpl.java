@@ -47,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
 
         try {
             Path path = cvPath.resolve(studentId + ".pdf") ;

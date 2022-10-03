@@ -56,8 +56,7 @@ const Dashboard = () => {
                 </div>
                 <div className="links d-flex mx-auto">
                     <Link
-                        to={"/validate-cv"}
-                        state={{ userId: userId }}
+                        to={"/students-cv"}
                         className="m-4 fs-2 d-flex align-items-center"
                     >
                         Valider des CV
