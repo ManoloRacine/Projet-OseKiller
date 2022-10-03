@@ -3,7 +3,7 @@ info:
   title: OSE Killer API
   version: 1.0.0
 servers:
-  - url: https://localhost:8080
+  - url: http://localhost:8080
 paths:
   /sign-up:
     post:
@@ -16,12 +16,6 @@ paths:
         description: Demande d'inscription
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/SignUpRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/SignUpRequest'
-          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/SignUpRequest'
         required: true
@@ -45,16 +39,14 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/SignInRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/SignInRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/SignInRequest'
         required: true
       responses:
         '200':
           description: Demande de connection accepté
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
         '400':
           description: Format invalide / Attribut(s) manquant(s)
         '401':
@@ -69,12 +61,6 @@ paths:
       requestBody:
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/TokenRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/TokenRequest'
-          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/TokenRequest'
         required: true
@@ -101,16 +87,14 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TokenRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/TokenRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/TokenRequest'
         required: true
       responses:
         '200':
           description: Demande d'un nouveau JWT Valide accepté
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
         '400':
           description: Format invalide / Attribut(s) manquant(s)
         '401':
@@ -120,23 +104,23 @@ paths:
       security:
         - bearerAuth: []
         
-  /user/validate:
+  /user/{id}/validate:
     post:
       tags:
-        - Authentication
-      summary: Validation de l'inscription
-      description: Validation de l'inscription
+        - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Valider une inscription utilisateur
+      description: Valider une inscription utilisateur
       operationId: validateUser
       requestBody:
         description: Valider l'inscription d'un nouveau user
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/UserValidationRequest'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/UserValidationRequest'
-          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/UserValidationRequest'
         required: true
@@ -152,7 +136,7 @@ paths:
   /users:
     get:
       tags:
-        - Authentication
+        - User
       summary: Retourne tous les utilisateurs
       description: Retourne tous les utilisateurs
       operationId: getUsers
@@ -165,7 +149,6 @@ paths:
           description: Requête non autorisée
       security:
         - bearerAuth: []
-  
   /ping:
     get:
       tags:
@@ -182,15 +165,103 @@ paths:
         - Ping
       summary: Demande de ping par un l'utilisateur autentifié
       description: Demande de ping par un l'utilisateur autentifié
-      operationId: ping
+      operationId: pingToken
       responses:
         '200':
           description: Demande de ping reçu
-        '401':
-          description: Non autentifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthPingResponse'
+        '403':
+          description: Requête non autorisée
       security:
         - bearerAuth: []
-
+  /student/{id}/cv:
+    put:
+      tags:
+      - Student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Téléverser le cv de format pdf d'un étudiant
+      description: Téléverser le cv de format pdf d'un étudiant
+      operationId: uploadCV
+      requestBody:
+        description: Téléverser un cv
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        '200':
+          description: Le fichier a été Téléversé
+        '403':
+          description: Requête non autorisée
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+      - Student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Télécharger le cv de format pdf d'un étudiant
+      description: Télécharger le cv de format pdf d'un étudiant
+      operationId: downloadCV
+      responses:
+        '200':
+          description: Le fichier a été Télécharger
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    format: binary
+        '403':
+          description: Requête non autorisée
+      security:
+        - bearerAuth: []
+  /student/{id}/cv/validate:
+    post:
+      tags:
+      - Student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Valider le CV d'un étudiant
+      description: Valider le cv de format pdf d'un étudiant
+      operationId: validateCV
+      requestBody:
+        description: Valider le CV d'un étudiant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CvValidationRequest'
+        required: true
+      responses:
+        '200':
+          description: Le CV à été Téléversé
+        '403':
+          description: Requête non autorisée
+      security:
+        - bearerAuth: []
 components:
   securitySchemes:
       bearerAuth:
@@ -198,8 +269,46 @@ components:
         scheme: bearer
         bearerFormat: JWT
   schemas:
+    JwtResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        refreshToken:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
+        tokenType:
+          type: string
+          example: Bearer
+    AuthPingResponse:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: hugol@example.com
+        role:
+          type: string
+          example: STUDENT
+    CvValidationRequest:
+      type: object
+      required:
+        - valid
+      properties:
+        valid:
+          type: boolean
+          example: false
+        feedBack:
+          type: string
+          example: Votre CV est trop long
     SignUpRequest:
       type: object
+      required:
+        - name
+        - email
+        - password
+        - role
       properties:
         name:
           type: string
@@ -222,6 +331,9 @@ components:
         name: signUpRequest
     SignInRequest:
       type: object
+      required:
+        - email
+        - password
       properties:
         email:
           type: string
@@ -234,6 +346,8 @@ components:
         name: signInRequest
     TokenRequest:
       type: object
+      required:
+        - refreshToken
       properties:
         refreshToken: 
           type: string
@@ -242,11 +356,9 @@ components:
         name: signInRequest
     UserValidationRequest:
       type: object
+      required:
+        - valid
       properties:
-        email:
-          type: string
-          format: email
-          example: hugol@example.com
         valid:
           type: boolean
           example: true
