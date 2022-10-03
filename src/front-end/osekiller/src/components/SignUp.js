@@ -1,8 +1,8 @@
 import SignUpForm from "./forms/SignUpForm";
-import { useFormik } from 'formik';
+import {useFormik} from 'formik';
 import * as Yup from "yup"
 import axios from "axios";
-import { useState } from "react";
+import {useState} from "react";
 
 const SignUp = (props) => {
     const [userType, setUserType] = useState("etudiant");
