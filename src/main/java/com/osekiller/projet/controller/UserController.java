@@ -19,7 +19,7 @@ public class UserController {
 
     @PostMapping("/user/{id}/validate")
     public ResponseEntity<Void> validateUser(@Valid @RequestBody UserValidationDto dto,
-                                             @RequestParam(name = "id") Long id) {
+                                             @PathVariable(name = "id") Long id) {
         if (dto.validation()) {
             userService.validateUser(id);
         }

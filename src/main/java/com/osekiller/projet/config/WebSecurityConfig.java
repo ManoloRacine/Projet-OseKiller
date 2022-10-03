@@ -45,7 +45,6 @@ public class WebSecurityConfig {
                                 // Autoriser ses routes de base
                                 .antMatchers("/ping", "/sign-in", "/sign-up").permitAll()
                                 .antMatchers("/user/validate").hasAuthority(ERole.MANAGER.name())
-                                .antMatchers("/student").hasAuthority(ERole.STUDENT.name())
                                 // Le reste doivent être autentifié
                                 .anyRequest().authenticated())
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

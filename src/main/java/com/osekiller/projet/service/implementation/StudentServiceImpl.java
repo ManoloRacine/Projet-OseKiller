@@ -1,9 +1,7 @@
 package com.osekiller.projet.service.implementation;
 
-import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.model.user.User;
-import com.osekiller.projet.repository.CVRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.ResourceFactory;
@@ -27,10 +25,10 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
-    private StudentRepository studentRepository;
-    private CVRepository cvRepository;
 
-    private final Path cvPath = Paths.get("CV") ;
+    private StudentRepository studentRepository;
+
+    private final Path cvPath = Paths.get("CV");
 
     @Override
     public void validateCV(Long studentId) {
@@ -47,34 +45,32 @@ public class StudentServiceImpl implements StudentService {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
         try {
             Files.copy(cv.getInputStream(), cvPath.resolve(studentId + ".pdf"));
             CV newCV = cvRepository.save(new CV(cvPath.toString(), student.get(), false));
             student.get().setCv(newCV);
             student.get().setCvRejected(false);
-            studentRepository.save(student.get()) ;
-        }
-        catch (IOException e) {
+            studentRepository.save(student.get());
+        } catch (IOException e) {
             System.out.println(e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     public Resource getCV(Long studentId, ResourceFactory resourceFactory) {
         try {
-            Path file = cvPath.resolve(studentId.toString() + ".pdf") ;
+            Path file = cvPath.resolve(studentId.toString() + ".pdf");
             Resource resource = resourceFactory.createResource(file.toUri());
             if (resource.exists() && resource.isReadable()) {
-                return resource ;
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
+                return resource;
+            } else {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (MalformedURLException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
