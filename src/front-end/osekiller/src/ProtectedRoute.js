@@ -1,29 +1,36 @@
-import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { pingToken } from "../src/services/AuthService";
+import Dashboard from "./views/Dashboard";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRole }) => {
     const navigate = useNavigate();
-    const token = localStorage.getItem("accessToken");
+    const [isAllowed, setIsAllowed] = useState(false);
 
     useEffect(() => {
+        console.log(allowedRole);
         pingToken()
-            .then(() => {
-                return children;
+            .then(({ data }) => {
+                console.log(data);
+                if (allowedRole.includes(data.role)) {
+                    setIsAllowed(true);
+                }
             })
             .catch((err) => {
+                console.log(err);
                 if (err.response.status === 403) {
                     console.log("Token expiré");
                     navigate("/");
                 }
             });
-    }, [children, navigate]);
+    }, [navigate, allowedRole]);
 
-    if (!token) {
-        return <Navigate to={"/"} replace />;
+    if (isAllowed) {
+        return children;
+    } else {
+        window.history.replaceState(null, null, "/dashboard");
+        return <Dashboard />;
     }
-    return children;
 };
 
 export default ProtectedRoute;

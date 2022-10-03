@@ -19,7 +19,9 @@ function App() {
                 <Route
                     path="/dashboard"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute
+                            allowedRole={["STUDENT", "MANAGER", "COMPANY"]}
+                        >
                             <Dashboard />
                         </ProtectedRoute>
                     }
@@ -27,7 +29,7 @@ function App() {
                 <Route
                     path="/upload-cv"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute allowedRole={["STUDENT"]}>
                             <UploadCv />
                         </ProtectedRoute>
                     }
