@@ -1,12 +1,12 @@
 package com.osekiller.projet.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.UserValidationDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.implementation.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -21,20 +21,19 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.server.ResponseStatusException;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

@@ -35,6 +35,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthTokenFilter authTokenFilter) throws Exception {
         http
+                .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests(
                         (requests) -> requests

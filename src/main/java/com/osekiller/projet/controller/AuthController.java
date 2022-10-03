@@ -55,7 +55,7 @@ public class AuthController {
         try {
             authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (BadCredentialsException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"invalid-credentials");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"invalid-credentials");
         } catch (DisabledException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"user-disabled");
         }

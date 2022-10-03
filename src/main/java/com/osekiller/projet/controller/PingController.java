@@ -1,6 +1,5 @@
 package com.osekiller.projet.controller;
 
-import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
