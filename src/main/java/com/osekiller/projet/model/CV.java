@@ -21,4 +21,6 @@ public class CV {
     @NonNull private Student owner;
 
     @NonNull private boolean isValidated;
+
+    private String feedback;
 }

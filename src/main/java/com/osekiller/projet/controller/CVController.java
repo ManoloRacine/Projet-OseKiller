@@ -34,14 +34,13 @@ public class CVController {
                 header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFilename() + "\"").body(cv);
     }
 
-
     @PostMapping("/student/{id}/cv/validate")
     public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody StudentCVValidationDto dto,
                                                   @RequestParam(name = "id") Long id) {
         if (dto.validation()) {
-            studentService.validateCV(id);
+            studentService.validateCV(id, dto.feedBack());
         } else {
-            studentService.invalidateCV(id);
+            studentService.invalidateCV(id, dto.feedBack());
         }
         return ResponseEntity.ok().build();
     }

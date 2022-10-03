@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         if (student.getCv().getPath() != null) {
             cvPresent = true ;
         }
-        return new StudentDto(student.getEmail(), student.getName(), student.getId(), student.isEnabled(), student.getCv().isValidated(), student.isCvRejected(), cvPresent) ;
+        return new StudentDto(student.getEmail(), student.getName(), student.getId(), student.isEnabled(), student.getCv().isValidated(), student.isCvRejected(), cvPresent, student.getCv().getFeedback()) ;
     }
 
     public void validateUser(Long id) {
