@@ -1,5 +1,6 @@
 import { useEffect, useState  } from "react";
 import { getStudents } from "../services/UserServices" ;
+import { Link, useNavigate } from "react-router-dom";
 
 
 const StudentCvs = () => {
@@ -22,7 +23,7 @@ const StudentCvs = () => {
                 <ul className="text-center">
                     {students.map((student,index) =>
                     student["cvPresent"] === true && student["cvRejected"] === false && student["cvValidated"] === false ?
-                    <li key={index}>{student["name"]}</li>
+                    <Link to={"../validate-cv"} state={{ studentId : student["id"]}} key={index}>{student["name"]}</Link>
                     :
                     null)}
                 </ul>

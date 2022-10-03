@@ -31,6 +31,7 @@ const Dashboard = () => {
                     }
                 })
                 setRole(response.data.role);
+                console.log(response.data) ;
             })
             .catch((err) => {
                 console.log(err);
@@ -59,12 +60,17 @@ const Dashboard = () => {
                     )}
                 </div>
                 <div className="links d-flex mx-auto">
-                    <Link
-                        to={"/students-cv"}
-                        className="m-4 fs-2 d-flex align-items-center"
-                    >
-                        Valider des CV
-                    </Link>
+                    {
+                        role === "MANAGER" && (
+                            <Link
+                                to={"/students-cv"}
+                                className="m-4 fs-2 d-flex align-items-center"
+                            >
+                                Valider des CV
+                            </Link>
+                        )
+                    }
+                    
                 </div>
 
                 {/* Bouton à améliorer */}
@@ -76,7 +82,7 @@ const Dashboard = () => {
             <div className="row">
                 <div className="col-6"></div>
                 <div className="col-6">
-                    { userPdf !== "" ? (<iframe src={userPdf} height="600px" width="100%"></iframe>) : (<p>You do not have a CV uploaded</p>)}
+                    {role === "STUDENT" ? userPdf !== "" ? (<iframe src={userPdf} height="600px" width="100%"></iframe>) : (<p>You do not have a CV uploaded</p>) : null}
                 </div>
             </div>
         </div>

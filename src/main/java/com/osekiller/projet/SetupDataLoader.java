@@ -55,8 +55,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     void createStudentIfNotFound(Student student) {
         if(studentRepository.findByEmail(student.getEmail()).isPresent()) return;
         student.setEnabled(true);
-        Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
-        student.setRole(managerRole);
+        Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
+        student.setRole(studentRole);
         studentRepository.save(student);
     }
 
