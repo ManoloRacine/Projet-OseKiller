@@ -34,8 +34,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers()) ;
     }
 
-    @GetMapping("/student")
+    @GetMapping("/students")
     public ResponseEntity<List<StudentDto>> getStudents() {
         return ResponseEntity.ok(userService.getStudents()) ;
     }
+
+    @GetMapping("/student/{id}")
+    public ResponseEntity<StudentDto> getStudents(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(userService.getStudent(id)) ;
+    }
+
 }

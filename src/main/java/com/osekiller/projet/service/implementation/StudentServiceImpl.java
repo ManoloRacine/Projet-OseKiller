@@ -35,28 +35,29 @@ public class StudentServiceImpl implements StudentService {
     private final Path cvPath = Paths.get("CV");
 
     @Override
-    public void validateCV(Long studentId) {
+    public void validateCV(Long studentId, String feedback) {
         Optional<Student> student = studentRepository.findById(studentId);
 
-        if (student.isPresent()){
-            student.get().setCvRejected(false);
-            cvRepository.findCVByOwner(student.get()).setValidated(true);
-        } else {
+        if (student.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
 
+        student.get().setCvRejected(false);
+        student.get().getCv().setValidated(true);
+        student.get().getCv().setFeedback(feedback);
+        studentRepository.save(student.get());
     }
 
     @Override
-    public void invalidateCV(Long studentId) {
+    public void invalidateCV(Long studentId, String feedback) {
         Optional<Student> student = studentRepository.findById(studentId);
 
-        if (student.isPresent()){
-            student.get().setCvRejected(true);
-            cvRepository.findCVByOwner(student.get()).setValidated(true);
-        } else {
+        if (student.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+
+        student.get().setCvRejected(true);
+        student.get().getCv().setValidated(false);
+        student.get().getCv().setFeedback(feedback);
+        studentRepository.save(student.get());
     }
 
     @Override
@@ -67,7 +68,11 @@ public class StudentServiceImpl implements StudentService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
         try {
-            Files.copy(cv.getInputStream(), cvPath.resolve(studentId + ".pdf"));
+            Path path = cvPath.resolve(studentId + ".pdf");
+            if (path.toFile().exists()) {
+                Files.delete(path);
+            }
+            Files.copy(cv.getInputStream(), path);
             CV newCV = cvRepository.save(new CV(cvPath.toString(), student.get(), false));
             student.get().setCv(newCV);
             student.get().setCvRejected(false);
@@ -86,7 +91,7 @@ public class StudentServiceImpl implements StudentService {
             if (resource.exists() && resource.isReadable()) {
                 return resource;
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT);
             }
         } catch (MalformedURLException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);

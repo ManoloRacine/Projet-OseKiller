@@ -4,9 +4,9 @@ import org.springframework.core.io.Resource;
 
 public interface StudentService {
 
-    void validateCV(Long studentId);
+    void validateCV(Long studentId, String feedback);
 
-    void invalidateCV(Long studentId);
+    void invalidateCV(Long studentId, String feedback);
 
     void saveCV(MultipartFile cv, Long studentId);
 

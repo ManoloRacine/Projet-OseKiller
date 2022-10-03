@@ -79,7 +79,6 @@ public class StudentServiceTest {
         Manager mockManager = new Manager("Joe Biden","jbiden@osk.com","password");
         mockManager.setRole(new Role("MANAGER"));
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
-        when(userRepository.findById(any())).thenReturn(Optional.of(mockManager));
 
 
         assertThatThrownBy(() -> studentService.saveCV(mockFile, 1L))
@@ -109,7 +108,7 @@ public class StudentServiceTest {
 
         assertThatThrownBy(() -> studentService.getCV(1L, factory) )
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+                .extracting("status").isEqualTo(HttpStatus.NO_CONTENT);
 
     }
 
@@ -122,7 +121,7 @@ public class StudentServiceTest {
 
         assertThatThrownBy(() -> studentService.getCV(1L, factory) )
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+                .extracting("status").isEqualTo(HttpStatus.NO_CONTENT);
 
     }
 }
