@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import UploadCv from "./views/UploadCv";
 
 function App() {
     return (
@@ -14,12 +15,27 @@ function App() {
             }}
         >
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute redirectTo="/dashboard">
+                            <Home />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/dashboard"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute authenticated>
                             <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/upload-cv"
+                    element={
+                        <ProtectedRoute authenticated allowedRole={["STUDENT"]}>
+                            <UploadCv />
                         </ProtectedRoute>
                     }
                 />
