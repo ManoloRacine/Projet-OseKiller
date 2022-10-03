@@ -8,6 +8,7 @@ public record StudentDto(@NotBlank String email,
                          @NotBlank boolean enabled,
                          @NotBlank boolean cvValidated,
                          @NotBlank boolean cvRejected,
-                         @NotBlank boolean cvPresent) {
+                         @NotBlank boolean cvPresent,
+                         @NotBlank String feedback) {
 
 }

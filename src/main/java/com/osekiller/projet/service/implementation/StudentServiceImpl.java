@@ -33,13 +33,27 @@ public class StudentServiceImpl implements StudentService {
     private final Path cvPath = Paths.get("CV") ;
 
     @Override
-    public void validateCV(Long studentId) {
+    public void validateCV(Long studentId, String feedback) {
+        Optional<Student> student = studentRepository.findById(studentId);
 
+        if (student.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+
+        student.get().setCvRejected(false);
+        student.get().getCv().setValidated(true);
+        student.get().getCv().setFeedback(feedback);
     }
 
     @Override
-    public void invalidateCV(Long studentId) {
+    public void invalidateCV(Long studentId, String feedback) {
+        Optional<Student> student = studentRepository.findById(studentId);
 
+        if (student.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+
+        student.get().setCvRejected(true);
+        student.get().getCv().setValidated(false);
+        student.get().getCv().setFeedback(feedback);
     }
 
     @Override
