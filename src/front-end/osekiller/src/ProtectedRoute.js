@@ -5,6 +5,7 @@ import { pingToken } from "../src/services/AuthService";
 
 const ProtectedRoute = ({ children }) => {
     const navigate = useNavigate();
+    const token = localStorage.getItem("accessToken");
 
     useEffect(() => {
         pingToken()
@@ -18,8 +19,6 @@ const ProtectedRoute = ({ children }) => {
                 }
             });
     }, [children, navigate]);
-
-    const token = localStorage.getItem("accessToken");
 
     if (!token) {
         return <Navigate to={"/"} replace />;

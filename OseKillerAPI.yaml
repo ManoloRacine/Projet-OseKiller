@@ -104,10 +104,16 @@ paths:
       security:
         - bearerAuth: []
         
-  /user/validate:
+  /user/{id}/validate:
     post:
       tags:
         - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       summary: Valider une inscription utilisateur
       description: Valider une inscription utilisateur
       operationId: validateUser
@@ -352,12 +358,7 @@ components:
       type: object
       required:
         - valid
-        - email
       properties:
-        email:
-          type: string
-          format: email
-          example: hugol@example.com
         valid:
           type: boolean
           example: true

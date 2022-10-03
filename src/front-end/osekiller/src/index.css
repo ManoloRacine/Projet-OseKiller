@@ -12,11 +12,14 @@ code {
     monospace;
 }
 
-
-section[id="selectedCv"] li {
-  list-style-type: none;
-  margin: 10px 0px;
-  padding: 10px;
+svg[data-icon="cloud-arrow-up"]{
+  padding: 20px;
   border: 1px solid white;
-  border-radius: 10px;
+  border-radius: 20px;
+}
+
+svg:hover {
+  background-color: rgb(0, 0, 0, 0.3);
+  
+  
 }
