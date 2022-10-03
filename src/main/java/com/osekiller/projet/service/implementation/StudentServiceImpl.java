@@ -1,6 +1,8 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.model.user.User;
+import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
@@ -24,14 +26,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private UserRepository userRepository;
+    private StudentRepository studentRepository;
 
     private final Path cvPath = Paths.get("CV") ;
     @Override
     public void saveCV(MultipartFile cv, Long studentId) {
-        Optional<User> user = userRepository.findById(studentId) ;
+        Optional<Student> student = studentRepository.findById(studentId) ;
 
-        if (user.isEmpty() || !user.get().getRole().getName().equals("STUDENT")) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
+        if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
 
         try {
             Files.copy(cv.getInputStream(), cvPath.resolve(studentId + ".pdf"));
