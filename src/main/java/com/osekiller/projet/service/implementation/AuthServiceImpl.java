@@ -109,25 +109,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signOut(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(
-<<<<<<< HEAD
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-=======
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        );
->>>>>>> origin/main
+
+                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+
         refreshTokenRepository.delete(refreshToken);
     }
 
     @Override
     public JwtResponseDto refresh(String token) {
-<<<<<<< HEAD
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-        refreshToken = verifyExpiration(refreshToken);
-=======
+
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         verifyExpiration(refreshToken);
->>>>>>> origin/main
+
         return new JwtResponseDto(
                 jwtUtils.generateToken(refreshToken.getUser()),
                 refreshToken.getToken(),
@@ -160,7 +153,5 @@ public class AuthServiceImpl implements AuthService {
             refreshTokenRepository.delete(token);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token-expired");
         }
-    }<<<<<<<HEAD
-
-        =======>>>>>>>origin/main
+    }
 }
