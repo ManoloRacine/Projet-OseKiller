@@ -2,8 +2,8 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.request.SignInDto;
 import com.osekiller.projet.controller.payload.request.SignUpDto;
-import com.osekiller.projet.controller.payload.response.AuthPingDto;
 import com.osekiller.projet.controller.payload.response.JwtResponseDto;
+import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.RefreshToken;
 import com.osekiller.projet.model.Role;
@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
     public void signUp(SignUpDto dto) {
         //Valider que le email est disponble
         if(userRepository.findByEmail(dto.email()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"email-taken");
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
 
         //Sauvegarder l'utilisateur en fonction de son role
@@ -107,14 +107,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void signOut(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED)
         );
         refreshTokenRepository.delete(refreshToken);
     }
     @Override
     public JwtResponseDto refresh(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-        refreshToken = verifyExpiration(refreshToken);
+        verifyExpiration(refreshToken);
         return new JwtResponseDto(
                 jwtUtils.generateToken(refreshToken.getUser()),
                 refreshToken.getToken(),
@@ -123,13 +123,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthPingDto authPing(String token) {
-        String email = jwtUtils.getUsernameFromToken(token);
-        User user = userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
-        return new AuthPingDto(
+    public UserDto getUserFromToken(String accessToken) {
+        String email = jwtUtils.getUsernameFromToken(accessToken);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        return new UserDto(
                 user.getEmail(),
-                user.getRole().getName(),
-                user.getName()
+                user.getName(),
+                user.isEnabled(),
+                user.getId(),
+                user.getRole().getName()
         );
     }
 
@@ -141,12 +143,10 @@ public class AuthServiceImpl implements AuthService {
                 );
     }
 
-    public RefreshToken verifyExpiration(RefreshToken token) {
+    private void verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token-expired");
         }
-
-        return token;
     }
 }

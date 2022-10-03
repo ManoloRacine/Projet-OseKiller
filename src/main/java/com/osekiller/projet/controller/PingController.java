@@ -1,6 +1,6 @@
 package com.osekiller.projet.controller;
 
-import com.osekiller.projet.controller.payload.response.AuthPingDto;
+import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +19,8 @@ public class PingController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/token")
-    public ResponseEntity<AuthPingDto> pingToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
+    public ResponseEntity<UserDto> pingToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
         String jwt = header.substring(7);
-        return ResponseEntity.ok(authService.authPing(jwt));
+        return ResponseEntity.ok(authService.getUserFromToken(jwt));
     }
 }
