@@ -1,7 +1,9 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.model.user.User;
+import com.osekiller.projet.repository.CVRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.ResourceFactory;
@@ -28,16 +30,33 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentRepository studentRepository;
 
+    private CVRepository cvRepository;
+
     private final Path cvPath = Paths.get("CV");
 
     @Override
     public void validateCV(Long studentId) {
+        Optional<Student> student = studentRepository.findById(studentId);
+
+        if (student.isPresent()){
+            student.get().setCvRejected(false);
+            cvRepository.findCVByOwner(student.get()).setValidated(true);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
     }
 
     @Override
     public void invalidateCV(Long studentId) {
+        Optional<Student> student = studentRepository.findById(studentId);
 
+        if (student.isPresent()){
+            student.get().setCvRejected(true);
+            cvRepository.findCVByOwner(student.get()).setValidated(true);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
@@ -83,6 +102,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public void deleteAll() {
+        cvRepository.deleteAll();
         FileSystemUtils.deleteRecursively(cvPath.toFile());
     }
 
