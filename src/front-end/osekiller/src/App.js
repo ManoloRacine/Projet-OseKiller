@@ -6,6 +6,7 @@ import UploadCv from "./views/UploadCv";
 import ValidateCv from "./views/ValidateCv";
 import StudentCvs from "./views/StudentCvs";
 
+
 function App() {
     return (
         <div
@@ -57,6 +58,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+
             </Routes>
         </div>
     );

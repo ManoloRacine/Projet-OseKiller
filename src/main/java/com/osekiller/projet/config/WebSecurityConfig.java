@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                                 .antMatchers("/user/**").hasAuthority(ERole.MANAGER.name())
                                 // Le reste doivent être autentifié
                                 .anyRequest().authenticated())
+
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

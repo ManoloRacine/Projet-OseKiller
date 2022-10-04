@@ -9,6 +9,7 @@ import ErrorMessage from "../components/ErrorMessage";
 const UploadCv = () => {
     const [selectedFile, setSelectedFile] = useState({});
     const [isCvSubmitted, setIsCvSubmitted] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
     const { userId } = location.state;
@@ -18,6 +19,7 @@ const UploadCv = () => {
         formData.append("file", selectedFile);
         uploadCv(formData, userId)
             .then((response) => setIsCvSubmitted(true))
+
             .catch((err) => console.log("Error:", err));
     };
 
@@ -79,6 +81,7 @@ const UploadCv = () => {
                     severity="success"
                 />
             )}
+
         </div>
     );
 };

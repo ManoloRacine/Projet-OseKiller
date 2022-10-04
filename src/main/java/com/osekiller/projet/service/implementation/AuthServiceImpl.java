@@ -150,5 +150,6 @@ public class AuthServiceImpl implements AuthService {
                         refreshTokenRepository.delete(token);
                         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token-expired");
                 }
+
         }
 }

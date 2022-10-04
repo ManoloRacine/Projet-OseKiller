@@ -11,6 +11,7 @@ const Dashboard = () => {
     const [userPdf, setUserPdf] = useState("");
     const [role, setRole] = useState("");
     const [studentInfo, setStudentInfo] = useState({});
+
     const navigate = useNavigate();
 
     const logout = () => {
@@ -41,6 +42,7 @@ const Dashboard = () => {
                 }
                 setRole(response.data.role);
                 console.log(response.data);
+
             })
             .catch((err) => {
                 console.log(err);
@@ -77,6 +79,7 @@ const Dashboard = () => {
                             Valider des CV
                         </Link>
                     )}
+
                 </div>
 
                 {/* Bouton à améliorer */}
