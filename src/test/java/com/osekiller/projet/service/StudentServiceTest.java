@@ -1,8 +1,11 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.repository.CVRepository;
+import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.implementation.StudentServiceImpl;
 import org.assertj.core.api.Assertions;
@@ -11,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
@@ -20,42 +22,56 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class StudentServiceTest {
-    @InjectMocks
-    private StudentServiceImpl studentService ;
 
     @Mock
     UserRepository userRepository ;
 
+    @Mock
+    StudentRepository studentRepository;
+
+    @Mock
+    CVRepository cvRepository;
+
+    @InjectMocks
+    private StudentServiceImpl studentService ;
+
     @Test
     void saveCVHappyDay() {
+        // Arrange
         Student mockStudent = new Student("Joe Biden","jbiden@osk.com","password");
-        mockStudent.setRole(new Role("STUDENT"));
-        MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
-        when(userRepository.findById(any())).thenReturn(Optional.of(mockStudent));
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "test".getBytes()
+        ) ;
+        CV mockCV = new CV(Paths.get("CV").toString(), mockStudent, false);
+        when(studentRepository.findById(any())).thenReturn(Optional.of(mockStudent));
+        when(cvRepository.findCVByOwner(any())).thenReturn(mockCV);
 
-
-        try (MockedStatic mockedStatic = mockStatic(Files.class)) {
-            studentService.saveCV(mockFile, 1L);
+        // Act
+        try (MockedStatic<Files> mockedStatic = mockStatic(Files.class)) {
+            //studentService.saveCV(mockFile, 1L);
+            studentService.saveCV(mockFile, mockStudent.getId());
             mockedStatic.verify(() -> Files.copy(any(ByteArrayInputStream.class), any(Path.class))) ;
         }
 
-
+        // Assert
+        assertThat(cvRepository.findCVByOwner(mockStudent)).isNotNull();
     }
 
     @Test
@@ -63,7 +79,6 @@ public class StudentServiceTest {
         Manager mockManager = new Manager("Joe Biden","jbiden@osk.com","password");
         mockManager.setRole(new Role("MANAGER"));
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
-        when(userRepository.findById(any())).thenReturn(Optional.of(mockManager));
 
 
         assertThatThrownBy(() -> studentService.saveCV(mockFile, 1L))
@@ -93,7 +108,7 @@ public class StudentServiceTest {
 
         assertThatThrownBy(() -> studentService.getCV(1L, factory) )
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+                .extracting("status").isEqualTo(HttpStatus.NO_CONTENT);
 
     }
 
@@ -106,7 +121,7 @@ public class StudentServiceTest {
 
         assertThatThrownBy(() -> studentService.getCV(1L, factory) )
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+                .extracting("status").isEqualTo(HttpStatus.NO_CONTENT);
 
     }
 }

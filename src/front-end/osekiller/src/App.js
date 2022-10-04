@@ -3,6 +3,8 @@ import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import UploadCv from "./views/UploadCv";
+import ValidateCv from "./views/ValidateCv";
+import StudentCvs from "./views/StudentCvs" ;
 
 function App() {
     return (
@@ -36,6 +38,22 @@ function App() {
                     element={
                         <ProtectedRoute authenticated allowedRole={["STUDENT"]}>
                             <UploadCv />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/validate-cv"
+                    element={
+                        <ProtectedRoute>
+                            <ValidateCv />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/students-cv"
+                    element={
+                        <ProtectedRoute>
+                            <StudentCvs />
                         </ProtectedRoute>
                     }
                 />
