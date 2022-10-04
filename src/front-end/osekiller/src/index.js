@@ -4,7 +4,11 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import Home from "./views/Home";
+import Dashboard from "./views/Dashboard";
+import UserValidation from "./views/UserValidation";
 
 <link
   rel="stylesheet"
@@ -16,7 +20,25 @@ import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <App />
+    <Routes>
+      <Route path="/" element={<App/>}>
+        <Route index element={
+          <ProtectedRoute redirectTo="/dashboard">
+            <Home />
+          </ProtectedRoute>
+        }/>
+        <Route path="dashboard" element={
+          <ProtectedRoute authenticated>
+              <Dashboard />
+          </ProtectedRoute>
+        }/>
+        <Route path="user-validation" element={
+          <ProtectedRoute authenticated allowedRoles={["MANAGER"]}>
+              <UserValidation />
+          </ProtectedRoute>
+         }/>
+      </Route>
+    </Routes>
   </BrowserRouter>
 );
 

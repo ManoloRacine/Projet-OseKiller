@@ -106,7 +106,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(new UserValidationDto("test@test.com", true))))
+                        .content(asJsonString(new UserValidationDto(true))))
                 .andExpect(status().isOk()) ;
     }
 
@@ -118,7 +118,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(new UserValidationDto("test@test.com", true))))
+                        .content(asJsonString(new UserValidationDto(true))))
                 .andExpect(status().isNotFound()) ;
     }
 
@@ -130,7 +130,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(new UserValidationDto("test@test.com", false))))
+                        .content(asJsonString(new UserValidationDto(false))))
                 .andExpect(status().isOk()) ;
     }
 
@@ -142,7 +142,7 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/user/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(new UserValidationDto("test@test.com", false))))
+                        .content(asJsonString(new UserValidationDto(false))))
                 .andExpect(status().isNotFound()) ;
     }
 

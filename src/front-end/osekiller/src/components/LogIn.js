@@ -30,7 +30,7 @@ const LogIn = ({ changeForm, title }) => {
                     "refreshToken",
                     `${tokenType} ${refreshToken}`
                 );
-                navigate("/dashboard", { state: { email: email } });
+                navigate("/dashboard");
             })
             .catch((err) => {
                 setIsLoading(false);
