@@ -3,6 +3,7 @@ package com.osekiller.projet;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Manager;
+import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.user.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationListener;
@@ -33,6 +34,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         //Si il y a des chose à setup au lancement du serveur c'est ici
         initializeRoles();
         initializeManagers();
+        initializeStudents();
         alreadySetup = true;
     }
 
@@ -41,6 +43,21 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         for(ERole role : ERole.values()){
             createRoleIfNotFound(role);
         }
+    }
+
+    @Transactional
+    void initializeStudents() {
+        createStudentIfNotFound(new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("123")));
+        createStudentIfNotFound(new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("123")));
+        createStudentIfNotFound(new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("123")));
+    }
+
+    void createStudentIfNotFound(Student student) {
+        if(studentRepository.findByEmail(student.getEmail()).isPresent()) return;
+        student.setEnabled(true);
+        Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
+        student.setRole(studentRole);
+        studentRepository.save(student);
     }
 
     @Transactional

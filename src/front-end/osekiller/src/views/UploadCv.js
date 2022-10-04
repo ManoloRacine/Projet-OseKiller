@@ -4,9 +4,12 @@ import { faArrowLeft, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { uploadCv } from "../services/UploadService";
 import SelectedCV from "../components/SelectedCV";
+import ErrorMessage from "../components/ErrorMessage";
 
 const UploadCv = () => {
     const [selectedFile, setSelectedFile] = useState({});
+    const [isCvSubmitted, setIsCvSubmitted] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
     const { userId } = location.state;
@@ -15,7 +18,8 @@ const UploadCv = () => {
         const formData = new FormData();
         formData.append("file", selectedFile);
         uploadCv(formData, userId)
-            .then((response) => console.log("Success:", response))
+            .then((response) => setIsCvSubmitted(true))
+
             .catch((err) => console.log("Error:", err));
     };
 
@@ -71,6 +75,13 @@ const UploadCv = () => {
                     </section>
                 )}
             </main>
+            {isCvSubmitted && (
+                <ErrorMessage
+                    message={"CV téléversé avec succès !"}
+                    severity="success"
+                />
+            )}
+
         </div>
     );
 };

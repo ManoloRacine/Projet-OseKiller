@@ -1,6 +1,7 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.UserValidationDto;
+import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.service.UserService;
 import lombok.AllArgsConstructor;
@@ -32,4 +33,15 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getUsers() {
         return ResponseEntity.ok(userService.getUsers()) ;
     }
+
+    @GetMapping("/students")
+    public ResponseEntity<List<StudentDto>> getStudents() {
+        return ResponseEntity.ok(userService.getStudents()) ;
+    }
+
+    @GetMapping("/student/{id}")
+    public ResponseEntity<StudentDto> getStudents(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(userService.getStudent(id)) ;
+    }
+
 }
