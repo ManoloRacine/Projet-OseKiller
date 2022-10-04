@@ -1,35 +1,37 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { AuthenticatedUserContext } from "./App";
 import { pingToken } from "./services/AuthService";
 
 const ProtectedRoute = ({children, redirectTo = "/", authenticated = false, allowedRoles}) => {
 
-    const [userInfo, setUserInfo] = useState(undefined);
+    const {authenticatedUser, setAuthenticatedUser} = useContext(AuthenticatedUserContext);
     
     useEffect(() => {
         pingToken()
             .then(
                 (response) => {
-                    setUserInfo(response.data);        
+                    setAuthenticatedUser(response.data);        
                 }
             )
             .catch(
                 () => {
-                    setUserInfo(undefined)
+                    setAuthenticatedUser(undefined)
                 }
             ) 
     },[children])
 
-    if(!userInfo){
+    if(!authenticatedUser){
         if (authenticated) return <Navigate to={redirectTo} relative={false}/>
 
         return children
     }
+
     if(!authenticated) return <Navigate to={redirectTo} relative={false}/>
                 
     if(!allowedRoles) return children;
 
-    if(allowedRoles.includes(userInfo.role)) return children
+    if(allowedRoles.includes(authenticatedUser.role)) return children
                     
     return <Navigate to={redirectTo} relative={false}/>
 };

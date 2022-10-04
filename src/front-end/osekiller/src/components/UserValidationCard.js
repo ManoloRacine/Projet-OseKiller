@@ -12,7 +12,7 @@ export const UserValidationCard = ({user, removeUser}) => {
                 Accepter
             </button>
             <button className="btn btn-danger" onClick={() => {
-                validateUser(user.id, true)
+                validateUser(user.id, false)
                 removeUser(user.id)
             }}>
                 Refuser

@@ -1,15 +1,14 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import calLogo from "../assets/calLogo.jpg";
-import { pingToken } from "../services/AuthService";
+import { AuthenticatedUserContext } from "../App";
 
 export const Header = () => {
 
     const navigate = useNavigate();
 
     const location = useLocation();
-    const [userId, setUserId] = useState("");
-    const [role, setRole] = useState("");
+    const {authenticatedUser} = useContext(AuthenticatedUserContext);
 
     const logout = () => {
         localStorage.removeItem("accessToken");
@@ -17,22 +16,8 @@ export const Header = () => {
         navigate("/");
     };
 
-    
-    //Pas vraiment optimale parce que faudrait faire un call dans chaque component qui à besoins des information de l'utilisateur
-    // Faudrait qu'on ait un global state
-    useEffect(() => {
-        pingToken()
-            .then((response) => {
-                setUserId(response.data.id);
-                setRole(response.data.role);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
-
     return (
-        location.pathname === "/" 
+        (location.pathname === "/" || !authenticatedUser) 
         ||
         <nav
                 className="d-flex p-2 rounded"
@@ -46,14 +31,14 @@ export const Header = () => {
                     <h1 className="ps-4 display-4">Ose killer</h1>
                 </div>
                 <div className="links d-flex mx-auto">
-                {role === "MANAGER" && 
+                {authenticatedUser.role === "MANAGER" && 
                     (<Link to="/user-validation" className="m-4 fs-2 d-flex align-items-center">
                         Validation d'utilisateur
                     </Link>)}
-                    {role === "STUDENT" && (
+                    {authenticatedUser.role === "STUDENT" && (
                         <Link
                             to={"/upload-cv"}
-                            state={{ userId: userId }}
+                            state={{ userId: authenticatedUser.id }}
                             className="m-4 fs-2 d-flex align-items-center"
                         >
                             Téléverser votre CV

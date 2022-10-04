@@ -1,24 +1,25 @@
-import { Routes, Route, Outlet } from "react-router-dom";
-import Home from "./views/Home";
-import Dashboard from "./views/Dashboard";
-import ProtectedRoute from "./ProtectedRoute";
-import UserValidation from "./views/UserValidation";
+import { createContext, useState } from "react";
+import { Outlet } from "react-router-dom";
+
 import Header from "./components/Header";
 
-function App() {
+export const AuthenticatedUserContext = createContext()
+
+export const App = () => {
+    const [authenticatedUser, setAuthenticatedUser] = useState({});
+
     return (
-        <div
+        <AuthenticatedUserContext.Provider value={{authenticatedUser, setAuthenticatedUser}}>
+            <div
             className="App p-3"
             style={{
                 backgroundColor: "#da8362",
                 minHeight: "100vh",
                 color: "#2C324C",
-            }}
-        >
-            <Header />
-            <Outlet />
-        </div>
+            }}>
+                <Header />
+                <Outlet />
+            </div>
+        </AuthenticatedUserContext.Provider>
     );
 }
-
-export default App;

@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { faArrowLeft, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router-dom";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { uploadCv } from "../services/UploadService";
 import SelectedCV from "../components/SelectedCV";
 
-export const UploadCv = () => {
+const UploadCv = () => {
     const [selectedFile, setSelectedFile] = useState({});
-    const navigate = useNavigate();
     const location = useLocation();
     const { userId } = location.state;
 
