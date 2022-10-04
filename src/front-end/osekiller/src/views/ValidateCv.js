@@ -1,9 +1,9 @@
 import axios from "../api/axios";
 import { useEffect, useState } from "react";
-import { faCheck, faCross } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCross, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { navigate, useLocation, useNavigate } from "react-router-dom";
-import { validateCv, invalidateCv} from "../services/CvServices"
+import { validateCv, invalidateCv, getCV} from "../services/CvServices"
 
 
 const ValidateCv = () => {
@@ -18,15 +18,8 @@ const ValidateCv = () => {
     }
 
     useEffect(() => {
-        axios.get(
-            `/student/${studentId}/cv`, {
-                responseType: "arraybuffer",
-                headers: {
-                    "Content-Type" : "application/pdf",
-                    Authorization: localStorage.getItem("accessToken"),
-                },
-            }
-        ).then((response) => {
+        getCV(studentId)
+        .then((response) => {
             console.log("test") ;
             //let data_url = URL.createObjectURL(response.data) ;
             let link = document.createElement('a');
@@ -51,18 +44,18 @@ const ValidateCv = () => {
                 <textarea className="form-control" onChange={handleInputFeedback}></textarea>
             </div>
             <button
-                className="btn btn-primary float-left"
+                className="btn btn-success float-left"
                 onClick={() => {validateCv(studentId, feedBack); navigate("/dashboard")}}
             >
                 <FontAwesomeIcon icon={faCheck} className="me-2" />
-                Dashboard
+                Approuver
             </button>
             <button
-                className="btn btn-primary float-left"
+                className="btn btn-danger float-left"
                 onClick={() => {invalidateCv(studentId, feedBack); navigate("/dashboard")}}
             >
-                <FontAwesomeIcon icon={faCross} className="me-2" />
-                Dashboard
+                <FontAwesomeIcon icon={faX} className="me-2" />
+                Désapprouver
             </button>
         </div>
         
