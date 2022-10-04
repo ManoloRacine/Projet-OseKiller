@@ -25,6 +25,10 @@ export const validateCv = async (studentId, feedbackText) => {
 
 export const invalidateCv = async (studentId, feedbackText) => {
     return axios.post(
-        `/student/${studentId}/cv/validate`, {validation : false, feedback : feedbackText}
+        `/student/${studentId}/cv/validate`, {validation : false, feedback : feedbackText},
+        {headers : {
+            "Content-Type" : "application/json",
+            Authorization : localStorage.getItem("accessToken"),
+        }}, 
     ) ;
 }
