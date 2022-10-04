@@ -93,6 +93,8 @@ const Dashboard = () => {
                 <div className="col-6"></div>
                 <div className="col-6">
                     {role === "STUDENT" ? userPdf !== "" ? (<iframe src={userPdf} height="600px" width="100%"></iframe>) : (<p>You do not have a CV uploaded</p>) : null}
+                    {role === "STUDENT" && studentInfo["cvValidated"] ? (<h3>CV est valide</h3>) : null}
+                    {role === "STUDENT" && studentInfo["cvRejected"] ? (<h3>CV n'est pas valide</h3>) : null}
                     {role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] === true || studentInfo["cvValidated"] === true) ? <p>{studentInfo["feedback"]}</p> : null}
                 </div>
             </div>
