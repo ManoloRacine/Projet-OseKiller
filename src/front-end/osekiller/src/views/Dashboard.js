@@ -93,7 +93,7 @@ const Dashboard = () => {
                 <div className="col-6">
                     {role === "STUDENT" && studentInfo["cvValidated"] ? (<h3 className="text-success">CV est valide</h3>) : null}
                     {role === "STUDENT" && studentInfo["cvRejected"] ? (<h3 className="text-danger">CV n'est pas valide</h3>) : null}
-                    {role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] === true || studentInfo["cvValidated"] === true) ? <div><h4>Feedback :</h4><p>{studentInfo["feedback"]}</p></div> : <h4 className="text-warning">CV en attente de validation</h4>}
+                    {role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] === true || studentInfo["cvValidated"] === true) ? <div><h4>Feedback :</h4><p>{studentInfo["feedback"]}</p></div> : role === "STUDENT" ? <h4 className="text-warning">CV en attente de validation</h4> : null}
                 </div>
                 <div className="col-6">
                     {role === "STUDENT" ? userPdf !== "" ? (<iframe src={userPdf} height="600px" width="100%"></iframe>) : (<p>You do not have a CV uploaded</p>) : null}
