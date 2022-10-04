@@ -4,7 +4,7 @@ import Dashboard from "./views/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import UploadCv from "./views/UploadCv";
 import ValidateCv from "./views/ValidateCv";
-import StudentCvs from "./views/StudentCvs" ;
+import StudentCvs from "./views/StudentCvs";
 
 function App() {
     return (
