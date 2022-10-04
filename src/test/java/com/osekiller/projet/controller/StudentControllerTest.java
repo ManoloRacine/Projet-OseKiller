@@ -41,7 +41,7 @@ public class StudentControllerTest {
         doReturn(resource).when(studentService).getCV(any(), any()) ;
         doReturn("test").when(resource).getFilename() ;
 
-        mockMvc.perform(get("/student/{id}/cv", 1L))
+        mockMvc.perform(get("/students/{id}/cv", 1L))
                 .andExpect(status().isOk()) ;
 
     }
@@ -50,7 +50,7 @@ public class StudentControllerTest {
     @WithMockUser
     void saveCVHappyDay() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
-        mockMvc.perform(put("/student/{id}/cv", 1L)
+        mockMvc.perform(put("/students/{id}/cv", 1L)
                         .content(mockMultipartFile.getBytes()))
                 .andExpect(status().isOk()) ;
     }

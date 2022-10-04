@@ -13,10 +13,11 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @CrossOrigin
+@RequestMapping("/users")
 public class UserController {
     UserService userService;
 
-    @PostMapping("/user/{id}/validate")
+    @PostMapping("/{id}/validate")
     public ResponseEntity<Void> validateUser(@Valid @RequestBody UserValidationDto dto,
                                              @PathVariable(name = "id") Long id) {
         if (dto.validation()) {
@@ -28,7 +29,7 @@ public class UserController {
         return ResponseEntity.ok().build() ;
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<List<UserDto>> getUsers() {
         return ResponseEntity.ok(userService.getUsers()) ;
     }

@@ -20,13 +20,13 @@ import java.net.URI;
 public class CVController {
     StudentService studentService ;
 
-    @PutMapping("/student/{id}/cv")
+    @PutMapping("/students/{id}/cv")
     public ResponseEntity<Void> saveCV(@Valid @RequestBody MultipartFile file, @PathVariable(name = "id") Long id) {
         studentService.saveCV(file, id);
         return ResponseEntity.ok().build() ;
     }
 
-    @GetMapping("/student/{id}/cv")
+    @GetMapping("/students/{id}/cv")
     public ResponseEntity<Resource> getCV(@PathVariable(name = "id") Long id) {
         ResourceFactory factory = UrlResource::new;
         Resource cv = studentService.getCV(id, factory) ;

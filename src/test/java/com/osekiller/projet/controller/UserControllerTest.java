@@ -104,7 +104,7 @@ public class UserControllerTest {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doReturn(Optional.of(mockUser1)).when(userRepository).findById(1L) ;
 
-        mockMvc.perform(post("/user/{id}/validate", 1)
+        mockMvc.perform(post("/users/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(new UserValidationDto("test@test.com", true))))
                 .andExpect(status().isOk()) ;
@@ -116,7 +116,7 @@ public class UserControllerTest {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).validateUser(1L);
 
-        mockMvc.perform(post("/user/{id}/validate", 1)
+        mockMvc.perform(post("/users/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(new UserValidationDto("test@test.com", true))))
                 .andExpect(status().isNotFound()) ;
@@ -128,7 +128,7 @@ public class UserControllerTest {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doReturn(Optional.of(mockUser1)).when(userRepository).findById(1L) ;
 
-        mockMvc.perform(post("/user/{id}/validate", 1)
+        mockMvc.perform(post("/users/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(new UserValidationDto("test@test.com", false))))
                 .andExpect(status().isOk()) ;
@@ -140,7 +140,7 @@ public class UserControllerTest {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).invalidateUser(1L);
 
-        mockMvc.perform(post("/user/{id}/validate", 1)
+        mockMvc.perform(post("/users/{id}/validate", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(new UserValidationDto("test@test.com", false))))
                 .andExpect(status().isNotFound()) ;

@@ -18,7 +18,7 @@ const ProtectedRoute = ({
             .catch(() => {
                 setUserInfo(undefined);
             });
-    }, [authenticated, redirectTo, userInfo]);
+    }, [children]);
 
     if (!userInfo) {
         if (authenticated) return <Navigate to={redirectTo} relative={false} />;

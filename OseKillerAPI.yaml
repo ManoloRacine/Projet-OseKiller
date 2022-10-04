@@ -104,7 +104,7 @@ paths:
       security:
         - bearerAuth: []
         
-  /user/{id}/validate:
+  /users/{id}/validate:
     post:
       tags:
         - User
@@ -131,6 +131,8 @@ paths:
           description: Format invalide / Attribut(s) manquant(s)
         '403':
           description: Requête non autorisée
+        '404':
+          description: utilisateur non trouvé
       security:
         - bearerAuth: []
   /users:
@@ -177,7 +179,7 @@ paths:
           description: Requête non autorisée
       security:
         - bearerAuth: []
-  /student/{id}/cv:
+  /students/{id}/cv:
     put:
       tags:
       - Student
@@ -202,10 +204,12 @@ paths:
                   format: binary
         required: true
       responses:
-        '200':
-          description: Le fichier a été Téléversé
+        '204':
+          description: Le fichier a été Téléversé et est en attente de validation
         '403':
           description: Requête non autorisée
+        '404':
+          description: étudiant non trouvé
       security:
         - bearerAuth: []
     get:
@@ -233,9 +237,11 @@ paths:
                     format: binary
         '403':
           description: Requête non autorisée
+        '404':
+          description: étudiant non trouvé
       security:
         - bearerAuth: []
-  /student/{id}/cv/validate:
+  /students/{id}/cv/validate:
     post:
       tags:
       - Student
@@ -257,11 +263,95 @@ paths:
         required: true
       responses:
         '200':
-          description: Le CV à été Téléversé
+          description: Le CV à été valider
         '403':
           description: Requête non autorisée
+        '404':
+          description: étudiant non trouvé
       security:
         - bearerAuth: []
+  /companies/{id}/offers:
+    post:
+      tags:
+      - Company
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Poster l'offre de stage d'une entreprise
+      description: Poster l'offre de stage d'une entreprise
+      operationId: uploadOffer
+      requestBody:
+        description: Postulé une offre de stage
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              $ref: '#/components/schemas/InternshipOffer'
+        required: true
+      responses:
+        '204':
+          description: L'offre à été soumise et est en attente de validation 
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: entreprise non trouvé
+      security:
+        - bearerAuth: []
+    get:
+      tags:
+      - Company
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      summary: Obtenir les offres de stage d'une entreprise
+      description: Obtenir les offres de stage d'une entreprise
+      operationId: getOffers
+      responses:
+        '200':
+          description: Les offres ont été reçu
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: entreprise non trouvé
+      security:
+        - bearerAuth: []
+  /companies/{companyId}/offers/{offerId}:
+    get:
+      tags:
+      - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+      summary: Obtenir une offre de stage d'une entreprise
+      description: Obtenir une offre de stage d'une entreprise
+      operationId: getOffer
+      responses:
+        '200':
+          description: L'offre a été reçu
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    format: binary
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: entreprise non trouvé
+      security:
+        - bearerAuth: []
+  
 components:
   securitySchemes:
       bearerAuth:
@@ -329,6 +419,26 @@ components:
             - COMPANY
       xml:
         name: signUpRequest
+    InternshipOffer:
+      type: object
+      properties:
+        position:
+          type: string
+          example: Junior Web Developer
+        salary:
+          type: number
+          example: 25
+        startDate:
+          type: string
+          format: date
+          example: 2022-10-30
+        endDate:
+          type: string
+          format: date
+          example: 2023-01-30  
+        file:
+          type: string
+          format: binary
     SignInRequest:
       type: object
       required:
