@@ -1,29 +1,37 @@
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { pingToken } from "../src/services/AuthService";
+import { pingToken } from "./services/AuthService";
 
-const ProtectedRoute = ({ children }) => {
-    const navigate = useNavigate();
-    const token = localStorage.getItem("accessToken");
+const ProtectedRoute = ({
+    children,
+    redirectTo = "/",
+    authenticated = false,
+    allowedRoles,
+}) => {
+    const [userInfo, setUserInfo] = useState(undefined);
 
     useEffect(() => {
         pingToken()
-            .then(() => {
-                return children;
+            .then((response) => {
+                setUserInfo(response.data);
             })
-            .catch((err) => {
-                if (err.response.status === 403) {
-                    console.log("Token expiré");
-                    navigate("/");
-                }
+            .catch(() => {
+                setUserInfo(undefined);
             });
-    }, [children, navigate]);
+    }, [authenticated, redirectTo, userInfo]);
 
-    if (!token) {
-        return <Navigate to={"/"} replace />;
+    if (!userInfo) {
+        if (authenticated) return <Navigate to={redirectTo} relative={false} />;
+
+        return children;
     }
-    return children;
+    if (!authenticated) return <Navigate to={redirectTo} relative={false} />;
+
+    if (!allowedRoles) return children;
+
+    if (allowedRoles.includes(userInfo.role)) return children;
+
+    return <Navigate to={redirectTo} relative={false} />;
 };
 
 export default ProtectedRoute;

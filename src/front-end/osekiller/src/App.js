@@ -4,7 +4,7 @@ import Dashboard from "./views/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import UploadCv from "./views/UploadCv";
 import ValidateCv from "./views/ValidateCv";
-import StudentCvs from "./views/StudentCvs" ;
+import StudentCvs from "./views/StudentCvs";
 
 function App() {
     return (
@@ -17,11 +17,18 @@ function App() {
             }}
         >
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute redirectTo="/dashboard">
+                            <Home />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/dashboard"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute authenticated>
                             <Dashboard />
                         </ProtectedRoute>
                     }
@@ -29,7 +36,7 @@ function App() {
                 <Route
                     path="/upload-cv"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute authenticated allowedRole={["STUDENT"]}>
                             <UploadCv />
                         </ProtectedRoute>
                     }
