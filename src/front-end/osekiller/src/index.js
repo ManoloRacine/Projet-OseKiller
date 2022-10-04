@@ -9,6 +9,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
 import UserValidation from "./views/UserValidation";
+import UploadCv from "./views/UploadCv";
 
 <link
   rel="stylesheet"
@@ -37,6 +38,11 @@ root.render(
               <UserValidation />
           </ProtectedRoute>
          }/>
+         <Route path="/upload-cv" element={
+            <ProtectedRoute authenticated allowedRole={["STUDENT"]}>
+                <UploadCv />
+            </ProtectedRoute>
+          }/>
       </Route>
     </Routes>
   </BrowserRouter>

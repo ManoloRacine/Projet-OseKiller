@@ -5,14 +5,16 @@ import { pingToken } from "../services/AuthService";
 
 const Dashboard = () => {
     const [userName, setUserName] = useState("");
-    
+
+    //Pas vraiment optimale parce que faudrait faire un call dans chaque component qui à besoins des information de l'utilisateur
+    // Faudrait qu'on ait un global state
     useEffect(() => {
         pingToken()
             .then((response) => {
                 setUserName(response.data.name);
             })
             .catch((err) => {
-                console.error(err);
+                console.log(err);
             });
     }, []);
 
