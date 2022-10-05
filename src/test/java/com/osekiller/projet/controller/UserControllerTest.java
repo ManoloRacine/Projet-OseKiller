@@ -3,6 +3,7 @@ package com.osekiller.projet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.UserValidationDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
+import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
@@ -49,7 +50,7 @@ public class UserControllerTest {
     private MockMvc mockMvc ;
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void getUsersHappyDay() throws Exception {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         mockUser1.setRole(new Role("STUDENT"));
@@ -87,7 +88,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void getUsersEmpty() throws Exception {
         List<UserDto> mockDtoList = new ArrayList<>() ;
         doReturn(mockDtoList).when(userService).getUsers() ;
@@ -99,7 +100,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void validateHappyday() throws Exception {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doReturn(Optional.of(mockUser1)).when(userRepository).findById(1L) ;
@@ -111,7 +112,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void validateNoUser() throws Exception {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).validateUser(1L);
@@ -123,7 +124,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void invalidateHappyday() throws Exception {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doReturn(Optional.of(mockUser1)).when(userRepository).findById(1L) ;
@@ -135,7 +136,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void invalidateNoUser() throws Exception {
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).invalidateUser(1L);
