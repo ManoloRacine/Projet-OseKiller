@@ -2,8 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calLogo from "../assets/calLogo.jpg";
 import { pingToken } from "../services/AuthService";
-import { getCV } from "../services/CvServices";
-import { getStudent } from "../services/UserServices";
+import { getCV } from "../services/CvService" ;
+import { getStudent } from "../services/UserService" ;
 
 const Dashboard = () => {
     const [userName, setUserName] = useState("");
@@ -87,7 +87,11 @@ const Dashboard = () => {
             </nav>
             <h1>{`Bonjour, ${userName}`}</h1>
             <div className="row">
-                <div className="col-6"></div>
+                <div className="col-6">
+                    {role === "STUDENT" && studentInfo["cvValidated"] ? (<h3 className="text-success">CV est valide</h3>) : null}
+                    {role === "STUDENT" && studentInfo["cvRejected"] ? (<h3 className="text-danger">CV n'est pas valide</h3>) : null}
+                    {role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] === true || studentInfo["cvValidated"] === true) ? <div><h4>Feedback :</h4><p>{studentInfo["feedback"]}</p></div> : role === "STUDENT" ? <h4 className="text-warning">CV en attente de validation</h4> : null}
+                </div>
                 <div className="col-6">
                     {role === "STUDENT" ? (
                         userPdf !== "" ? (
@@ -99,12 +103,6 @@ const Dashboard = () => {
                         ) : (
                             <p>You do not have a CV uploaded</p>
                         )
-                    ) : null}
-                    {role === "STUDENT" &&
-                    studentInfo["cvPresent"] &&
-                    (studentInfo["cvRejected"] === true ||
-                        studentInfo["cvValidated"] === true) ? (
-                        <p>{studentInfo["feedback"]}</p>
                     ) : null}
                 </div>
             </div>

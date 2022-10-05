@@ -44,7 +44,7 @@ function App() {
                 <Route
                     path="/validate-cv"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute authenticated allowedRole={["MANAGER"]}>
                             <ValidateCv />
                         </ProtectedRoute>
                     }
@@ -52,7 +52,7 @@ function App() {
                 <Route
                     path="/students-cv"
                     element={
-                        <ProtectedRoute>
+                        <ProtectedRoute authenticated allowedRole={["MANAGER"]}>
                             <StudentCvs />
                         </ProtectedRoute>
                     }
