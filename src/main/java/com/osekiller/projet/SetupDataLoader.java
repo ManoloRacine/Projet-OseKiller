@@ -47,16 +47,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Transactional
     void initializeManagers(){
-        Manager testManager = new Manager("Test Manager","testmanager@osk.com", passwordEncoder.encode("testPass123"));
+        Manager testManager = new Manager("Test Manager","testmanager@osk.com", passwordEncoder.encode("123"));
         testManager.setEnabled(true);
         createManagerIfNotFound(testManager);
     }
 
     @Transactional
     void initializeStudents(){
-        Student testStudent1 = new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("testPass123"));
-        Student testStudent2 = new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("testPass123"));
-        Student testStudent3 = new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("testPass123"));
+        Student testStudent1 = new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("123"));
+        Student testStudent2 = new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("123"));
+        Student testStudent3 = new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("123"));
         testStudent1.setEnabled(true);
         createStudentIfNotFound(testStudent1);
         createStudentIfNotFound(testStudent2);

@@ -19,7 +19,7 @@ const ProtectedRoute = ({children, redirectTo = "/", authenticated = false, allo
                     setAuthenticatedUser(undefined)
                 }
             ) 
-    },[children])
+    },[children, setAuthenticatedUser])
 
     if(!authenticatedUser){
         if (authenticated) return <Navigate to={redirectTo} relative={false}/>

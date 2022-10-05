@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { pingToken } from "../services/AuthService";
+import { useState } from "react";
 import LogIn from "../components/LogIn";
 import SignUp from "../components/SignUp";
 

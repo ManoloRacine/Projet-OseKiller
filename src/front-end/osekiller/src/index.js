@@ -10,6 +10,8 @@ import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
 import UserValidation from "./views/UserValidation";
 import UploadCv from "./views/UploadCv";
+import StudentCvs from "./views/StudentCvs";
+import ValidateCv from "./views/ValidateCv";
 
 <link
   rel="stylesheet"
@@ -39,8 +41,18 @@ root.render(
           </ProtectedRoute>
          }/>
          <Route path="upload-cv" element={
-            <ProtectedRoute authenticated allowedRole={["STUDENT"]}>
+            <ProtectedRoute authenticated allowedRoles={["STUDENT"]}>
                 <UploadCv />
+            </ProtectedRoute>
+          }/>
+          <Route path="validate-cv" element={
+            <ProtectedRoute authenticated allowedRoles={["MANAGER"]}>
+                <ValidateCv />
+            </ProtectedRoute>
+          }/>
+          <Route path="students-cv" element={
+            <ProtectedRoute authenticated allowedRoles={["MANAGER"]}>
+                <StudentCvs />
             </ProtectedRoute>
           }/>
       </Route>

@@ -31,17 +31,25 @@ export const Header = () => {
                     <h1 className="ps-4 display-4">Ose killer</h1>
                 </div>
                 <div className="links d-flex mx-auto">
-                {authenticatedUser.role === "MANAGER" && 
-                    (<Link to="/user-validation" className="m-4 fs-2 d-flex align-items-center">
+                    {authenticatedUser.role === "MANAGER" && (
+                    <Link to="/user-validation" className="m-4 fs-2 d-flex align-items-center">
                         Validation d'utilisateur
-                    </Link>)}
+                    </Link>
+                    )}
                     {authenticatedUser.role === "STUDENT" && (
+                    <Link
+                        to={"/upload-cv"}
+                        state={{ userId: authenticatedUser.id }}
+                        className="m-4 fs-2 d-flex align-items-center">
+                            Téléverser votre CV
+                    </Link>
+                    )}
+                    {authenticatedUser.role === "MANAGER" && (
                         <Link
-                            to={"/upload-cv"}
-                            state={{ userId: authenticatedUser.id }}
+                            to={"/students-cv"}
                             className="m-4 fs-2 d-flex align-items-center"
                         >
-                            Téléverser votre CV
+                            Valider des CV
                         </Link>
                     )}
                 </div>
