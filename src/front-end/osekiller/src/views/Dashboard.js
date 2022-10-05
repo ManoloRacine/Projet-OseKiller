@@ -2,8 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calLogo from "../assets/calLogo.jpg";
 import { pingToken } from "../services/AuthService";
-import { getCV } from "../services/CvServices" ;
-import { getStudent } from "../services/UserServices" ;
+import { getCV } from "../services/CvService" ;
+import { getStudent } from "../services/UserService" ;
 
 const Dashboard = () => {
     const [userName, setUserName] = useState("");

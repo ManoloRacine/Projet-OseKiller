@@ -1,5 +1,5 @@
 import { useEffect, useState  } from "react";
-import { getStudents } from "../services/UserServices" ;
+import { getStudents } from "../services/UserService" ;
 import { faArrowLeft, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

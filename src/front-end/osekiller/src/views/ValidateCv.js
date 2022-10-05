@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { faCheck, faCross, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { navigate, useLocation, useNavigate } from "react-router-dom";
-import { validateCv, invalidateCv, getCV} from "../services/CvServices"
+import { validateCv, invalidateCv, getCV} from "../services/CvService"
 
 
 const ValidateCv = () => {
