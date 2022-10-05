@@ -1,60 +1,58 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import calLogo from "../assets/calLogo.jpg";
-import { pingToken } from "../services/AuthService";
+import {useContext, useEffect, useState} from "react";
+import {AuthenticatedUserContext} from "../App";
+import {getStudent} from "../services/UserService";
+import {getCV} from "../services/CvService";
 
 const Dashboard = () => {
-    const [userName, setUserName] = useState("");
-    const [userId, setUserId] = useState("");
-    const [role, setRole] = useState("");
-    const navigate = useNavigate();
+    const [userPdf, setUserPdf] = useState("");
+    const [studentInfo, setStudentInfo] = useState({});
 
-    const logout = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        navigate("/");
-    };
+    const {authenticatedUser} = useContext(AuthenticatedUserContext);
 
     useEffect(() => {
-        pingToken()
-            .then((response) => {
-                setUserName(response.data.name);
-                setUserId(response.data.id);
-                setRole(response.data.role);
-            })
-            .catch((err) => {
-                console.log(err);
+        if (authenticatedUser.role === "STUDENT") {
+            getStudent(authenticatedUser.id).then((response) => {
+                setStudentInfo(response.data);
             });
-    }, []);
+            getCV(authenticatedUser.id).then((response) => {
+                if (response.status !== 204) {
+                    var blob1 = new Blob([response.data], {
+                        type: "application/pdf",
+                    });
+                    var data_url = window.URL.createObjectURL(blob1);
+                    setUserPdf(data_url);
+                }
+            });
+        }
+    }, [authenticatedUser.id, authenticatedUser.role]);
 
     return (
         <div className="p-3">
-            <nav
-                className="d-flex p-2 rounded"
-                style={{ backgroundColor: "#2C324C" }}
-            >
-                <div className="header d-flex align-items-center text-white">
-                    <img src={calLogo} alt="Logo du Cégep André-Laurendeau" />
-                    <h1 className="ps-4 display-4">Ose killer</h1>
-                </div>
-                <div className="links d-flex mx-auto">
-                    {role === "STUDENT" && (
-                        <Link
-                            to={"/upload-cv"}
-                            state={{ userId: userId }}
-                            className="m-4 fs-2 d-flex align-items-center"
-                        >
-                            Téléverser votre CV
-                        </Link>
-                    )}
-                </div>
+            <h1>{`Bonjour, ${authenticatedUser.name}`}</h1>
 
-                {/* Bouton à améliorer */}
-                <button className="btn btn-primary" onClick={logout}>
-                    Déconnexion
-                </button>
-            </nav>
-            <h1>{`Bonjour, ${userName}`}</h1>
+            <div className="row">
+                <div className="col-6">
+                    {authenticatedUser.role === "STUDENT" && studentInfo["cvValidated"] ? (<h3 className="text-success">CV est valide</h3>) : null}
+                    {authenticatedUser.role === "STUDENT" && studentInfo["cvRejected"] ? (<h3 className="text-danger">CV n'est pas valide</h3>) : null}
+                    {authenticatedUser.role === "STUDENT" && studentInfo["cvPresent"] === true && (studentInfo["cvRejected"] === true || studentInfo["cvValidated"] === true) ?
+                    <div><h4>Feedback :</h4><p>{studentInfo["feedback"]}</p></div> :
+                    studentInfo['cvPresent'] === true ? <h4 className="text-warning">CV en attente de validation</h4> : null }
+                </div>
+                <div className="col-6">
+                    {authenticatedUser.role === "STUDENT" ? (
+                        userPdf !== "" ? (
+                            <iframe
+                                title="studentCv"
+                                src={userPdf}
+                                height="600px"
+                                width="100%"
+                            ></iframe>
+                        ) : (
+                            <p>Vous n'avez pas téléversé de CV</p>
+                        )
+                    ) : null}
+                </div>
+            </div>
         </div>
     );
 };

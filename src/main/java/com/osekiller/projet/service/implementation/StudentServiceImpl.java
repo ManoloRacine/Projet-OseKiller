@@ -1,14 +1,13 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.model.user.User;
+import com.osekiller.projet.repository.CVRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
-import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
@@ -28,34 +27,71 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentRepository studentRepository;
 
-    private final Path cvPath = Paths.get("CV") ;
+    private CVRepository cvRepository;
+
+    private final Path cvPath = Paths.get("CV");
+
+    @Override
+    public void validateCV(Long studentId, String feedback) {
+        Optional<Student> student = studentRepository.findById(studentId);
+
+        if (student.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        student.get().setCvRejected(false);
+        student.get().getCv().setValidated(true);
+        student.get().getCv().setFeedback(feedback);
+        studentRepository.save(student.get());
+    }
+
+    @Override
+    public void invalidateCV(Long studentId, String feedback) {
+        Optional<Student> student = studentRepository.findById(studentId);
+
+        if (student.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        student.get().setCvRejected(true);
+        student.get().getCv().setValidated(false);
+        student.get().getCv().setFeedback(feedback);
+        studentRepository.save(student.get());
+    }
+
     @Override
     public void saveCV(MultipartFile cv, Long studentId) {
-        Optional<Student> student = studentRepository.findById(studentId) ;
+        Optional<Student> student = studentRepository.findById(studentId);
 
-        if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
+        if (student.isEmpty())
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
         try {
-            Files.copy(cv.getInputStream(), cvPath.resolve(studentId + ".pdf"));
-        }
-        catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
+            Path path = cvPath.resolve(studentId + ".pdf");
+            if (path.toFile().exists()) {
+                Files.delete(path);
+            }
+            Files.copy(cv.getInputStream(), path);
+            CV newCV = cvRepository.save(new CV(cvPath.toString(), student.get(), false));
+            student.get().setCv(newCV);
+            student.get().setCvRejected(false);
+            studentRepository.save(student.get());
+        } catch (IOException e) {
+            System.out.println(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     public Resource getCV(Long studentId, ResourceFactory resourceFactory) {
         try {
-            Path file = cvPath.resolve(studentId.toString() + ".pdf") ;
+            Path file = cvPath.resolve(studentId.toString() + ".pdf");
             Resource resource = resourceFactory.createResource(file.toUri());
             if (resource.exists() && resource.isReadable()) {
-                return resource ;
-            }
-            else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
+                return resource;
+            } else {
+                throw new ResponseStatusException(HttpStatus.NO_CONTENT);
             }
         } catch (MalformedURLException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR) ;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -68,6 +104,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public void deleteAll() {
+        cvRepository.deleteAll();
         FileSystemUtils.deleteRecursively(cvPath.toFile());
     }
 

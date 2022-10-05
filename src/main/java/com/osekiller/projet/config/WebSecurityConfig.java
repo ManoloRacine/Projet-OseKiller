@@ -24,6 +24,7 @@ public class WebSecurityConfig {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService)
             throws Exception {
@@ -33,6 +34,7 @@ public class WebSecurityConfig {
                 .and()
                 .build();
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, AuthTokenFilter authTokenFilter) throws Exception {
         http

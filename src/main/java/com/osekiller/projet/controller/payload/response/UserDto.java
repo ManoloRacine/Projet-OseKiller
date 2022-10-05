@@ -7,5 +7,4 @@ public record UserDto(@NotBlank String email,
                       @NotBlank boolean enabled,
                       @NotBlank Long id,
                       @NotBlank String role) {
-
 }

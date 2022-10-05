@@ -106,26 +106,23 @@ public class AuthServiceImpl implements AuthService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message.toString());
         }
 
-    @Override
-    public void signOut(String token) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(
+        @Override
+        public void signOut(String token) {
+                RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(
+                                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+                refreshTokenRepository.delete(refreshToken);
+        }
 
-                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-
-        refreshTokenRepository.delete(refreshToken);
-    }
-
-    @Override
-    public JwtResponseDto refresh(String token) {
-
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
-        verifyExpiration(refreshToken);
-
-        return new JwtResponseDto(
-                jwtUtils.generateToken(refreshToken.getUser()),
-                refreshToken.getToken(),
-                "Bearer");
-    }
+        @Override
+        public JwtResponseDto refresh(String token) {
+                RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+                verifyExpiration(refreshToken);
+                return new JwtResponseDto(
+                                jwtUtils.generateToken(refreshToken.getUser()),
+                                refreshToken.getToken(),
+                                "Bearer");
+        }
 
         @Override
         public UserDto getUserFromToken(String accessToken) {
@@ -148,10 +145,10 @@ public class AuthServiceImpl implements AuthService {
                                                                 "User " + username + " not found."));
         }
 
-    private void verifyExpiration(RefreshToken token) {
-        if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
-            refreshTokenRepository.delete(token);
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token-expired");
+        private void verifyExpiration(RefreshToken token) {
+                if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
+                        refreshTokenRepository.delete(token);
+                        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "token-expired");
+                }
         }
-    }
 }
