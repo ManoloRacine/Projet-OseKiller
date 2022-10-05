@@ -104,12 +104,6 @@ const Dashboard = () => {
                             <p>You do not have a CV uploaded</p>
                         )
                     ) : null}
-                    {role === "STUDENT" &&
-                    studentInfo["cvPresent"] &&
-                    (studentInfo["cvRejected"] === true ||
-                        studentInfo["cvValidated"] === true) ? (
-                        <p>{studentInfo["feedback"]}</p>
-                    ) : null}
                 </div>
             </div>
         </div>
