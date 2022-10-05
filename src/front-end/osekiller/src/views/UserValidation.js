@@ -1,7 +1,6 @@
-import { useEffect } from "react";
-import { useState } from "react"
+import {useEffect, useState} from "react";
 import UserValidationCard from "../components/UserValidationCard";
-import { fetchUsers } from "../services/UserService";
+import {fetchUsers} from "../services/UserService";
 
 export const UserValidation = () => {
     const [users, setUsers] = useState([]);

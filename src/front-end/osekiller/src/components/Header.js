@@ -1,7 +1,7 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {useContext} from "react";
 import calLogo from "../assets/calLogo.jpg";
-import { AuthenticatedUserContext } from "../App";
+import {AuthenticatedUserContext} from "../App";
 
 export const Header = () => {
 

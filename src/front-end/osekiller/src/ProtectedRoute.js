@@ -1,7 +1,7 @@
-import { useContext, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import { AuthenticatedUserContext } from "./App";
-import { pingToken } from "./services/AuthService";
+import {useContext, useEffect} from "react";
+import {Navigate} from "react-router-dom";
+import {AuthenticatedUserContext} from "./App";
+import {pingToken} from "./services/AuthService";
 
 const ProtectedRoute = ({children, redirectTo = "/", authenticated = false, allowedRoles}) => {
 

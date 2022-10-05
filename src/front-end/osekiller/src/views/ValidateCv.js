@@ -1,9 +1,9 @@
 import axios from "../api/axios";
-import { useEffect, useState } from "react";
-import { faCheck, faCross } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocation, useNavigate } from "react-router-dom";
-import { validateCv, invalidateCv} from "../services/CvServices"
+import {useEffect, useState} from "react";
+import {faCheck, faCross} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useLocation, useNavigate} from "react-router-dom";
+import {invalidateCv, validateCv} from "../services/CvServices"
 
 
 const ValidateCv = () => {

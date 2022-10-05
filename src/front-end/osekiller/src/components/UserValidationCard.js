@@ -1,4 +1,4 @@
-import { validateUser } from "../services/UserService";
+import {validateUser} from "../services/UserService";
 
 export const UserValidationCard = ({user, removeUser}) => {
     return <div  className="card" style={{width: "18rem"}}>

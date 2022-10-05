@@ -2,15 +2,12 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.CVRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
-import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;

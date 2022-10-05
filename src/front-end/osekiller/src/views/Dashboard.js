@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { AuthenticatedUserContext } from "../App";
-import { useEffect, useState } from "react";
-import { getCV } from "../services/CvServices";
-import { getStudent } from "../services/UserService";
+import {useContext, useEffect, useState} from "react";
+import {AuthenticatedUserContext} from "../App";
+import {getCV} from "../services/CvServices";
+import {getStudent} from "../services/UserService";
 
 const Dashboard = () => {
     const [userPdf, setUserPdf] = useState("");

@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { uploadCv } from "../services/UploadService";
+import {useState} from "react";
+import {useLocation} from "react-router-dom";
+import {faCloudArrowUp} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {uploadCv} from "../services/UploadService";
 import SelectedCV from "../components/SelectedCV";
 import ErrorMessage from "../components/ErrorMessage";
 
