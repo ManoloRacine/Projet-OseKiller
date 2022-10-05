@@ -1,65 +1,25 @@
-import { Routes, Route } from "react-router-dom";
-import Home from "./views/Home";
-import Dashboard from "./views/Dashboard";
-import ProtectedRoute from "./ProtectedRoute";
-import UploadCv from "./views/UploadCv";
-import ValidateCv from "./views/ValidateCv";
-import StudentCvs from "./views/StudentCvs";
+import {createContext, useState} from "react";
+import {Outlet} from "react-router-dom";
 
-function App() {
+import Header from "./components/Header";
+
+export const AuthenticatedUserContext = createContext()
+
+export const App = () => {
+    const [authenticatedUser, setAuthenticatedUser] = useState({});
+
     return (
-        <div
-            className="App"
+        <AuthenticatedUserContext.Provider value={{authenticatedUser, setAuthenticatedUser}}>
+            <div
+            className="App p-3"
             style={{
                 backgroundColor: "#da8362",
                 minHeight: "100vh",
                 color: "#2C324C",
-            }}
-        >
-            <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <ProtectedRoute redirectTo="/dashboard">
-                            <Home />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/dashboard"
-                    element={
-                        <ProtectedRoute authenticated>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/upload-cv"
-                    element={
-                        <ProtectedRoute authenticated allowedRole={["STUDENT"]}>
-                            <UploadCv />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/validate-cv"
-                    element={
-                        <ProtectedRoute authenticated allowedRole={["MANAGER"]}>
-                            <ValidateCv />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/students-cv"
-                    element={
-                        <ProtectedRoute authenticated allowedRole={["MANAGER"]}>
-                            <StudentCvs />
-                        </ProtectedRoute>
-                    }
-                />
-            </Routes>
-        </div>
+            }}>
+                <Header />
+                <Outlet />
+            </div>
+        </AuthenticatedUserContext.Provider>
     );
 }
-
-export default App;

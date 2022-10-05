@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { userLogin } from "../services/AuthService";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {userLogin} from "../services/AuthService";
 import LogInForm from "./forms/LogInForm";
 
 const LogIn = ({ changeForm, title }) => {
@@ -30,7 +30,7 @@ const LogIn = ({ changeForm, title }) => {
                     "refreshToken",
                     `${tokenType} ${refreshToken}`
                 );
-                navigate("/dashboard", { state: { email: email } });
+                navigate("/dashboard");
             })
             .catch((err) => {
                 setIsLoading(false);

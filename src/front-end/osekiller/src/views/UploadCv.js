@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { faArrowLeft, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { uploadCv } from "../services/UploadService";
+import {useState} from "react";
+import {useLocation} from "react-router-dom";
+import {faCloudArrowUp} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {uploadCv} from "../services/UploadService";
 import SelectedCV from "../components/SelectedCV";
 import ErrorMessage from "../components/ErrorMessage";
 
@@ -10,7 +10,6 @@ const UploadCv = () => {
     const [selectedFile, setSelectedFile] = useState({});
     const [isCvSubmitted, setIsCvSubmitted] = useState(false);
 
-    const navigate = useNavigate();
     const location = useLocation();
     const { userId } = location.state;
 
@@ -18,7 +17,7 @@ const UploadCv = () => {
         const formData = new FormData();
         formData.append("file", selectedFile);
         uploadCv(formData, userId)
-            .then((response) => setIsCvSubmitted(true))
+            .then(() => setIsCvSubmitted(true))
 
             .catch((err) => console.log("Error:", err));
     };
@@ -30,13 +29,6 @@ const UploadCv = () => {
                 style={{ backgroundColor: "#2C324C" }}
             >
                 <section className="mb-4">
-                    <button
-                        className="btn btn-primary float-left"
-                        onClick={() => navigate("/dashboard")}
-                    >
-                        <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
-                        Dashboard
-                    </button>
                     <h1 className="text-center">Téléverser votre CV</h1>
                 </section>
                 {selectedFile.name == null ? (

@@ -1,6 +1,20 @@
-import axios from "../api/axios";
+import axios from "../api/axios"
 
-const token = localStorage.getItem("accessToken");
+export const fetchUsers = () => {
+   return axios.get("/users", {
+        headers: {
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+}
+
+export const validateUser = (userId, valid) => {
+    return axios.post("/user/" + userId + "/validate",{validation: valid}, {
+         headers: {
+             Authorization: localStorage.getItem("accessToken"),
+         },
+     });
+}
 
 export const getStudents = async () => {
     return axios.get(`/students`, {

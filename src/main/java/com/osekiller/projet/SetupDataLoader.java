@@ -46,28 +46,32 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    void initializeStudents() {
-        createStudentIfNotFound(new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("123")));
-        createStudentIfNotFound(new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("123")));
-        createStudentIfNotFound(new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("123")));
+    void initializeManagers(){
+        Manager testManager = new Manager("Test Manager","testmanager@osk.com", passwordEncoder.encode("123"));
+        testManager.setEnabled(true);
+        createManagerIfNotFound(testManager);
     }
 
-    void createStudentIfNotFound(Student student) {
+    @Transactional
+    void initializeStudents(){
+        Student testStudent1 = new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("123"));
+        Student testStudent2 = new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("123"));
+        Student testStudent3 = new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("123"));
+        testStudent1.setEnabled(true);
+        createStudentIfNotFound(testStudent1);
+        createStudentIfNotFound(testStudent2);
+        createStudentIfNotFound(testStudent3);
+    }
+
+    void createStudentIfNotFound(Student student){
         if(studentRepository.findByEmail(student.getEmail()).isPresent()) return;
-        student.setEnabled(true);
         Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
         student.setRole(studentRole);
         studentRepository.save(student);
     }
 
-    @Transactional
-    void initializeManagers(){
-        createManagerIfNotFound(new Manager("Test Manager","testmanager@osk.com", passwordEncoder.encode("testPass123")));
-    }
-
     void createManagerIfNotFound(Manager manager){
         if(managerRepository.findByEmail(manager.getEmail()).isPresent()) return;
-        manager.setEnabled(true);
         Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
         manager.setRole(managerRole);
         managerRepository.save(manager);
