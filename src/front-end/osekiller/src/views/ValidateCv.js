@@ -34,11 +34,10 @@ const ValidateCv = () => {
             
             var data_url = window.URL.createObjectURL(blob1) ;
             setPdf(data_url) ;
-            console.log(pdf) ;
             console.log(blob1) ;
             console.log(localStorage.getItem("accessToken")) ;
         })
-    }, [pdf, studentId])
+    }, [studentId])
 
     return (
         <div>
