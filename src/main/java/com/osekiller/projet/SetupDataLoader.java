@@ -5,6 +5,7 @@ import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.user.*;
+import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -26,10 +27,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private StudentRepository studentRepository;
     private ManagerRepository managerRepository;
     private RoleRepository roleRepository;
+    private StudentService studentService;
 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        studentService.deleteAll();
+        studentService.init();
         if (alreadySetup) return;
         //Si il y a des chose à setup au lancement du serveur c'est ici
         initializeRoles();
