@@ -19,39 +19,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
-    private StudentRepository studentRepository;
-
     @Override
     public List<UserDto> getUsers() {
-        return userRepository.findAll().stream().map(
-                this::userToDTO
-        ).toList() ;
-    }
-
-    private UserDto userToDTO(User user) {
-        return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName()) ;
-    }
-
-    public List<StudentDto> getStudents() {
-        return studentRepository.findAll().stream().map(
-                this::studentToDto
-        ).toList() ;
-    }
-
-    public StudentDto getStudent(Long id) {
-        Optional<Student> student = studentRepository.findById(id) ;
-
-        if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
-
-        return studentToDto(student.get()) ;
-    }
-
-    private StudentDto studentToDto(Student student) {
-        boolean cvPresent = false ;
-        if (student.getCv().getPath() != null) {
-            cvPresent = true ;
-        }
-        return new StudentDto(student.getEmail(), student.getName(), student.getId(), student.isEnabled(), student.getCv().isValidated(), student.isCvRejected(), cvPresent, student.getCv().getFeedback()) ;
+        return userRepository.findAll().stream().map(UserDto::from).toList() ;
     }
 
     public void validateUser(Long id) {

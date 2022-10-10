@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +38,7 @@ public class StudentControllerTest {
     MockMvc mockMvc ;
 
     @InjectMocks
-    CVController controller = new CVController(studentService);
+    StudentController controller = new StudentController(studentService);
 
     @Test
     @WithMockUser(authorities = {"MANAGER"})

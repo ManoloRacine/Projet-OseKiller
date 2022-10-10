@@ -3,7 +3,6 @@ package com.osekiller.projet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.UserValidationDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
-import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;

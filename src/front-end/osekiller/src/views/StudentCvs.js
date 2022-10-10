@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {getStudents} from "../services/UserService";
 import {Link} from "react-router-dom";
+import { getStudents } from "../services/StudentService";
 
 
 const StudentCvs = () => {
@@ -9,7 +9,6 @@ const StudentCvs = () => {
     useEffect(() => {
         getStudents().then((response) => {
             setStudents(response.data)
-            console.log(response.data)
         })
     }, []) ;
 

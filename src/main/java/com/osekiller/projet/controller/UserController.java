@@ -17,7 +17,10 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     UserService userService;
-
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return ResponseEntity.ok(userService.getUsers()) ;
+    }
     @PostMapping("/{id}/validate")
     public ResponseEntity<Void> validateUser(@Valid @RequestBody UserValidationDto dto,
                                              @PathVariable(name = "id") Long id) {
@@ -29,20 +32,4 @@ public class UserController {
         }
         return ResponseEntity.ok().build() ;
     }
-
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok(userService.getUsers()) ;
-    }
-
-    @GetMapping("/students")
-    public ResponseEntity<List<StudentDto>> getStudents() {
-        return ResponseEntity.ok(userService.getStudents()) ;
-    }
-
-    @GetMapping("/student/{id}")
-    public ResponseEntity<StudentDto> getStudents(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(userService.getStudent(id)) ;
-    }
-
 }
