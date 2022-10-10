@@ -2,27 +2,22 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import SelectedCV from "./SelectedCV";
-import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { uploadCv } from "../services/UploadService";
 import ErrorMessage from "./ErrorMessage";
 
-const Upload = ({ title, subtitle }) => {
-    const [selectedFile, setSelectedFile] = useState({});
-    const [isCvSubmitted, setIsCvSubmitted] = useState(false);
-
+const Upload = ({
+    title,
+    subtitle,
+    selectedFile,
+    onChange,
+    onDelete,
+    onSubmit,
+    isSubmitted,
+}) => {
     const location = useLocation();
     const { state } = location;
     const userId = state?.userId;
 
-    const handleSubmit = () => {
-        const formData = new FormData();
-        formData.append("file", selectedFile);
-        uploadCv(formData, userId)
-            .then(() => setIsCvSubmitted(true))
-
-            .catch((err) => console.log("Error:", err));
-    };
     return (
         <main className="d-flex justify-content-center align-items-center p-3 vh-100">
             <div
@@ -45,9 +40,7 @@ const Upload = ({ title, subtitle }) => {
                             type="file"
                             id="cvInput"
                             accept="application/pdf"
-                            onChange={({ target }) =>
-                                setSelectedFile(Array.from(target.files)[0])
-                            }
+                            onChange={onChange}
                             style={{ display: "none" }}
                         />
                     </form>
@@ -56,11 +49,11 @@ const Upload = ({ title, subtitle }) => {
                         <SelectedCV
                             fileName={selectedFile.name}
                             fileSize={selectedFile.size}
-                            deleteFile={() => setSelectedFile({})}
+                            deleteFile={onDelete}
                         />
                         <button
                             className="btn"
-                            onClick={handleSubmit}
+                            onClick={() => onSubmit(userId)}
                             style={{ backgroundColor: "#ee7600" }}
                         >
                             Soumettre
@@ -68,7 +61,7 @@ const Upload = ({ title, subtitle }) => {
                     </section>
                 )}
             </div>
-            {isCvSubmitted && (
+            {isSubmitted && (
                 <ErrorMessage
                     message={"CV téléversé avec succès !"}
                     severity="success"
@@ -81,6 +74,11 @@ const Upload = ({ title, subtitle }) => {
 Upload.propTypes = {
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string.isRequired,
+    selectedFile: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    isSubmitted: PropTypes.bool.isRequired,
 };
 
 export default Upload;
