@@ -12,6 +12,7 @@ import UserValidation from "./views/UserValidation";
 import UploadCv from "./views/UploadCv";
 import StudentCvs from "./views/StudentCvs";
 import ValidateCv from "./views/ValidateCv";
+import UploadInternship from "./views/UploadInternship";
 
 <link
   rel="stylesheet"
@@ -55,6 +56,11 @@ root.render(
                 <StudentCvs />
             </ProtectedRoute>
           }/>
+          <Route path="upload-internship" element={
+          <ProtectedRoute authenticated allowedRoles={["COMPANY"]}>
+              <UploadInternship />
+          </ProtectedRoute>
+      }/>
       </Route>
     </Routes>
   </BrowserRouter>
