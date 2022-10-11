@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {AuthenticatedUserContext} from "../App";
-import {getStudent} from "../services/UserService";
-import {getCV} from "../services/CvService";
+import { getCv, getStudent } from "../services/StudentService";
+
 
 const Dashboard = () => {
     const [userPdf, setUserPdf] = useState("");
@@ -14,7 +14,7 @@ const Dashboard = () => {
             getStudent(authenticatedUser.id).then((response) => {
                 setStudentInfo(response.data);
             });
-            getCV(authenticatedUser.id).then((response) => {
+            getCv(authenticatedUser.id).then((response) => {
                 if (response.status !== 204) {
                     var blob1 = new Blob([response.data], {
                         type: "application/pdf",

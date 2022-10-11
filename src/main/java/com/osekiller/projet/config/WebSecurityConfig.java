@@ -44,10 +44,10 @@ public class WebSecurityConfig {
                         (requests) -> requests
                                 //Autoriser ses routes de base
                                 .antMatchers("/ping","/sign-in","/sign-up").permitAll()
-                                .antMatchers("/users/**","/user/**").hasAuthority(ERole.MANAGER.name())
-                                .antMatchers(HttpMethod.PUT,"/student/{id}/cv").hasAuthority(ERole.STUDENT.name())
-                                .antMatchers(HttpMethod.GET,"/student/{id}/cv").hasAnyAuthority(ERole.MANAGER.name(),ERole.STUDENT.name())
-                                .antMatchers("/student/{id}/cv/validate").hasAuthority(ERole.MANAGER.name())
+                                .antMatchers("/users/**").hasAuthority(ERole.MANAGER.name())
+                                .antMatchers(HttpMethod.PUT,"/students/{id}/cv").hasAuthority(ERole.STUDENT.name())
+                                .antMatchers(HttpMethod.GET,"/students/{id}/cv").hasAnyAuthority(ERole.MANAGER.name(),ERole.STUDENT.name())
+                                .antMatchers("/students/{id}/cv/validate").hasAuthority(ERole.MANAGER.name())
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )

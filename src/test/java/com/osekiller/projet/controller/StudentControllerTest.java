@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +38,7 @@ public class StudentControllerTest {
     MockMvc mockMvc ;
 
     @InjectMocks
-    CVController controller = new CVController(studentService);
+    StudentController controller = new StudentController(studentService);
 
     @Test
     @WithMockUser(authorities = {"MANAGER"})
@@ -49,8 +49,8 @@ public class StudentControllerTest {
         Resource resource = new InputStreamResource(inputStream);
         when(studentService.getCV(any(), any())).thenReturn(resource);
 
-        mockMvc.perform(get("/student/{id}/cv", 1L))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/students/{id}/cv", 1L))
+                .andExpect(status().isOk()) ;
 
     }
 
@@ -58,7 +58,7 @@ public class StudentControllerTest {
     @WithMockUser(authorities = {"STUDENT"})
     void saveCVHappyDay() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
-        mockMvc.perform(put("/student/{id}/cv", 1L)
+        mockMvc.perform(put("/students/{id}/cv", 1L)
                         .content(mockMultipartFile.getBytes()))
                 .andExpect(status().isOk()) ;
     }
