@@ -20,9 +20,10 @@ const UploadCv = () => {
             subtitle={"Téléverser votre CV"}
             title={"Choisir votre CV"}
             selectedFile={selectedFile}
-            onChange={({ target }) =>
-                setSelectedFile(Array.from(target.files)[0])
-            }
+            onChange={({ target }) => {
+                console.log(target.files);
+                setSelectedFile(Array.from(target.files)[0]);
+            }}
             onDelete={() => setSelectedFile({})}
             onSubmit={handleSubmit}
             isSubmitted={isCvSubmitted}

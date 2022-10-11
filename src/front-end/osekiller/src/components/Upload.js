@@ -31,6 +31,7 @@ const Upload = ({
                     <form className="d-flex justify-content-center">
                         <label htmlFor="cvInput" className="btn text-white">
                             <FontAwesomeIcon
+                                data-testid="uploadIcon"
                                 icon={faCloudArrowUp}
                                 className="fa-10x d-flex mx-auto"
                             />
@@ -39,6 +40,7 @@ const Upload = ({
                         <input
                             type="file"
                             id="cvInput"
+                            data-testid="cvInput"
                             accept="application/pdf"
                             onChange={onChange}
                             style={{ display: "none" }}
