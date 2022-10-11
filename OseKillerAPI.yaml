@@ -292,7 +292,7 @@ paths:
               $ref: '#/components/schemas/InternshipOffer'
         required: true
       responses:
-        '204':
+        '202':
           description: L'offre à été soumise et est en attente de validation 
         '403':
           description: Requête non autorisée
@@ -321,18 +321,18 @@ paths:
           description: entreprise non trouvé
       security:
         - bearerAuth: []
-  /companies/{companyId}/offers/{offerId}:
+  /offers/{id}:
     get:
       tags:
-      - Company
+      - Offers
       parameters:
         - in: path
           name: companyId
           schema:
             type: integer
           required: true
-      summary: Obtenir une offre de stage d'une entreprise
-      description: Obtenir une offre de stage d'une entreprise
+      summary: Obtenir une offre de stage
+      description: Obtenir une offre de stage
       operationId: getOffer
       responses:
         '200':
