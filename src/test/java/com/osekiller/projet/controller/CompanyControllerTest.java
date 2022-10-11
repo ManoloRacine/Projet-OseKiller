@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,7 +45,7 @@ public class CompanyControllerTest {
     @WithMockUser
     void getOfferHappyDay() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", mock(UrlResource.class)) ;
+        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
         doReturn(offerDtoResponse).when(companyService).getOffer(1L) ;
 
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}", 1, 1)).
@@ -55,7 +56,7 @@ public class CompanyControllerTest {
     @WithMockUser
     void getOfferNoCompany() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", mock(UrlResource.class)) ;
+        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffer(1L);
 
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}", 1, 1)).
@@ -92,7 +93,7 @@ public class CompanyControllerTest {
     void postOfferHappyDay() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
-
+        System.out.println(asJsonString(offerDto));
         mockMvc.perform(multipart("/companies/{id}/offers", 1)
                         .file(mockMultipartFile)
                         .param("offerDto", asJsonString(offerDto)))

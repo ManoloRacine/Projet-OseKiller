@@ -4,13 +4,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
+import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.CompanyService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 @RestController
@@ -36,8 +45,14 @@ public class OfferController {
     }
 
     @GetMapping("/companies/{companyId}/offers/{offerId}")
-    public ResponseEntity<OfferDtoResponse> getOffers(@PathVariable(name = "companyId") Long companyId,
-                                                            @PathVariable(name = "offerId") Long offerId) {
-        return ResponseEntity.ok(companyService.getOffer(offerId)) ;
+    public ResponseEntity<MultiValueMap<String, Object>> getOffers(@PathVariable(name = "companyId") Long companyId,
+                                              @PathVariable(name = "offerId") Long offerId) {
+        OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
+        OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(), offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(), offerDtoResponse.endDate()) ;
+        MultiValueMap<String, Object> multipartBody = new LinkedMultiValueMap<>();
+        multipartBody.add("offerDto", offerDtoResponseNoPdf);
+        multipartBody.add("file", offerDtoResponse.offer());
+
+        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(multipartBody) ;
     }
 }

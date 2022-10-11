@@ -2,6 +2,7 @@ package com.osekiller.projet;
 
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Role;
+import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.user.*;
@@ -37,6 +38,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         if (alreadySetup) return;
         //Si il y a des chose à setup au lancement du serveur c'est ici
         initializeRoles();
+        initializeCompanies();
         initializeManagers();
         initializeStudents();
         alreadySetup = true;
@@ -47,6 +49,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         for(ERole role : ERole.values()){
             createRoleIfNotFound(role);
         }
+    }
+
+    @Transactional
+    void initializeCompanies(){
+        Company testCompany = new Company("Test Company","testcompany@osk.com", passwordEncoder.encode("123"));
+        testCompany.setEnabled(true);
+        createCompanyIfNotFound(testCompany);
     }
 
     @Transactional
@@ -65,6 +74,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createStudentIfNotFound(testStudent1);
         createStudentIfNotFound(testStudent2);
         createStudentIfNotFound(testStudent3);
+    }
+
+    void createCompanyIfNotFound(Company company){
+        if(companyRepository.findByEmail(company.getEmail()).isPresent()) return;
+        Role companyRole = roleRepository.findByName(ERole.COMPANY.name()).orElseThrow(EntityNotFoundException::new);
+        company.setRole(companyRole);
+        companyRepository.save(company);
     }
 
     void createStudentIfNotFound(Student student){
