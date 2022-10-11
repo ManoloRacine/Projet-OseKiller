@@ -28,4 +28,6 @@ public class Offer {
     @NonNull private double salary;
     @NonNull private LocalDate startDate;
     @NonNull private LocalDate endDate;
+
+    @NonNull private boolean accepted;
 }

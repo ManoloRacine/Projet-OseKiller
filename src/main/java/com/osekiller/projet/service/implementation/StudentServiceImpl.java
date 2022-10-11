@@ -8,6 +8,7 @@ import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
@@ -81,15 +82,15 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
-    public Resource getCV(Long studentId, ResourceFactory resourceFactory) {
+    public Resource getCV(Long studentId) {
+        Optional<Student> student = studentRepository.findById(studentId) ;
+        if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        if (cvRepository.findById(student.get().getCv().getId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+
         try {
             Path file = cvPath.resolve(studentId.toString() + ".pdf");
-            Resource resource = resourceFactory.createResource(file.toUri());
-            if (resource.exists() && resource.isReadable()) {
-                return resource;
-            } else {
-                throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-            }
+            Resource resource = new UrlResource(file.toUri());
+            return resource;
         } catch (MalformedURLException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }

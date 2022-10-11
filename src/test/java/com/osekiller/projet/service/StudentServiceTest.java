@@ -17,6 +17,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -90,37 +91,25 @@ public class StudentServiceTest {
     @Test
     void getCVHappyDay() {
         Resource resource = mock(Resource.class) ;
-        ResourceFactory factory = uri -> resource;
-        when(resource.exists()).thenReturn(true) ;
-        when(resource.isReadable()).thenReturn(true) ;
+        CV cv = mock(CV.class) ;
+        Student student = mock(Student.class) ;
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student)) ;
+        when(student.getCv()).thenReturn(cv) ;
+        when(cvRepository.findById(anyLong())).thenReturn(Optional.of(cv)) ;
+        when(cv.getId()).thenReturn(1L) ;
 
-        Resource resourceReturn = studentService.getCV(1L, factory) ;
 
-        Assertions.assertThat(resourceReturn).isEqualTo(resource) ;
+        Resource resourceReturn = studentService.getCV(1L) ;
+
+        Assertions.assertThat(resourceReturn.getClass()).isEqualTo(UrlResource.class) ;
     }
 
     @Test
     void getCVDoesntExist() {
-        Resource resource = mock(Resource.class) ;
-        ResourceFactory factory = uri -> resource;
-        when(resource.exists()).thenReturn(false) ;
-
-        assertThatThrownBy(() -> studentService.getCV(1L, factory) )
+        assertThatThrownBy(() -> studentService.getCV(1L) )
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.NO_CONTENT);
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
-    @Test
-    void getCVUnreadable() {
-        Resource resource = mock(Resource.class) ;
-        ResourceFactory factory = uri -> resource;
-        when(resource.exists()).thenReturn(true) ;
-        when(resource.isReadable()).thenReturn(false) ;
-
-        assertThatThrownBy(() -> studentService.getCV(1L, factory) )
-                .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.NO_CONTENT);
-
-    }
 }

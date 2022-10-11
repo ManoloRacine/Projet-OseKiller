@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.file.Path;
@@ -26,8 +27,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -45,7 +45,7 @@ public class CompanyControllerTest {
     void getOfferHappyDay() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", mock(UrlResource.class)) ;
-        doReturn(offerDtoResponse).when(companyService).getOffer(1L, 1L) ;
+        doReturn(offerDtoResponse).when(companyService).getOffer(1L) ;
 
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}", 1, 1)).
                 andExpect(status().isOk()) ;
@@ -56,7 +56,7 @@ public class CompanyControllerTest {
     void getOfferNoCompany() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", mock(UrlResource.class)) ;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffer(1L, 1L);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffer(1L);
 
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}", 1, 1)).
                 andExpect(status().isNotFound()) ;
@@ -91,11 +91,11 @@ public class CompanyControllerTest {
     @WithMockUser(authorities = {"COMPANY"})
     void postOfferHappyDay() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14", mockMultipartFile.getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
 
-        mockMvc.perform(post("/companies/{id}/offers", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(offerDto)))
+        mockMvc.perform(multipart("/companies/{id}/offers", 1)
+                        .file(mockMultipartFile)
+                        .param("offerDto", asJsonString(offerDto)))
                 .andExpect(status().isAccepted()) ;
     }
 
@@ -103,12 +103,12 @@ public class CompanyControllerTest {
     @WithMockUser(authorities = {"COMPANY"})
     void postOfferNoCompany() throws Exception {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14", mockMultipartFile.getBytes()) ;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).addOffer(eq(1L), any(OfferDto.class));
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).addOffer(eq(1L), any(OfferDto.class), any(MultipartFile.class));
 
-        mockMvc.perform(post("/companies/{id}/offers", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(offerDto)))
+        mockMvc.perform(multipart("/companies/{id}/offers", 1)
+                        .file(mockMultipartFile)
+                        .param("offerDto", asJsonString(offerDto)))
                 .andExpect(status().isNotFound()) ;
     }
 

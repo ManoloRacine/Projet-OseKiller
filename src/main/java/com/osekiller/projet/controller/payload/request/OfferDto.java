@@ -10,7 +10,6 @@ public record OfferDto(
         @NotBlank String position,
         @NotNull double salary,
         @NotBlank String startDate,
-        @NotBlank String endDate,
-        @NotNull byte[] offer
+        @NotBlank String endDate
         ) {
 }
