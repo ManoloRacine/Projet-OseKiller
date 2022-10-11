@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faX} from "@fortawesome/free-solid-svg-icons";
 import {useLocation, useNavigate} from "react-router-dom";
-import {getCV, invalidateCv, validateCv} from "../services/CvService"
+import { getCv, invalidateCv, validateCv } from "../services/StudentService";
 
 
 const ValidateCv = () => {
@@ -17,7 +17,7 @@ const ValidateCv = () => {
     }
 
     useEffect(() => {
-        getCV(studentId)
+        getCv(studentId)
         .then((response) => {
             console.log("test") ;
             //let data_url = URL.createObjectURL(response.data) ;

@@ -7,9 +7,6 @@ import java.util.List;
 
 public interface UserService {
     List<UserDto> getUsers();
-    List<StudentDto> getStudents();
     void invalidateUser(Long email);
     void validateUser(Long email);
-
-    StudentDto getStudent(Long id);
 }

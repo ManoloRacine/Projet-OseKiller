@@ -96,7 +96,7 @@ public class StudentServiceTest {
 
         Resource resourceReturn = studentService.getCV(1L, factory) ;
 
-        Assertions.assertThat(resourceReturn).isEqualTo(resource) ;
+        assertThat(resourceReturn).isEqualTo(resource) ;
     }
 
     @Test

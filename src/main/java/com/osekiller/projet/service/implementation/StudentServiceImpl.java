@@ -1,5 +1,6 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CVRepository;
@@ -19,6 +20,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -93,6 +95,15 @@ public class StudentServiceImpl implements StudentService {
         } catch (MalformedURLException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    public List<StudentDto> getStudents() {
+        return studentRepository.findAll().stream().map(
+                StudentDto::from
+        ).toList() ;
+    }
+    public StudentDto getStudent(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return StudentDto.from(student);
     }
 
     public void init() {
