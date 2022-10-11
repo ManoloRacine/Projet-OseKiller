@@ -1,6 +1,7 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.StudentCVValidationDto;
+import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
@@ -13,27 +14,36 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @CrossOrigin
-public class CVController {
+@RequestMapping("/students")
+public class StudentController {
     StudentService studentService;
-
-    @PutMapping("/student/{id}/cv")
+    @GetMapping
+    public ResponseEntity<List<StudentDto>> getStudents() {
+        return ResponseEntity.ok(studentService.getStudents()) ;
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<StudentDto> getStudents(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(studentService.getStudent(id)) ;
+    }
+    @PutMapping("/{id}/cv")
     public ResponseEntity<Void> saveCV(@Valid @RequestBody MultipartFile file, @PathVariable(name = "id") Long id) {
         studentService.saveCV(file, id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/student/{id}/cv")
+    @GetMapping("/{id}/cv")
     public ResponseEntity<Resource> getCV(@PathVariable(name = "id") Long id) {
         Resource cv = studentService.getCV(id);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFilename() + "\"").body(cv);
     }
 
-    @PostMapping("/student/{id}/cv/validate")
+    @PostMapping("/{id}/cv/validate")
     public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody StudentCVValidationDto dto,
             @PathVariable(name = "id") Long id) {
         if (dto.validation()) {

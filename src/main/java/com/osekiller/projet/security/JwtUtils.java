@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+//TODO write test for that
 @Component
 public class JwtUtils {
     public static final long TOKEN_EXPIRATION = 1000* 60 * 30; //30 minutes
