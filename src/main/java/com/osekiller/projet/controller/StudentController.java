@@ -38,8 +38,7 @@ public class StudentController {
 
     @GetMapping("/{id}/cv")
     public ResponseEntity<Resource> getCV(@PathVariable(name = "id") Long id) {
-        ResourceFactory factory = UrlResource::new;
-        Resource cv = studentService.getCV(id, factory);
+        Resource cv = studentService.getCV(id);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFilename() + "\"").body(cv);
     }
