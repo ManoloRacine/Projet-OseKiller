@@ -10,4 +10,6 @@ public interface CompanyService {
     void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) ;
     OfferDtoResponse getOffer(Long offerId);
     List<OfferDtoResponse> getAllOffersCompany(Long companyId) ;
+    void init();
+    void deleteAll();
 }
