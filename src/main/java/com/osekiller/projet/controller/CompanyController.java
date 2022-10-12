@@ -9,6 +9,7 @@ import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,9 @@ public class CompanyController {
 
         OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
 
-        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(offerDtoResponse.offer()) ;
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + offerDtoResponse.offer().getFilename() +
+                        "\"").body(offerDtoResponse.offer());
     }
 
     @GetMapping("/{companyId}/offers/{offerId}")
