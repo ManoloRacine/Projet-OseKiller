@@ -19,8 +19,5 @@ public interface StudentService {
     List<StudentDto> getStudents();
 
     StudentDto getStudent(Long id);
-    void init(); //TODO this should be in another service like "FileStorageService"
-
-    void deleteAll(); //TODO this should be in another service like "FileStorageService"
 
 }

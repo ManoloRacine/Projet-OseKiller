@@ -19,7 +19,10 @@ public class Offer {
     @NonNull
     private Company owner;
 
-    private String path;
+    private String pdfName;
+
+    @Lob
+    private byte[] pdf;
 
     @NonNull private String position;
     private String feedback;

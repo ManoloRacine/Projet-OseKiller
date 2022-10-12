@@ -15,7 +15,10 @@ public class Cv {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NonNull private String path;
+    @Lob
+    private byte[] pdf ;
+
+    private String pdfName;
 
     @OneToOne(cascade = CascadeType.ALL)
     @NonNull private Student owner;
