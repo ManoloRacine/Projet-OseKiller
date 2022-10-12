@@ -243,11 +243,13 @@ public class CompanyServiceTest {
 
     @Test
     void invalidateOfferNoFeedback(){
-        //Arrange
 
-        //Act
+        //Act & Assert
 
-        //Assert
+        assertThatThrownBy(() -> companyService.invalidateOffer(1L, "feedback"))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 }

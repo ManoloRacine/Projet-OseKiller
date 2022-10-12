@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @CrossOrigin
 @RequestMapping("/companies")
-public class OfferController {
+public class CompanyController {
 
     CompanyService companyService ;
 
