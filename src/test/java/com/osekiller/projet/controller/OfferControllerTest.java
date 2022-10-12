@@ -5,6 +5,7 @@ import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.service.OfferService;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class OfferControllerTest {
     @MockBean
-    private CompanyServiceImpl companyService ;
+    private OfferService offerService;
 
     @Autowired
     private MockMvc mockMvc ;
@@ -55,7 +56,7 @@ public class OfferControllerTest {
         generalOfferDtos.add(generalOfferDto1);
         generalOfferDtos.add(generalOfferDto2);
         generalOfferDtos.add(generalOfferDto3);
-        when(companyService.getAllValidOffers()).thenReturn(generalOfferDtos) ;
+        when(offerService.getAllValidOffers()).thenReturn(generalOfferDtos) ;
 
         //Act & Assert
         mockMvc.perform(get("/offers?accepted=true"))
@@ -71,7 +72,7 @@ public class OfferControllerTest {
     void getAllValidOffersEmpty() throws Exception {
         //Arrange
         List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
-        when(companyService.getAllValidOffers()).thenReturn(generalOfferDtos) ;
+        when(offerService.getAllValidOffers()).thenReturn(generalOfferDtos) ;
 
         //Act & Assert
         mockMvc.perform(get("/offers?accepted=true"))
@@ -94,7 +95,7 @@ public class OfferControllerTest {
         generalOfferDtos.add(generalOfferDto1);
         generalOfferDtos.add(generalOfferDto2);
         generalOfferDtos.add(generalOfferDto3);
-        when(companyService.getAllInvalidOffers()).thenReturn(generalOfferDtos) ;
+        when(offerService.getAllInvalidOffers()).thenReturn(generalOfferDtos) ;
 
         //Act & Assert
         mockMvc.perform(get("/offers?accepted=false"))
@@ -110,7 +111,7 @@ public class OfferControllerTest {
     void getAllInvalidOffersEmpty() throws Exception {
         //Arrange
         List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
-        when(companyService.getAllInvalidOffers()).thenReturn(generalOfferDtos) ;
+        when(offerService.getAllInvalidOffers()).thenReturn(generalOfferDtos) ;
 
         //Act & Assert
         mockMvc.perform(get("/offers?accepted=false"))

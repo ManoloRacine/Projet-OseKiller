@@ -7,6 +7,7 @@ import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.service.CompanyService;
+import com.osekiller.projet.service.OfferService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +23,15 @@ import java.util.List;
 @CrossOrigin
 public class OfferController {
 
-    CompanyService companyService ;
+    OfferService offerService;
 
     @GetMapping("/offers")
     public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam String accepted) {
 
         if (accepted.equals("true")) {
-            return ResponseEntity.ok().body(companyService.getAllValidOffers()) ;
+            return ResponseEntity.ok().body(offerService.getAllValidOffers()) ;
         } else if (accepted.equals("false")) {
-            return ResponseEntity.ok().body(companyService.getAllInvalidOffers()) ;
+            return ResponseEntity.ok().body(offerService.getAllInvalidOffers()) ;
         }
 
         return ResponseEntity.badRequest().build() ;

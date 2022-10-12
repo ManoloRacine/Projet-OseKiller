@@ -33,11 +33,8 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
-
-    private CompanyRepository companyRepository ;
-
-    private OfferRepository offerRepository ;
-
+    private CompanyRepository companyRepository;
+    private OfferRepository offerRepository;
     @Override
     public void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) {
         Optional<Company> companyOptional = companyRepository.findById(companyId) ;
@@ -56,28 +53,9 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
         offerRepository.save(offer) ;
-
-
     }
-
     @Override
-    public OfferDtoResponse getOffer(Long offerId) {
-
-        Optional<Offer> offer = offerRepository.findById(offerId) ;
-
-        if (offer.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
-
-        Offer offer1 = offer.get() ;
-
-        Resource resource = new ByteArrayResource(offer1.getPdf()) ;
-
-        return new OfferDtoResponse(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(),
-                offer1.getEndDate().toString(), resource) ;
-
-    }
-
-    @Override
-    public List<OfferDtoResponseNoPdf> getAllOffersCompany(Long companyId) {
+    public List<OfferDtoResponseNoPdf> getOffersByCompany(Long companyId) {
         Optional<Company> company = companyRepository.findById(companyId) ;
         if (company.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
 
@@ -92,25 +70,4 @@ public class CompanyServiceImpl implements CompanyService {
 
         return offerDtoResponseList ;
     }
-
-    @Override
-    public List<GeneralOfferDto> getAllValidOffers() {
-        List<Offer> offerList = offerRepository.findAllByAcceptedIsTrue() ;
-        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map((offer -> new GeneralOfferDto(
-                offer.getId(), offer.getOwner().getId(), offer.getOwner().getName(), offer.getPosition(),
-                offer.getSalary(), offer.getStartDate().toString(), offer.getEndDate().toString()
-        ))).toList() ;
-        return generalOfferDtos;
-    }
-
-    @Override
-    public List<GeneralOfferDto> getAllInvalidOffers() {
-        List<Offer> offerList = offerRepository.findAllByAcceptedIsFalse() ;
-        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map((offer -> new GeneralOfferDto(
-                offer.getId(), offer.getOwner().getId(), offer.getOwner().getName(), offer.getPosition(),
-                offer.getSalary(), offer.getStartDate().toString(), offer.getEndDate().toString()
-        ))).toList() ;
-        return generalOfferDtos;
-    }
-
 }

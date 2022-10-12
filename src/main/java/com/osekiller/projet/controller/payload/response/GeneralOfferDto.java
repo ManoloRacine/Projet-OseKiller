@@ -7,7 +7,7 @@ public record GeneralOfferDto(@NotBlank Long offerId,
                               @NotBlank Long companyId,
                               @NotBlank String companyName,
                               @NotBlank String position,
-                              @NotNull double salary,
+                              @NotNull Double salary,
                               @NotBlank String startDate,
                               @NotBlank String endDate) {
 
