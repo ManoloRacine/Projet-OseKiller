@@ -5,6 +5,7 @@ import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.repository.OfferRepository;
+import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.OfferServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +35,10 @@ import static org.mockito.Mockito.when;
 public class OfferServiceTest {
 
     @Mock
-    OfferRepository offerRepository ;
+    OfferRepository offerRepository;
+
+    @Mock
+    StudentRepository studentRepository;
 
     @InjectMocks
     OfferServiceImpl offerService;

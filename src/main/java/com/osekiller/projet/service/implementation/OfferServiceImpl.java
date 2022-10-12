@@ -3,7 +3,9 @@ package com.osekiller.projet.service.implementation;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.model.Offer;
+import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.OfferRepository;
+import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.OfferService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -19,6 +21,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class OfferServiceImpl implements OfferService {
     private OfferRepository offerRepository ;
+
+    private StudentRepository studentRepository;
     @Override
     public OfferDtoResponse getOffer(Long offerId) {
 
@@ -37,6 +41,9 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public void addApplicantToOffer(Long studentId, Long offerId) {
         Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+
     }
 
     @Override
