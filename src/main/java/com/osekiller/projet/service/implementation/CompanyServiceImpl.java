@@ -104,7 +104,12 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void invalidateOffer(Long offerId, String feedback) {
-        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if(feedback == null || feedback.isEmpty() || feedback.isBlank())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Offer offer = offerRepository.findById(offerId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+
     }
 
     public void init() {

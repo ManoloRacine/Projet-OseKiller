@@ -246,7 +246,31 @@ public class CompanyServiceTest {
 
         //Act & Assert
 
-        assertThatThrownBy(() -> companyService.invalidateOffer(1L, "feedback"))
+        assertThatThrownBy(() -> companyService.invalidateOffer(1L, null))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    void invalidateOfferEmptyFeedback(){
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> companyService.invalidateOffer(1L, ""))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    void invalidateOfferBlankFeedback(){
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> companyService.invalidateOffer(1L, "       "))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status")
                 .isEqualTo(HttpStatus.BAD_REQUEST);
