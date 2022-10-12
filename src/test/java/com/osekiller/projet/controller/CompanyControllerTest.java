@@ -141,12 +141,20 @@ public class CompanyControllerTest {
     }
     @Test
     @WithMockUser(authorities = {"MANAGER"})
-    void validateOfferHappyFeedback(){
+    void validateOfferHappyFeedback() throws Exception {
+
         //Arrange
+
+        ValidationDto dto = new ValidationDto(true, "One of the offers of all time");
+
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
 
         //Act & Assert
 
-
+        mockMvc.perform(post("/companies/1/offers/2/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(dto))).andExpect(status().isOk());
     }
 
     @Test
@@ -180,11 +188,19 @@ public class CompanyControllerTest {
     }
     @Test
     @WithMockUser(authorities = {"MANAGER"})
-    void invalidateOfferHappyDay(){
+    void invalidateOfferHappyDay() throws Exception {
         //Arrange
+
+        ValidationDto dto = new ValidationDto(false, "One of the offers of all time");
+
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
 
         //Act & Assert
 
+        mockMvc.perform(post("/companies/1/offers/2/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(dto))).andExpect(status().isOk());
     }
 
     static String asJsonString(final Object obj) {
