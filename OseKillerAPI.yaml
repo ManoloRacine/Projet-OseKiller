@@ -74,7 +74,7 @@ paths:
         '403':
           description: Le token n'appartient pas à l'utilisateur
       security:
-      - bearerAuth: []
+        - bearerAuth: []
   /refresh:
     post:
       tags:
@@ -103,7 +103,7 @@ paths:
           description: Le token n'appartient pas à l'utilisateur
       security:
         - bearerAuth: []
-        
+
   /users/{id}/validate:
     post:
       tags:
@@ -182,7 +182,7 @@ paths:
   /students/{id}/cv:
     put:
       tags:
-      - Student
+        - Student
       parameters:
         - in: path
           name: id
@@ -214,7 +214,7 @@ paths:
         - bearerAuth: []
     get:
       tags:
-      - Student
+        - Student
       parameters:
         - in: path
           name: id
@@ -244,7 +244,7 @@ paths:
   /students/{id}/cv/validate:
     post:
       tags:
-      - Student
+        - Student
       parameters:
         - in: path
           name: id
@@ -273,7 +273,7 @@ paths:
   /companies/{id}/offers:
     post:
       tags:
-      - Company
+        - Company
       parameters:
         - in: path
           name: id
@@ -293,7 +293,7 @@ paths:
         required: true
       responses:
         '202':
-          description: L'offre à été soumise et est en attente de validation 
+          description: L'offre à été soumise et est en attente de validation
         '403':
           description: Requête non autorisée
         '404':
@@ -302,7 +302,7 @@ paths:
         - bearerAuth: []
     get:
       tags:
-      - Company
+        - Company
       parameters:
         - in: path
           name: id
@@ -348,7 +348,7 @@ paths:
   /companies/{companyId}/offers/{offerId}:
     get:
       tags:
-      - Company
+        - Company
       parameters:
         - in: path
           name: companyId
@@ -400,7 +400,7 @@ paths:
   /companies/{companyId}/offers/{offerId}/validate:
     post:
       tags:
-      - Company
+        - Company
       parameters:
         - in: path
           name: companyId
@@ -429,13 +429,34 @@ paths:
           description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
-  
+  /offers:
+    get:
+      tags:
+        - Offers
+      parameters:
+        - in: query
+          name: accepted
+          schema:
+            type: boolean
+      summary: Retourne toutes les offres selon la query
+      description: Retourne toutes les offres selon la query
+      operationId: validOffers
+      responses:
+        '200':
+          description: Les offres ont étés envoyés
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferNoPdf'
+        '403':
+          description: Requête non autorisée
+
 components:
   securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     JwtResponse:
       type: object
@@ -513,7 +534,7 @@ components:
         endDate:
           type: string
           format: date
-          example: 2023-01-30  
+          example: 2023-01-30
         file:
           type: string
           format: binary
@@ -537,7 +558,7 @@ components:
       required:
         - refreshToken
       properties:
-        refreshToken: 
+        refreshToken:
           type: string
           example: 123e4567-e89b-12d3-a456-426614174000
       xml:
@@ -552,3 +573,29 @@ components:
           example: true
       xml:
         name: userValidationRequest
+    OfferNoPdf:
+      type: object
+      properties:
+        offerId:
+          type: integer
+          example: 1
+        companyId:
+          type: integer
+          example: 2
+        companyName:
+          type: string
+          example : google
+        position:
+          type: string
+          example: dev
+        salary:
+          type: number
+          example: 20.50
+        startDate:
+          type: string
+          example: 2022-10-20
+        endDate:
+          type: string
+          example: 2022-12-20
+      xml:
+        name: offerNoPdf
