@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,14 +63,9 @@ public class CompanyServiceTest {
         Company company = mock(Company.class) ;
         when(companyRepository.findById(any())).thenReturn(Optional.of(company)) ;
 
+        companyService.addOffer(1L, offerDto, mockMultipartFile);
 
-        try (MockedStatic<Files> mockedStatic = mockStatic(Files.class)) {
-            //studentService.saveCV(mockFile, 1L);
-            companyService.addOffer(1L, offerDto, mockMultipartFile);
-            mockedStatic.verify(() -> Files.copy(any(ByteArrayInputStream.class), any(Path.class))) ;
-        }
-
-        verify(offerRepository, times(2)).save(any()) ;
+        verify(offerRepository).save(any()) ;
     }
 
     @Test
@@ -87,13 +84,14 @@ public class CompanyServiceTest {
 
     @Test
     @WithMockUser
-    void getOfferHappyDay() throws MalformedURLException {
+    void getOfferHappyDay() throws IOException {
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         Offer offer = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
         offer.setId(1L);
+        offer.setPdf(mockMultipartFile.getBytes());
         when(offerRepository.findById(1L)).thenReturn(Optional.of(offer)) ;
-        when(cvPath.resolve(anyString())).thenReturn(Path.of("1.pdf")) ;
 
-        Assertions.assertEquals(companyService.getOffer(1L), new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new UrlResource(Path.of("OFFER/1.pdf").toUri())));
+        Assertions.assertEquals(companyService.getOffer(1L), new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new ByteArrayResource(mockMultipartFile.getBytes())));
     }
 
     @Test
