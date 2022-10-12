@@ -47,7 +47,7 @@ public class StudentControllerTest {
         boolean file = new File(classLoader.getResource(".").getFile() + "/" + FILE_NAME).createNewFile();
         inputStream = classLoader.getResourceAsStream(FILE_NAME);
         Resource resource = new InputStreamResource(inputStream);
-        when(studentService.getCV(any(), any())).thenReturn(resource);
+        when(studentService.getCV(any())).thenReturn(resource);
 
         mockMvc.perform(get("/students/{id}/cv", 1L))
                 .andExpect(status().isOk()) ;
