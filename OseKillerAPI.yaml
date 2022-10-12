@@ -74,7 +74,7 @@ paths:
         '403':
           description: Le token n'appartient pas à l'utilisateur
       security:
-      - bearerAuth: []
+        - bearerAuth: []
   /refresh:
     post:
       tags:
@@ -103,7 +103,7 @@ paths:
           description: Le token n'appartient pas à l'utilisateur
       security:
         - bearerAuth: []
-        
+
   /users/{id}/validate:
     post:
       tags:
@@ -182,7 +182,7 @@ paths:
   /students/{id}/cv:
     put:
       tags:
-      - Student
+        - Student
       parameters:
         - in: path
           name: id
@@ -214,7 +214,7 @@ paths:
         - bearerAuth: []
     get:
       tags:
-      - Student
+        - Student
       parameters:
         - in: path
           name: id
@@ -244,7 +244,7 @@ paths:
   /students/{id}/cv/validate:
     post:
       tags:
-      - Student
+        - Student
       parameters:
         - in: path
           name: id
@@ -259,7 +259,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CvValidationRequest'
+              $ref: '#/components/schemas/ValidationRequest'
         required: true
       responses:
         '200':
@@ -273,7 +273,7 @@ paths:
   /companies/{id}/offers:
     post:
       tags:
-      - Company
+        - Company
       parameters:
         - in: path
           name: id
@@ -293,7 +293,7 @@ paths:
         required: true
       responses:
         '202':
-          description: L'offre à été soumise et est en attente de validation 
+          description: L'offre à été soumise et est en attente de validation
         '403':
           description: Requête non autorisée
         '404':
@@ -302,7 +302,7 @@ paths:
         - bearerAuth: []
     get:
       tags:
-      - Company
+        - Company
       parameters:
         - in: path
           name: id
@@ -321,13 +321,18 @@ paths:
           description: entreprise non trouvé
       security:
         - bearerAuth: []
-  /offers/{id}:
+  /companies/{companyId}/offers/{offerId}:
     get:
       tags:
-      - Offers
+        - Company
       parameters:
         - in: path
           name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
           schema:
             type: integer
           required: true
@@ -348,16 +353,64 @@ paths:
         '403':
           description: Requête non autorisée
         '404':
-          description: entreprise non trouvé
+          description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
-  
+  /companies/{companyId}/offers/{offerId}/validate:
+    post:
+      tags:
+        - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
+          schema:
+            type: integer
+          required: true
+      summary: Valider une offre de stage
+      description: Valider une offre de stage
+      operationId: validateOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationRequest'
+      responses:
+        '200':
+          description: L'offre a été validé
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: entreprise ou offre non trouvé
+      security:
+        - bearerAuth: []
+  /offers/valid:
+    get:
+      tags:
+        - Offers
+      summary: Retourne toutes les offres valides
+      description: Retourne toutes les offres valides
+      operationId: validOffers
+      responses:
+        '200':
+          description: Les offres ont étés envoyés
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfferNoPdf'
+        '403':
+          description: Requête non autorisée
+
 components:
   securitySchemes:
-      bearerAuth:
-        type: http
-        scheme: bearer
-        bearerFormat: JWT
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     JwtResponse:
       type: object
@@ -381,7 +434,7 @@ components:
         role:
           type: string
           example: STUDENT
-    CvValidationRequest:
+    ValidationRequest:
       type: object
       required:
         - valid
@@ -391,7 +444,7 @@ components:
           example: false
         feedBack:
           type: string
-          example: Votre CV est trop long
+          example: trop long
     SignUpRequest:
       type: object
       required:
@@ -435,7 +488,7 @@ components:
         endDate:
           type: string
           format: date
-          example: 2023-01-30  
+          example: 2023-01-30
         file:
           type: string
           format: binary
@@ -459,7 +512,7 @@ components:
       required:
         - refreshToken
       properties:
-        refreshToken: 
+        refreshToken:
           type: string
           example: 123e4567-e89b-12d3-a456-426614174000
       xml:
@@ -474,3 +527,29 @@ components:
           example: true
       xml:
         name: userValidationRequest
+    OfferNoPdf:
+      type: object
+      properties:
+        offerId:
+          type: integer
+          example: 1
+        companyId:
+          type: integer
+          example: 2
+        companyName:
+          type: string
+          example : google
+        position:
+          type: string
+          example: dev
+        salary:
+          type: number
+          example: 20.50
+        startDate:
+          type: string
+          example: 2022-10-20
+        endDate:
+          type: string
+          example: 2022-12-20
+      xml:
+        name: offerNoPdf
