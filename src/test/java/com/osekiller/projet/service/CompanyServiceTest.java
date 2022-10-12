@@ -210,12 +210,11 @@ public class CompanyServiceTest {
     @Test
     @WithMockUser
     void validateOfferNonExistent(){
-        //Arrange
+        //Act & Assert
 
-        //Act
-
-        //Assert
-
+        assertThatThrownBy(() -> companyService.validateOffer(1L, "feedback"))
+                .isInstanceOf(ResponseStatusException.class)
+                .isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
