@@ -20,44 +20,12 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @CrossOrigin
-
 public class OfferController {
 
     CompanyService companyService ;
 
-    @PostMapping("/companies/{id}/offers")
-    public ResponseEntity<Void> postOffer(@RequestParam(name = "offerDto") String offerDto,
-                                          @RequestParam(name = "file") MultipartFile file,
-                                          @PathVariable(name = "id") Long id) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        OfferDto offerDto1 = mapper.readValue(offerDto, OfferDto.class) ;
-        companyService.addOffer(id, offerDto1, file);
-        return ResponseEntity.accepted().build() ;
-    }
-
-    @GetMapping("/companies/{id}/offers")
-    public ResponseEntity<List<OfferDtoResponseNoPdf>> getOffers(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(companyService.getAllOffersCompany(id)) ;
-    }
-
-    @GetMapping("/companies/{companyId}/offers/{offerId}")
-    public ResponseEntity<MultiValueMap<String, Object>> getOffers(@PathVariable(name = "companyId") Long companyId,
-                                              @PathVariable(name = "offerId") Long offerId) {
-        OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
-        OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(),
-                offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(), offerDtoResponse.endDate()) ;
-        MultiValueMap<String, Object> multipartBody = new LinkedMultiValueMap<>();
-        multipartBody.add("offerDto", offerDtoResponseNoPdf);
-        multipartBody.add("file", offerDtoResponse.offer());
-
-        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(multipartBody) ;
-    }
-
     @GetMapping("/offers")
-    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam(required = false) String accepted) {
-        if (accepted.isEmpty()) {
-            return null ; //TODO pour la méthode getOffers dans OS-61 (MÉÉÉÉÉÉÉÉÉDIIIIIIIIII)
-        }
+    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam String accepted) {
 
         if (accepted.equals("true")) {
             return ResponseEntity.ok().body(companyService.getAllValidOffers()) ;
