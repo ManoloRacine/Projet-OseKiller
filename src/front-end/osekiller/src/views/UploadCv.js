@@ -1,6 +1,6 @@
 import Upload from "../components/Upload";
 import { useState } from "react";
-import { uploadCv } from "../services/UploadService";
+import { uploadCv } from "../services/StudentService";
 
 const UploadCv = () => {
     const [selectedFile, setSelectedFile] = useState({});

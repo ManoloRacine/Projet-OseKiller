@@ -1,6 +1,6 @@
 import Upload from "../components/Upload";
 import { useState } from "react";
-import { uploadInternshipOffer } from "../services/UploadService";
+import { uploadInternshipOffer } from "../services/CompanyService";
 import UploadInternshipForm from "../components/forms/UploadInternshipForm";
 
 const UploadInternship = () => {
@@ -20,7 +20,8 @@ const UploadInternship = () => {
         };
         const formData = new FormData();
         formData.append("file", selectedFile);
-        uploadInternshipOffer(dto, formData, userId)
+        formData.append("offerDto", JSON.stringify(dto));
+        uploadInternshipOffer(formData, userId)
             .then(() => setIsOfferSubmitted(true))
 
             .catch((err) => console.log("Error:", err));

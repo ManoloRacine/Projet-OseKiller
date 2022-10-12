@@ -83,7 +83,7 @@ describe("Upload", () => {
     it("should be able to add file", function () {
         render(<MockUploadCv />);
 
-        const inputElement = screen.getByTestId("cvInput");
+        const inputElement = screen.getByTestId("pdfInput");
         const file = new File(["(⌐□_□)"], "chucknorris.pdf", {
             type: "application/pdf",
         });

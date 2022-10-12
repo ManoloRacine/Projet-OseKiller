@@ -29,7 +29,7 @@ const Upload = ({
                 </section>
                 {selectedFile.name == null ? (
                     <form className="d-flex justify-content-center">
-                        <label htmlFor="cvInput" className="btn text-white">
+                        <label htmlFor="pdfInput" className="btn text-white">
                             <FontAwesomeIcon
                                 data-testid="uploadIcon"
                                 icon={faCloudArrowUp}
@@ -39,8 +39,8 @@ const Upload = ({
                         </label>
                         <input
                             type="file"
-                            id="cvInput"
-                            data-testid="cvInput"
+                            id="pdfInput"
+                            data-testid="pdfInput"
                             accept="application/pdf"
                             onChange={onChange}
                             style={{ display: "none" }}
