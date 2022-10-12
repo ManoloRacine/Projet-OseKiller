@@ -259,7 +259,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CvValidationRequest'
+              $ref: '#/components/schemas/ValidationRequest'
         required: true
       responses:
         '200':
@@ -315,19 +315,48 @@ paths:
       responses:
         '200':
           description: Les offres ont été reçu
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type : object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    position:
+                      type: string
+                      example: Junior Web Developer
+                    salary:
+                      type: number
+                      example: 25
+                    startDate:
+                      type: string
+                      format: date
+                      example: 2022-10-30
+                    endDate:
+                      type: string
+                      format: date
+                      example: 2023-01-30
         '403':
           description: Requête non autorisée
         '404':
           description: entreprise non trouvé
       security:
         - bearerAuth: []
-  /offers/{id}:
+  /companies/{companyId}/offers/{offerId}:
     get:
       tags:
-      - Offers
+      - Company
       parameters:
         - in: path
           name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
           schema:
             type: integer
           required: true
@@ -342,13 +371,62 @@ paths:
               schema:
                 type: object
                 properties:
+                  id:
+                    type: number
+                    example: 1
+                  position:
+                    type: string
+                    example: Junior Web Developer
+                  salary:
+                    type: number
+                    example: 25
+                  startDate:
+                    type: string
+                    format: date
+                    example: 2022-10-30
+                  endDate:
+                    type: string
+                    format: date
+                    example: 2023-01-30
                   file:
                     type: string
                     format: binary
         '403':
           description: Requête non autorisée
         '404':
-          description: entreprise non trouvé
+          description: entreprise ou offre non trouvé
+      security:
+        - bearerAuth: []
+  /companies/{companyId}/offers/{offerId}/validate:
+    post:
+      tags:
+      - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
+          schema:
+            type: integer
+          required: true
+      summary: Valider une offre de stage
+      description: Valider une offre de stage
+      operationId: validateOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationRequest'
+      responses:
+        '200':
+          description: L'offre a été validé
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
   
@@ -381,7 +459,7 @@ components:
         role:
           type: string
           example: STUDENT
-    CvValidationRequest:
+    ValidationRequest:
       type: object
       required:
         - valid
@@ -391,7 +469,7 @@ components:
           example: false
         feedBack:
           type: string
-          example: Votre CV est trop long
+          example: trop long
     SignUpRequest:
       type: object
       required:
