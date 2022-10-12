@@ -56,7 +56,7 @@ public class OfferController {
     @GetMapping("/offers")
     public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam(required = false) String accepted) {
         if (accepted.isEmpty()) {
-            return null ;
+            return null ; //TODO pour la méthode getOffers dans OS-61 (MÉÉÉÉÉÉÉÉÉDIIIIIIIIII)
         }
 
         if (accepted.equals("true")) {
