@@ -1,10 +1,7 @@
 package com.osekiller.projet.service.implementation;
 
-import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
-import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.model.user.User;
-import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.UserService;
 import lombok.AllArgsConstructor;
@@ -13,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

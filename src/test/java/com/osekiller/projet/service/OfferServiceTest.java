@@ -2,14 +2,10 @@ package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
-import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.repository.OfferRepository;
-import com.osekiller.projet.repository.user.CompanyRepository;
-import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import com.osekiller.projet.service.implementation.OfferServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
