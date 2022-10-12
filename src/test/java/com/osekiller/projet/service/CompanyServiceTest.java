@@ -231,7 +231,6 @@ public class CompanyServiceTest {
 
     @Test
     void invalidateOfferNonExistent(){
-        //Arrange
 
         //Act & Assert
 
