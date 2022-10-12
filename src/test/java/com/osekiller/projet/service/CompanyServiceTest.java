@@ -223,23 +223,26 @@ public class CompanyServiceTest {
 
         //Act
 
+
+
         //Assert
 
     }
 
     @Test
-    @WithMockUser
     void invalidateOfferNonExistent(){
         //Arrange
 
-        //Act
+        //Act & Assert
 
-        //Assert
+        assertThatThrownBy(() -> companyService.invalidateOffer(1L, "feedback"))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
     @Test
-    @WithMockUser
     void invalidateOfferNoFeedback(){
         //Arrange
 
