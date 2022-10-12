@@ -429,12 +429,17 @@ paths:
           description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
-  /offers/valid:
+  /offers:
     get:
       tags:
         - Offers
-      summary: Retourne toutes les offres valides
-      description: Retourne toutes les offres valides
+      parameters:
+        - in: query
+          name: accepted
+          schema:
+            type: boolean
+      summary: Retourne toutes les offres selon la query
+      description: Retourne toutes les offres selon la query
       operationId: validOffers
       responses:
         '200':
