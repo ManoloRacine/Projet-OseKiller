@@ -10,6 +10,7 @@ import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,6 +54,17 @@ public class CompanyServiceTest {
 
     @InjectMocks
     CompanyServiceImpl companyService ;
+
+    static Company company;
+
+    static Offer offer;
+
+    @BeforeAll
+    static void setup() {
+        company = mock(Company.class);
+        offer = new Offer(company,"Junior Web Dev",25.5,LocalDate.now(),LocalDate.now().plusDays(20L));
+        offer.setId(1L);
+    }
 
     @Test
     void addOfferHappyDay() {
@@ -97,8 +110,6 @@ public class CompanyServiceTest {
 
         //Arrange
 
-        Offer offer = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        offer.setId(1L);
         when(offerRepository.findById(1L)).thenReturn(Optional.of(offer)) ;
         when(cvPath.resolve(anyString())).thenReturn(Path.of("1.pdf"));
 
@@ -108,7 +119,7 @@ public class CompanyServiceTest {
 
         //Assert
 
-        assertEquals(responseDto , new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new UrlResource(Path.of("OFFER/1.pdf").toUri())));
+        assertEquals(responseDto , new OfferDtoResponse(1L, offer.getPosition(), 1, offer.getStartDate().toString(), offer.getEndDate().toString(), new UrlResource(Path.of("OFFER/1.pdf").toUri())));
     }
 
     @Test
@@ -130,9 +141,9 @@ public class CompanyServiceTest {
 
         //Arrange
 
-        Offer offer1 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer2 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer3 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
+        Offer offer1 = new Offer(mock(Company.class), "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(mock(Company.class), "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(mock(Company.class), "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
         offer1.setId(1L);
         offer2.setId(2L);
         offer3.setId(3L);
@@ -201,10 +212,18 @@ public class CompanyServiceTest {
     void validateOfferHappyDay(){
         //Arrange
 
+        String feedback = "This is the best offer of all time";
+
         //Act
+
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+        companyService.validateOffer(1L, feedback);
 
         //Assert
 
+        assertThat(offer.getAccepted())
+                .isEqualTo(true);
+        verify(offerRepository).save(offer);
     }
 
     @Test
@@ -221,12 +240,16 @@ public class CompanyServiceTest {
     void invalidateOfferHappyDay(){
         //Arrange
 
+        String feedback = "This is the worst offer of all time";
+
         //Act
 
-
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+        companyService.invalidateOffer(1L, feedback);
 
         //Assert
 
+        verify(offerRepository).delete(offer);
     }
 
     @Test

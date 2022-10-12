@@ -15,16 +15,16 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @NonNull
     private Company owner;
 
     private String path;
 
     @NonNull private String position;
-    @NonNull private double salary;
+    @NonNull private Double salary;
     @NonNull private LocalDate startDate;
     @NonNull private LocalDate endDate;
 
-    @NonNull private boolean accepted;
+    private Boolean accepted = false;
 }
