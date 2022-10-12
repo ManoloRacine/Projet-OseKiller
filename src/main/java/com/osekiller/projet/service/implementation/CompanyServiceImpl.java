@@ -38,6 +38,17 @@ public class CompanyServiceImpl implements CompanyService {
     private final Path cvPath = Paths.get("OFFER");
 
     @Override
+    public Boolean companyExists(Long id) {
+        return companyRepository.existsById(id);
+    }
+
+    @Override
+    public Boolean companyOwnsOffer(Long companyId, Long offerId) {
+        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return offer.getOwner().getId().equals(companyId);
+    }
+
+    @Override
     public void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) {
         Optional<Company> companyOptional = companyRepository.findById(companyId) ;
 

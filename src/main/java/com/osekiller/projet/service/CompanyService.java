@@ -8,9 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface CompanyService {
-    void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) ;
+    Boolean companyExists(Long id);
+    Boolean companyOwnsOffer(Long companyId, Long offerId);
+    void addOffer(Long companyId, OfferDto offerDto, MultipartFile file);
     OfferDtoResponse getOffer(Long offerId);
-    List<OfferDtoResponseNoPdf> getAllOffersCompany(Long companyId) ;
+    List<OfferDtoResponseNoPdf> getAllOffersCompany(Long companyId);
     void validateOffer(Long offerId, String feedback);
     void invalidateOffer(Long offerId, String feedback);
     void init();

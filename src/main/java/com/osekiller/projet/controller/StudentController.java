@@ -1,6 +1,6 @@
 package com.osekiller.projet.controller;
 
-import com.osekiller.projet.controller.payload.request.StudentCVValidationDto;
+import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
@@ -42,7 +42,7 @@ public class StudentController {
     }
 
     @PostMapping("/{id}/cv/validate")
-    public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody StudentCVValidationDto dto,
+    public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody ValidationDto dto,
             @PathVariable(name = "id") Long id) {
         if (dto.validation()) {
             studentService.validateCV(id, dto.feedBack());
