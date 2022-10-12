@@ -73,9 +73,9 @@ public class CompanyServiceTest {
 
     @Test
     void getOffersHappyDay() throws MalformedURLException {
-        Offer offer1 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer2 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer3 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
+        Offer offer1 = new Offer(mock(Company.class), "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(mock(Company.class), "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(mock(Company.class), "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
         offer1.setId(1L);
         offer2.setId(2L);
         offer3.setId(3L);

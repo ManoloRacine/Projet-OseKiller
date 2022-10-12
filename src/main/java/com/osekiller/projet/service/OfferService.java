@@ -9,4 +9,5 @@ public interface OfferService {
     List<GeneralOfferDto> getAllValidOffers();
     List<GeneralOfferDto> getAllInvalidOffers();
     OfferDtoResponse getOffer(Long offerId);
+    void addApplicantToOffer(Long studentId, Long offerId);
 }

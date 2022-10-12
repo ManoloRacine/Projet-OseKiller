@@ -35,6 +35,11 @@ public class OfferServiceImpl implements OfferService {
 
     }
     @Override
+    public void addApplicantToOffer(Long studentId, Long offerId) {
+
+    }
+
+    @Override
     public List<GeneralOfferDto> getAllValidOffers() {
         List<Offer> offerList = offerRepository.findAllByAcceptedIsTrue() ;
         List<GeneralOfferDto> generalOfferDtos = offerList.stream().map((offer -> new GeneralOfferDto(

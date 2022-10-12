@@ -31,7 +31,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         if (companyOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
 
-        Offer offer = new Offer(companyOptional.get(), offerDto.position(), offerDto.salary(), LocalDate.parse(offerDto.startDate()), LocalDate.parse(offerDto.endDate()), false) ;
+        Offer offer = new Offer(companyOptional.get(), offerDto.position(), offerDto.salary(), LocalDate.parse(offerDto.startDate()), LocalDate.parse(offerDto.endDate())) ;
 
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         offer.setPdfName(fileName);

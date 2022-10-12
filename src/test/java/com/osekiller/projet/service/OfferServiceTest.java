@@ -42,7 +42,7 @@ public class OfferServiceTest {
     @Test
     void getOfferHappyDay() throws IOException {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        Offer offer = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
+        Offer offer = new Offer(mock(Company.class), "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
         offer.setId(1L);
         offer.setPdf(mockMultipartFile.getBytes());
         when(offerRepository.findById(1L)).thenReturn(Optional.of(offer)) ;
@@ -62,9 +62,9 @@ public class OfferServiceTest {
     @Test
     void getValidOffers() {
         Company company = mock(Company.class);
-        Offer offer1 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer2 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer3 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
         offer1.setId(1L);
         offer2.setId(2L);
         offer3.setId(3L);
@@ -103,9 +103,9 @@ public class OfferServiceTest {
     @Test
     void getInvalidOffers() {
         Company company = mock(Company.class);
-        Offer offer1 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer2 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-        Offer offer3 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
         offer1.setId(1L);
         offer2.setId(2L);
         offer3.setId(3L);
@@ -140,4 +140,44 @@ public class OfferServiceTest {
         assertNotNull(list);
         assertSame(list.size(), 0);
     }
+
+    @Test
+    void addApplicantToOfferHappyDay(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
+    }
+    @Test
+    void addApplicantToOfferAlreadyApplied(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
+    }
+
+    @Test
+    void addApplicantToOfferNotFound(){
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.addApplicantToOffer(1L,2L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void addApplicantNotFoundToOffer(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
+    }
+
 }
