@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCloudArrowUp} from "@fortawesome/free-solid-svg-icons";
 import SelectedCV from "./SelectedCV";
-import { useLocation } from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import ErrorMessage from "./ErrorMessage";
 
 const Upload = ({

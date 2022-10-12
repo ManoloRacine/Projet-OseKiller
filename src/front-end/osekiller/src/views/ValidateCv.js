@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faX} from "@fortawesome/free-solid-svg-icons";
 import {useLocation, useNavigate} from "react-router-dom";
-import { getCv, invalidateCv, validateCv } from "../services/StudentService";
+import {getCv, invalidateCv, validateCv} from "../services/StudentService";
 
 
 const ValidateCv = () => {

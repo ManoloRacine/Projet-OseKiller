@@ -1,28 +1,20 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.StudentDto;
-import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.repository.CVRepository;
+import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
-import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +24,7 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentRepository studentRepository;
 
-    private CVRepository cvRepository;
-
-    private final Path cvPath = Paths.get("CV");
+    private CvRepository cvRepository;
 
     @Override
     public void validateCV(Long studentId, String feedback) {
