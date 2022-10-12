@@ -75,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
         try {
             student.get().getCv().setPdf(cv.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         studentRepository.save(student.get()) ;

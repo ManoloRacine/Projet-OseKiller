@@ -53,7 +53,7 @@ public class CompanyServiceImpl implements CompanyService {
         try {
             offer.setPdf(file.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         offerRepository.save(offer) ;
