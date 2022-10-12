@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { getOffers } from "../services/CompanyService";
+import Offer from "../components/forms/Offer";
 
-const ValidateOffer = (props) => {
+const ValidateOffer = () => {
     const [offers, setOffers] = useState([]);
 
     useEffect(() => {
@@ -18,12 +18,13 @@ const ValidateOffer = (props) => {
     return (
         <div>
             {offers.map((offer, index) => (
-                <div key={index}>
-                    <p>Position: {offer.position}</p>
-                    <p>Salaire: {offer.salary}</p>
-                    <p>Date de début: {offer.startDate}</p>
-                    <p>Date de fin: {offer.endDate}</p>
-                </div>
+                <Offer
+                    key={index}
+                    position={offer.position}
+                    salary={offer.salary}
+                    startDate={offer.startDate}
+                    endDate={offer.endDate}
+                />
             ))}
         </div>
     );
