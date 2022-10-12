@@ -321,24 +321,7 @@ paths:
                 type: array
                 items:
                   type : object
-                  properties:
-                    id:
-                      type: number
-                      example: 1
-                    position:
-                      type: string
-                      example: Junior Web Developer
-                    salary:
-                      type: number
-                      example: 25
-                    startDate:
-                      type: string
-                      format: date
-                      example: 2022-10-30
-                    endDate:
-                      type: string
-                      format: date
-                      example: 2023-01-30
+                  $ref: '#/components/schemas/OfferNoPdf'
         '403':
           description: Requête non autorisée
         '404':
@@ -429,12 +412,17 @@ paths:
           description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
-  /offers/valid:
+  /offers:
     get:
       tags:
         - Offers
-      summary: Retourne toutes les offres valides
-      description: Retourne toutes les offres valides
+      parameters:
+        - in: query
+          name: accepted
+          schema:
+            type: boolean
+      summary: Retourne toutes les offres selon la query
+      description: Retourne toutes les offres selon la query
       operationId: validOffers
       responses:
         '200':
