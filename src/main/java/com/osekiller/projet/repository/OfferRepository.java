@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface OfferRepository extends JpaRepository<Offer, Long> {
     List<Offer> findAllByOwner(Company company) ;
+
+    List<Offer> findAllByAcceptedIsTrue() ;
+    List<Offer> findAllByAcceptedIsFalse() ;
 }

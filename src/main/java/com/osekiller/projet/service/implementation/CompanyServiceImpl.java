@@ -3,13 +3,12 @@ package com.osekiller.projet.service.implementation;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
-import com.osekiller.projet.model.CV;
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.service.CompanyService;
-import com.osekiller.projet.service.ResourceFactory;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -93,4 +92,25 @@ public class CompanyServiceImpl implements CompanyService {
 
         return offerDtoResponseList ;
     }
+
+    @Override
+    public List<GeneralOfferDto> getAllValidOffers() {
+        List<Offer> offerList = offerRepository.findAllByAcceptedIsTrue() ;
+        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map((offer -> new GeneralOfferDto(
+                offer.getId(), offer.getOwner().getId(), offer.getOwner().getName(), offer.getPosition(),
+                offer.getSalary(), offer.getStartDate().toString(), offer.getEndDate().toString()
+        ))).toList() ;
+        return generalOfferDtos;
+    }
+
+    @Override
+    public List<GeneralOfferDto> getAllInvalidOffers() {
+        List<Offer> offerList = offerRepository.findAllByAcceptedIsFalse() ;
+        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map((offer -> new GeneralOfferDto(
+                offer.getId(), offer.getOwner().getId(), offer.getOwner().getName(), offer.getPosition(),
+                offer.getSalary(), offer.getStartDate().toString(), offer.getEndDate().toString()
+        ))).toList() ;
+        return generalOfferDtos;
+    }
+
 }

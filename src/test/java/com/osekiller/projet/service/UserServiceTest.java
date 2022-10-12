@@ -40,6 +40,7 @@ public class UserServiceTest {
 
     @Test
     void getUsersHappyDay() {
+        //Arrange
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         mockUser1.setRole(new Role("STUDENT"));
         UserDto mockDto1 = new UserDto(mockUser1.getEmail(), mockUser1.getName(), mockUser1.isEnabled(), mockUser1.getId(), mockUser1.getRole().getName()) ;
@@ -53,8 +54,10 @@ public class UserServiceTest {
         List<UserDto> mockDtoList = new ArrayList<UserDto>(Arrays.asList(mockDto1, mockDto2, mockDto3)) ;
         doReturn(mockList).when(userRepository).findAll() ;
 
+        //Act
         List<UserDto> list = userService.getUsers() ;
 
+        //Assert
         Assertions.assertNotNull(list);
         Assertions.assertSame(3, list.size());
         Assertions.assertEquals(mockDtoList, list);
@@ -62,29 +65,37 @@ public class UserServiceTest {
 
     @Test
     void getUsersEmpty() {
+        //Arrange
         doReturn(new ArrayList<User>()).when(userRepository).findAll() ;
 
+        //Act
         List<UserDto> list = userService.getUsers() ;
 
+        //Assert
         Assertions.assertNotNull(list);
         Assertions.assertSame(0, list.size());
     }
 
     @Test
     void validateUserHappyDay() {
+        //Arrange
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doReturn(Optional.of(mockUser1)).when(userRepository).findById(any()) ;
 
+        //Act
         userService.validateUser(1L);
 
+        //Assert
         Assertions.assertTrue(mockUser1.isEnabled());
         verify(userRepository).save(mockUser1) ;
     }
 
     @Test
     void validateUserNoUser() {
+        //Arrange
         doReturn(Optional.empty()).when(userRepository).findById(any()) ;
 
+        //Act & Assert
         assertThatThrownBy(() -> userService.validateUser(1L)).isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -92,18 +103,23 @@ public class UserServiceTest {
 
     @Test
     void invalidateUserHappyDay() {
+        //Arrange
         Student mockUser1 = new Student("test1", "test@student.com", "1") ;
         doReturn(Optional.of(mockUser1)).when(userRepository).findById(any()) ;
 
+        //Act
         userService.invalidateUser(1L);
 
+        //Assert
         verify(userRepository).delete(mockUser1); ;
     }
 
     @Test
     void invalidateUserNoUser() {
+        //Arrange
         doReturn(Optional.empty()).when(userRepository).findById(any()) ;
 
+        //Act & Assert
         assertThatThrownBy(() -> userService.invalidateUser(1L)).isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
 
