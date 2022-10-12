@@ -1,7 +1,5 @@
 package com.osekiller.projet.controller.payload.response;
 
-import org.springframework.core.io.Resource;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 

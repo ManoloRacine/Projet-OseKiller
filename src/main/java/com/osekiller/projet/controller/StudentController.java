@@ -2,11 +2,9 @@ package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.StudentCVValidationDto;
 import com.osekiller.projet.controller.payload.response.StudentDto;
-import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

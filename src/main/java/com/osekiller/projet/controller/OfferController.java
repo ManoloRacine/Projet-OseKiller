@@ -7,19 +7,13 @@ import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.CompanyService;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.awt.*;
-import java.util.*;
 import java.util.List;
 
 @RestController

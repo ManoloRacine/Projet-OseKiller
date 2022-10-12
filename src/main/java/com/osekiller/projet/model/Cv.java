@@ -9,7 +9,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-public class CV {
+public class Cv {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

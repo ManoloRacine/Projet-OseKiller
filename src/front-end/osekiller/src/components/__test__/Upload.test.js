@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import {fireEvent, render, screen} from "@testing-library/react";
 import Upload from "../Upload";
-import { BrowserRouter } from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 import UploadCv from "../../views/UploadCv";
 
 const WrappingComponent = ({

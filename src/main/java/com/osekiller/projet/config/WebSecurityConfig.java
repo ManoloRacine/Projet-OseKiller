@@ -45,10 +45,11 @@ public class WebSecurityConfig {
                                 //Autoriser ses routes de base
                                 .antMatchers("/ping","/sign-in","/sign-up").permitAll()
                                 .antMatchers("/users/**","/user/**").hasAuthority(ERole.MANAGER.name())
-                                .antMatchers(HttpMethod.PUT,"/student/{id}/cv").hasAuthority(ERole.STUDENT.name())
-                                .antMatchers(HttpMethod.GET,"/student/{id}/cv").hasAnyAuthority(ERole.MANAGER.name(),ERole.STUDENT.name())
+                                .antMatchers(HttpMethod.PUT,"/students/{id}/cv").hasAuthority(ERole.STUDENT.name())
+                                .antMatchers(HttpMethod.GET,"/students/{id}/cv").hasAnyAuthority(ERole.MANAGER.name(),ERole.STUDENT.name())
                                 .antMatchers(HttpMethod.POST, "/companies/{id}/offers").hasAuthority(ERole.COMPANY.name())
-                                .antMatchers("/student/{id}/cv/validate").hasAuthority(ERole.MANAGER.name())
+                                .antMatchers(HttpMethod.GET, "/companies/{id}/offers").hasAnyAuthority(ERole.COMPANY.name(),ERole.MANAGER.name())
+                                .antMatchers("/students/{id}/cv/validate").hasAuthority(ERole.MANAGER.name())
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )

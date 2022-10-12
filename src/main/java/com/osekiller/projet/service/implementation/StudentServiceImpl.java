@@ -1,11 +1,10 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.StudentDto;
-import com.osekiller.projet.model.CV;
+import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.repository.CVRepository;
+import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
-import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -30,7 +29,7 @@ public class StudentServiceImpl implements StudentService {
 
     private StudentRepository studentRepository;
 
-    private CVRepository cvRepository;
+    private CvRepository cvRepository;
 
     private final Path cvPath = Paths.get("CV");
 
@@ -73,8 +72,8 @@ public class StudentServiceImpl implements StudentService {
                 Files.delete(path);
             }
             Files.copy(cv.getInputStream(), path);
-            CV newCV = cvRepository.save(new CV(cvPath.toString(), student.get(), false));
-            student.get().setCv(newCV);
+            Cv newCv = cvRepository.save(new Cv(cvPath.toString(), student.get(), false));
+            student.get().setCv(newCv);
             student.get().setCvRejected(false);
             studentRepository.save(student.get());
         } catch (IOException e) {

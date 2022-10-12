@@ -1,6 +1,6 @@
 import {useContext, useEffect, useState} from "react";
 import {AuthenticatedUserContext} from "../App";
-import { getCv, getStudent } from "../services/StudentService";
+import {getCv, getStudent} from "../services/StudentService";
 
 
 const Dashboard = () => {
