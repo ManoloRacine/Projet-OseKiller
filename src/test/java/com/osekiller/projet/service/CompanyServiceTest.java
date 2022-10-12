@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -53,52 +54,71 @@ public class CompanyServiceTest {
     CompanyServiceImpl companyService ;
 
     @Test
-    @WithMockUser
     void addOfferHappyDay() {
+
+        //Arrange
+
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
         Company company = mock(Company.class) ;
         when(companyRepository.findById(any())).thenReturn(Optional.of(company)) ;
 
+        //Act
 
         try (MockedStatic<Files> mockedStatic = mockStatic(Files.class)) {
-            //studentService.saveCV(mockFile, 1L);
             companyService.addOffer(1L, offerDto, mockMultipartFile);
             mockedStatic.verify(() -> Files.copy(any(ByteArrayInputStream.class), any(Path.class))) ;
         }
+
+        //Assert
 
         verify(offerRepository, times(2)).save(any()) ;
     }
 
     @Test
-    @WithMockUser
     void addOfferCompanyNonExistent() {
+
+        //Arrange
+
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
-        Company company = mock(Company.class) ;
+
         when(companyRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
 
+        //Act & Assert
 
-        AssertionsForClassTypes.assertThatThrownBy(() -> companyService.addOffer(1L, offerDto, mockMultipartFile))
+        assertThatThrownBy(() -> companyService.addOffer(1L, offerDto, mockMultipartFile))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    @WithMockUser
     void getOfferHappyDay() throws MalformedURLException {
+
+        //Arrange
+
         Offer offer = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
         offer.setId(1L);
         when(offerRepository.findById(1L)).thenReturn(Optional.of(offer)) ;
-        when(cvPath.resolve(anyString())).thenReturn(Path.of("1.pdf")) ;
+        when(cvPath.resolve(anyString())).thenReturn(Path.of("1.pdf"));
 
-        Assertions.assertEquals(companyService.getOffer(1L), new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new UrlResource(Path.of("OFFER/1.pdf").toUri())));
+        //Act
+
+        OfferDtoResponse responseDto = companyService.getOffer(1L);
+
+        //Assert
+
+        assertEquals(responseDto , new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new UrlResource(Path.of("OFFER/1.pdf").toUri())));
     }
 
     @Test
-    @WithMockUser
     void getOfferNonExistent() {
+
+        //Arrange
+
         when(offerRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
+
+        //Act & Assert
 
         assertThatThrownBy(() -> companyService.getOffer(1L))
                 .isInstanceOf(ResponseStatusException.class)
@@ -106,8 +126,10 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
-    void getOffersHappyDay() throws MalformedURLException {
+    void getOffersHappyDay() {
+
+        //Arrange
+
         Offer offer1 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
         Offer offer2 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
         Offer offer3 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
@@ -132,33 +154,100 @@ public class CompanyServiceTest {
         when(companyRepository.findById(anyLong())).thenReturn(Optional.of(company)) ;
         when(offerRepository.findAllByOwner(company)).thenReturn(mockList) ;
 
+        //Act
+
         List<OfferDtoResponseNoPdf> list = companyService.getAllOffersCompany(1L) ;
 
-        Assertions.assertNotNull(list);
-        Assertions.assertSame(list.size(), 3);
-        Assertions.assertEquals(list, mockDtoList);
+        //Assert
+
+        assertNotNull(list);
+        assertSame(list.size(), 3);
+        assertEquals(list, mockDtoList);
     }
 
     @Test
-    @WithMockUser
     void getOffersEmpty() {
+        //Arrange
+
         Company company = mock(Company.class) ;
         when(companyRepository.findById(anyLong())).thenReturn(Optional.of(company)) ;
         when(offerRepository.findAllByOwner(company)).thenReturn(new ArrayList<>()) ;
 
+        //Act
+
         List<OfferDtoResponseNoPdf> list = companyService.getAllOffersCompany(1L) ;
 
-        Assertions.assertNotNull(list);
-        Assertions.assertSame(list.size(), 0);
+        //Assert
+
+        assertNotNull(list);
+        assertSame(list.size(), 0);
     }
 
     @Test
-    @WithMockUser
     void getOffersNonExistentCompany() {
+        //Arrange
+
         when(offerRepository.findAllByOwner(mock(Company.class))).thenReturn(new ArrayList<>()) ;
+
+        //Act & Assert
 
         assertThatThrownBy(() -> companyService.getAllOffersCompany( 1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @WithMockUser
+    void validateOfferHappyDay(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
+    }
+
+    @Test
+    @WithMockUser
+    void validateOfferNonExistent(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
+    }
+
+    @Test
+    @WithMockUser
+    void invalidateOfferHappyDay(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
+    }
+
+    @Test
+    @WithMockUser
+    void invalidateOfferNonExistent(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
+    }
+
+    @Test
+    @WithMockUser
+    void invalidateOfferNoFeedback(){
+        //Arrange
+
+        //Act
+
+        //Assert
+
     }
 }

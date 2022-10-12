@@ -11,6 +11,8 @@ public interface CompanyService {
     void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) ;
     OfferDtoResponse getOffer(Long offerId);
     List<OfferDtoResponseNoPdf> getAllOffersCompany(Long companyId) ;
+    void validateOffer(Long offerId, String feedback);
+    void invalidateOffer(Long offerId, String feedback);
     void init();
     void deleteAll();
 }

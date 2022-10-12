@@ -97,6 +97,16 @@ public class CompanyServiceImpl implements CompanyService {
         return offerDtoResponseList ;
     }
 
+    @Override
+    public void validateOffer(Long offerId, String feedback) {
+
+    }
+
+    @Override
+    public void invalidateOffer(Long offerId, String feedback) {
+
+    }
+
     public void init() {
         try {
             Files.createDirectory(cvPath);
