@@ -99,7 +99,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void validateOffer(Long offerId, String feedback) {
-
+        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
