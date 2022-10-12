@@ -172,11 +172,18 @@ public class OfferServiceTest {
 
     @Test
     void addApplicantNotFoundToOffer(){
+
         //Arrange
+        Company company = mock(Company.class);
+        Offer offer = new Offer(company, "Junior dev", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
 
-        //Act
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
 
-        //Assert
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.addApplicantToOffer(1L,2L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
