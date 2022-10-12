@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getOffer, getOffers } from "../services/CompanyService";
+import { getOffer } from "../services/CompanyService";
+import { getOffers } from "../services/OfferService";
 import Offer from "../components/Offer";
 
 const ValidateOffer = () => {
@@ -7,10 +8,10 @@ const ValidateOffer = () => {
     const [pdf, setPdf] = useState("");
 
     useEffect(() => {
-        getOffers(12) // Temporaire, en attendant d'avoir un endpoint pour get toutes les offres de stages, de toutes les commpagnies
-            .then(({ data }) => {
-                console.log(data);
-                setOffers(data);
+        getOffers() // Temporaire, en attendant d'avoir un endpoint pour get toutes les offres de stages, de toutes les commpagnies
+            .then((response) => {
+                console.log(response);
+                setOffers(response.data);
             })
             .catch((err) => {
                 console.log(err);
@@ -22,11 +23,11 @@ const ValidateOffer = () => {
         getOffer(companyId, offerId)
             .then((response) => {
                 console.log(response);
-                response.data = new FormData();
+                //response.data = new FormData();
                 console.log(response.data);
 
                 var blob1 = new Blob([response.data], {
-                    type: "multipart/form-data",
+                    type: "application/json",
                 });
 
                 var data_url = window.URL.createObjectURL(blob1);

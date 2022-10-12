@@ -30,6 +30,8 @@ const Offer = ({ position, salary, startDate, endDate, getPdf }) => {
                 <p>{endDate}</p>
             </div>
 
+            {/*<button className={"btn btn-primary"}>Détail</button>*/}
+
             <div>
                 <button className={"btn btn-success d-block mb-2"}>
                     Approuver

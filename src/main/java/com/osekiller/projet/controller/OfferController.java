@@ -19,7 +19,7 @@ public class OfferController {
     CompanyService companyService ;
 
     @GetMapping("/offers")
-    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam String accepted) {
+    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam("accepted") String accepted) {
 
         if (accepted.equals("true")) {
             return ResponseEntity.ok().body(companyService.getAllValidOffers()) ;
