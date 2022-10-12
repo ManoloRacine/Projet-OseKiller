@@ -1,15 +1,15 @@
-import {useContext, useEffect, useState} from "react";
-import {AuthenticatedUserContext} from "../App";
+import { useContext, useEffect, useState } from "react";
+import { AuthenticatedUserContext } from "../App";
 import { getCv, getStudent } from "../services/StudentService";
-
 
 const Dashboard = () => {
     const [userPdf, setUserPdf] = useState("");
     const [studentInfo, setStudentInfo] = useState({});
 
-    const {authenticatedUser} = useContext(AuthenticatedUserContext);
+    const { authenticatedUser } = useContext(AuthenticatedUserContext);
 
     useEffect(() => {
+        //console.log(authenticatedUser.id);
         if (authenticatedUser.role === "STUDENT") {
             getStudent(authenticatedUser.id).then((response) => {
                 setStudentInfo(response.data);
@@ -32,11 +32,27 @@ const Dashboard = () => {
 
             <div className="row">
                 <div className="col-6">
-                    {authenticatedUser.role === "STUDENT" && studentInfo["cvValidated"] ? (<h3 className="text-success">CV est valide</h3>) : null}
-                    {authenticatedUser.role === "STUDENT" && studentInfo["cvRejected"] ? (<h3 className="text-danger">CV n'est pas valide</h3>) : null}
-                    {authenticatedUser.role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] || studentInfo["cvValidated"]) ?
-                    <div><h4>Feedback :</h4><p>{studentInfo["feedback"]}</p></div> :
-                    studentInfo['cvPresent'] === true ? <h4 className="text-warning">CV en attente de validation</h4> : null }
+                    {authenticatedUser.role === "STUDENT" &&
+                    studentInfo["cvValidated"] ? (
+                        <h3 className="text-success">CV est valide</h3>
+                    ) : null}
+                    {authenticatedUser.role === "STUDENT" &&
+                    studentInfo["cvRejected"] ? (
+                        <h3 className="text-danger">CV n'est pas valide</h3>
+                    ) : null}
+                    {authenticatedUser.role === "STUDENT" &&
+                    studentInfo["cvPresent"] &&
+                    (studentInfo["cvRejected"] ||
+                        studentInfo["cvValidated"]) ? (
+                        <div>
+                            <h4>Feedback :</h4>
+                            <p>{studentInfo["feedback"]}</p>
+                        </div>
+                    ) : studentInfo["cvPresent"] === true ? (
+                        <h4 className="text-warning">
+                            CV en attente de validation
+                        </h4>
+                    ) : null}
                 </div>
                 <div className="col-6">
                     {authenticatedUser.role === "STUDENT" ? (
