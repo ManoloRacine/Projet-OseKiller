@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,18 +61,15 @@ public class StudentServiceTest {
                 "text/plain",
                 "test".getBytes()
         ) ;
-        CV mockCV = new CV(Paths.get("CV").toString(), mockStudent, false);
+        CV mockCV = new CV(mockStudent, false);
         when(studentRepository.findById(any())).thenReturn(Optional.of(mockStudent));
         when(cvRepository.findCVByOwner(any())).thenReturn(mockCV);
 
         // Act
-        try (MockedStatic<Files> mockedStatic = mockStatic(Files.class)) {
-            //studentService.saveCV(mockFile, 1L);
-            studentService.saveCV(mockFile, mockStudent.getId());
-            mockedStatic.verify(() -> Files.copy(any(ByteArrayInputStream.class), any(Path.class))) ;
-        }
+        studentService.saveCV(mockFile, 1L);
 
         // Assert
+        verify(studentRepository).save(any(Student.class)) ;
         assertThat(cvRepository.findCVByOwner(mockStudent)).isNotNull();
     }
 
@@ -90,21 +89,26 @@ public class StudentServiceTest {
     }
 
     @Test
-    void getCVHappyDay() {
+    void getCVHappyDay() throws IOException {
         //Arrange
-        Resource resource = mock(Resource.class) ;
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "test".getBytes()
+        ) ;
         CV cv = mock(CV.class) ;
         Student student = mock(Student.class) ;
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student)) ;
         when(student.getCv()).thenReturn(cv) ;
         when(cvRepository.findById(anyLong())).thenReturn(Optional.of(cv)) ;
         when(cv.getId()).thenReturn(1L) ;
+        when(cv.getPdf()).thenReturn(mockFile.getBytes()) ;
 
         //Act
         Resource resourceReturn = studentService.getCV(1L) ;
 
-        //Assert
-        Assertions.assertThat(resourceReturn.getClass()).isEqualTo(UrlResource.class) ;
+        Assertions.assertThat(resourceReturn.getClass()).isEqualTo(ByteArrayResource.class) ;
     }
 
     @Test

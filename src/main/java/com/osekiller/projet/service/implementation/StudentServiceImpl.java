@@ -8,11 +8,13 @@ import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.ResourceFactory;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -67,20 +69,16 @@ public class StudentServiceImpl implements StudentService {
         if (student.isEmpty())
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 
+        String fileName = StringUtils.cleanPath(cv.getOriginalFilename());
+        student.get().getCv().setPdfName(fileName);
+
         try {
-            Path path = cvPath.resolve(studentId + ".pdf");
-            if (path.toFile().exists()) {
-                Files.delete(path);
-            }
-            Files.copy(cv.getInputStream(), path);
-            CV newCV = cvRepository.save(new CV(cvPath.toString(), student.get(), false));
-            student.get().setCv(newCV);
-            student.get().setCvRejected(false);
-            studentRepository.save(student.get());
+            student.get().getCv().setPdf(cv.getBytes());
         } catch (IOException e) {
-            System.out.println(e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        studentRepository.save(student.get()) ;
 
     }
 
@@ -89,13 +87,9 @@ public class StudentServiceImpl implements StudentService {
         if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
         if (cvRepository.findById(student.get().getCv().getId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
 
-        try {
-            Path file = cvPath.resolve(studentId.toString() + ".pdf");
-            Resource resource = new UrlResource(file.toUri());
-            return resource;
-        } catch (MalformedURLException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Resource resource = new ByteArrayResource(student.get().getCv().getPdf());
+
+        return resource;
     }
     public List<StudentDto> getStudents() {
         return studentRepository.findAll().stream().map(
@@ -105,19 +99,6 @@ public class StudentServiceImpl implements StudentService {
     public StudentDto getStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return StudentDto.from(student);
-    }
-
-    public void init() {
-        try {
-            Files.createDirectory(cvPath);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
-        }
-    }
-
-    public void deleteAll() {
-        cvRepository.deleteAll();
-        FileSystemUtils.deleteRecursively(cvPath.toFile());
     }
 
 }

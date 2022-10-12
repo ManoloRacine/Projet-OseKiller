@@ -10,11 +10,13 @@ import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.service.CompanyService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,8 +38,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     private OfferRepository offerRepository ;
 
-    private final Path cvPath = Paths.get("OFFER");
-
     @Override
     public void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) {
         Optional<Company> companyOptional = companyRepository.findById(companyId) ;
@@ -46,20 +46,18 @@ public class CompanyServiceImpl implements CompanyService {
 
         Offer offer = new Offer(companyOptional.get(), offerDto.position(), offerDto.salary(), LocalDate.parse(offerDto.startDate()), LocalDate.parse(offerDto.endDate()), false) ;
 
-        offerRepository.save(offer) ;
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        offer.setPdfName(fileName);
 
         try {
-            Path path = cvPath.resolve(offer.getId() + ".pdf");
-            if (path.toFile().exists()) {
-                Files.delete(path);
-            }
-            Files.copy(file.getInputStream(), path);
-            offer.setPath(path.toString());
-            offerRepository.save(offer);
+            offer.setPdf(file.getBytes());
         } catch (IOException e) {
-            System.out.println(e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        offerRepository.save(offer) ;
+
+
     }
 
     @Override
@@ -71,13 +69,10 @@ public class CompanyServiceImpl implements CompanyService {
 
         Offer offer1 = offer.get() ;
 
-        try {
-            Path file = cvPath.resolve(offerId.toString() + ".pdf");
-            Resource resource = new UrlResource(file.toUri());
-            return new OfferDtoResponse(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString(), resource) ;
-        } catch (MalformedURLException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Resource resource = new ByteArrayResource(offer1.getPdf()) ;
+
+        return new OfferDtoResponse(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(),
+                offer1.getEndDate().toString(), resource) ;
 
     }
 
@@ -116,19 +111,6 @@ public class CompanyServiceImpl implements CompanyService {
                 offer.getSalary(), offer.getStartDate().toString(), offer.getEndDate().toString()
         ))).toList() ;
         return generalOfferDtos;
-    }
-
-    public void init() {
-        try {
-            Files.createDirectory(cvPath);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
-        }
-    }
-
-    public void deleteAll() {
-        offerRepository.deleteAll();
-        FileSystemUtils.deleteRecursively(cvPath.toFile());
     }
 
 }

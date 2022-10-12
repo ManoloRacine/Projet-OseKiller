@@ -14,7 +14,7 @@ public record StudentDto(@NotBlank String email,
                          @NotBlank String feedback) {
     public static StudentDto from(Student student){
         boolean cvPresent = false ;
-        if (student.getCv().getPath() != null) {
+        if (student.getCv().getPdf() != null) {
             cvPresent = true ;
         }
         return new StudentDto(student.getEmail(), student.getName(), student.getId(), student.isEnabled(), student.getCv().isValidated(), student.isCvRejected(), cvPresent, student.getCv().getFeedback());

@@ -15,6 +15,4 @@ public interface CompanyService {
 
     List<GeneralOfferDto> getAllValidOffers();
     List<GeneralOfferDto> getAllInvalidOffers();
-    void init();
-    void deleteAll();
 }

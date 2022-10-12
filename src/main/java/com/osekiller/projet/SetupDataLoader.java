@@ -35,10 +35,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        studentService.deleteAll();
-        studentService.init();
-        companyService.deleteAll();
-        companyService.init();
         if (alreadySetup) return;
         //Si il y a des chose à setup au lancement du serveur c'est ici
         initializeRoles();
