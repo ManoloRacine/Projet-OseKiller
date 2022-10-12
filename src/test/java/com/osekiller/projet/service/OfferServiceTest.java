@@ -175,7 +175,8 @@ public class OfferServiceTest {
     void addApplicantToOfferAlreadyApplied(){
         //Arrange
 
-        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+        offer.getApplicants().add(mockStudent);
+        when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent));
 
         //Act & Assert
@@ -183,7 +184,6 @@ public class OfferServiceTest {
         assertThatThrownBy(() -> offerService.addApplicantToOffer(1L,2L))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.CONFLICT);
-
     }
 
     @Test
