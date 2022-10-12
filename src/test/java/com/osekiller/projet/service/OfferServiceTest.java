@@ -2,11 +2,15 @@ package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
+import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Offer;
+import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
+import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.OfferServiceImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +46,19 @@ public class OfferServiceTest {
 
     @InjectMocks
     OfferServiceImpl offerService;
+
+    static Company company;
+    static Offer offer;
+
+    static Student mockStudent;
+    @BeforeAll
+    static void setup(){
+        mockStudent = new Student("Joe Biden","jbiden@osk.com","encrypted-pass");
+        mockStudent.setRole(new Role(ERole.STUDENT.name()));
+        mockStudent.setId(1L);
+        company = mock(Company.class);
+        offer = new Offer(company, "Junior dev", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+    }
 
     @Test
     void getOfferHappyDay() throws IOException {
@@ -158,9 +175,14 @@ public class OfferServiceTest {
     void addApplicantToOfferAlreadyApplied(){
         //Arrange
 
-        //Act
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent));
 
-        //Assert
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.addApplicantToOffer(1L,2L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.CONFLICT);
 
     }
 
@@ -178,8 +200,6 @@ public class OfferServiceTest {
     void addApplicantNotFoundToOffer(){
 
         //Arrange
-        Company company = mock(Company.class);
-        Offer offer = new Offer(company, "Junior dev", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
 
         when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
 
