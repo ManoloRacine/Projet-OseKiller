@@ -32,7 +32,7 @@ public class Offer {
     @NonNull private LocalDate startDate;
     @NonNull private LocalDate endDate;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     private List<Student> applicants = new ArrayList<>();
 
     private boolean accepted = false;
