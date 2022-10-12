@@ -13,6 +13,7 @@ const Upload = ({
     onDelete,
     onSubmit,
     isSubmitted,
+    successMessage,
 }) => {
     const location = useLocation();
     const { state } = location;
@@ -64,10 +65,7 @@ const Upload = ({
                 )}
             </div>
             {isSubmitted && (
-                <ErrorMessage
-                    message={"CV téléversé avec succès !"}
-                    severity="success"
-                />
+                <ErrorMessage message={successMessage} severity="success" />
             )}
         </main>
     );
@@ -81,6 +79,7 @@ Upload.propTypes = {
     onDelete: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     isSubmitted: PropTypes.bool.isRequired,
+    successMessage: PropTypes.string.isRequired,
 };
 
 export default Upload;

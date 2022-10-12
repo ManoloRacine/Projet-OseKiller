@@ -48,6 +48,7 @@ const UploadInternship = () => {
                 onDelete={() => setSelectedFile({})}
                 onSubmit={handleSubmit}
                 isSubmitted={isOfferSubmitted}
+                successMessage={"Offre de stage téléversé avec succès !"}
             />
         </div>
     );

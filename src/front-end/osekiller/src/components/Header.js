@@ -49,6 +49,14 @@ export const Header = () => {
                             Valider des CV
                         </Link>
                     )}
+                    {authenticatedUser.role === "MANAGER" && (
+                        <Link
+                            to={"/validate-offer"}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Valider des offres de stages
+                        </Link>
+                    )}
                     {authenticatedUser.role === "STUDENT" && (
                         <Link
                             to={"/upload-cv"}

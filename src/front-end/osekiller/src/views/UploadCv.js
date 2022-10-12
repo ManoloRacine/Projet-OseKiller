@@ -27,6 +27,7 @@ const UploadCv = () => {
             onDelete={() => setSelectedFile({})}
             onSubmit={handleSubmit}
             isSubmitted={isCvSubmitted}
+            successMessage={"CV téléversé avec succès !"}
         />
     );
 };
