@@ -20,11 +20,12 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @CrossOrigin
+@RequestMapping("/companies")
 public class CompanyController {
 
     CompanyService companyService ;
 
-    @PostMapping("/companies/{id}/offers")
+    @PostMapping("/{id}/offers")
     public ResponseEntity<Void> postOffer(@RequestParam(name = "offerDto") String offerDto,
                                           @RequestParam(name = "file") MultipartFile file,
                                           @PathVariable(name = "id") Long id) throws JsonProcessingException {
@@ -34,12 +35,12 @@ public class CompanyController {
         return ResponseEntity.accepted().build() ;
     }
 
-    @GetMapping("/companies/{id}/offers")
+    @GetMapping("/{id}/offers")
     public ResponseEntity<List<OfferDtoResponseNoPdf>> getOffers(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(companyService.getAllOffersCompany(id)) ;
     }
 
-    @GetMapping("/companies/{companyId}/offers/{offerId}")
+    @GetMapping("/{companyId}/offers/{offerId}")
     public ResponseEntity<MultiValueMap<String, Object>> getOffers(@PathVariable(name = "companyId") Long companyId,
                                                                    @PathVariable(name = "offerId") Long offerId) {
         OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
