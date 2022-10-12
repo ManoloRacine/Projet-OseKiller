@@ -3,6 +3,7 @@ package com.osekiller.projet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
+import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,9 +67,9 @@ public class CompanyControllerTest {
     @Test
     @WithMockUser
     void getOffersHappyDay() throws Exception {
-        List<OfferDtoResponse> offerDtoResponseList = new ArrayList<>() ;
-        offerDtoResponseList.add(mock(OfferDtoResponse.class)) ;
-        offerDtoResponseList.add(mock(OfferDtoResponse.class)) ;
+        List<OfferDtoResponseNoPdf> offerDtoResponseList = new ArrayList<>() ;
+        offerDtoResponseList.add(mock(OfferDtoResponseNoPdf.class)) ;
+        offerDtoResponseList.add(mock(OfferDtoResponseNoPdf.class)) ;
         doReturn(offerDtoResponseList).when(companyService).getAllOffersCompany( 1L) ;
 
         mockMvc.perform(get("/companies/{id}/offers", 1)).

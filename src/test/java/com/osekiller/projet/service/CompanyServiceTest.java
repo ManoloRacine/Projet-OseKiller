@@ -2,6 +2,7 @@ package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
+import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.repository.OfferRepository;
@@ -117,14 +118,14 @@ public class CompanyServiceTest {
         when(cvPath.resolve("1.pdf")).thenReturn(Path.of("1.pdf")) ;
         when(cvPath.resolve("2.pdf")).thenReturn(Path.of("1.pdf")) ;
         when(cvPath.resolve("3.pdf")).thenReturn(Path.of("1.pdf")) ;
-        OfferDtoResponse offerDto1 = new OfferDtoResponse(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString(), new UrlResource(Path.of("OFFER/1.pdf").toUri())) ;
-        OfferDtoResponse offerDto2 = new OfferDtoResponse(offer2.getId(), offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString(), new UrlResource(Path.of("OFFER/2.pdf").toUri())) ;
-        OfferDtoResponse offerDto3 = new OfferDtoResponse(offer3.getId(), offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString(), new UrlResource(Path.of("OFFER/3.pdf").toUri())) ;
+        OfferDtoResponseNoPdf offerDto1 = new OfferDtoResponseNoPdf(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString()) ;
+        OfferDtoResponseNoPdf offerDto2 = new OfferDtoResponseNoPdf(offer2.getId(), offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString()) ;
+        OfferDtoResponseNoPdf offerDto3 = new OfferDtoResponseNoPdf(offer3.getId(), offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString()) ;
         List<Offer> mockList = new ArrayList<>() ;
         mockList.add(offer1) ;
         mockList.add(offer2) ;
         mockList.add(offer3) ;
-        List<OfferDtoResponse> mockDtoList = new ArrayList<>() ;
+        List<OfferDtoResponseNoPdf> mockDtoList = new ArrayList<>() ;
         mockDtoList.add(offerDto1) ;
         mockDtoList.add(offerDto2) ;
         mockDtoList.add(offerDto3) ;
@@ -132,7 +133,7 @@ public class CompanyServiceTest {
         when(companyRepository.findById(anyLong())).thenReturn(Optional.of(company)) ;
         when(offerRepository.findAllByOwner(company)).thenReturn(mockList) ;
 
-        List<OfferDtoResponse> list = companyService.getAllOffersCompany(1L) ;
+        List<OfferDtoResponseNoPdf> list = companyService.getAllOffersCompany(1L) ;
 
         Assertions.assertNotNull(list);
         Assertions.assertSame(list.size(), 3);
@@ -146,7 +147,7 @@ public class CompanyServiceTest {
         when(companyRepository.findById(anyLong())).thenReturn(Optional.of(company)) ;
         when(offerRepository.findAllByOwner(company)).thenReturn(new ArrayList<>()) ;
 
-        List<OfferDtoResponse> list = companyService.getAllOffersCompany(1L) ;
+        List<OfferDtoResponseNoPdf> list = companyService.getAllOffersCompany(1L) ;
 
         Assertions.assertNotNull(list);
         Assertions.assertSame(list.size(), 0);
