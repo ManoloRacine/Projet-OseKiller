@@ -43,12 +43,14 @@ public class StudentControllerTest {
     @Test
     @WithMockUser(authorities = {"MANAGER"})
     void getCVHappyDay() throws Exception {
+        //Arrange
         ClassLoader classLoader = controller.getClass().getClassLoader();
         boolean file = new File(classLoader.getResource(".").getFile() + "/" + FILE_NAME).createNewFile();
         inputStream = classLoader.getResourceAsStream(FILE_NAME);
         Resource resource = new InputStreamResource(inputStream);
         when(studentService.getCV(any())).thenReturn(resource);
 
+        //Act & Assert
         mockMvc.perform(get("/students/{id}/cv", 1L))
                 .andExpect(status().isOk()) ;
 
@@ -57,7 +59,10 @@ public class StudentControllerTest {
     @Test
     @WithMockUser(authorities = {"STUDENT"})
     void saveCVHappyDay() throws Exception {
+        //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
+
+        //Act & Assert
         mockMvc.perform(put("/students/{id}/cv", 1L)
                         .content(mockMultipartFile.getBytes()))
                 .andExpect(status().isOk()) ;

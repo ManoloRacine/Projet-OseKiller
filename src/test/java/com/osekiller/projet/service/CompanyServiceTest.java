@@ -54,7 +54,6 @@ public class CompanyServiceTest {
     CompanyServiceImpl companyService ;
 
     @Test
-    @WithMockUser
     void addOfferHappyDay() {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
@@ -72,7 +71,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void addOfferCompanyNonExistent() {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
@@ -86,7 +84,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getOfferHappyDay() throws MalformedURLException {
         Offer offer = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
         offer.setId(1L);
@@ -97,7 +94,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getOfferNonExistent() {
         when(offerRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
 
@@ -107,7 +103,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getOffersHappyDay() throws MalformedURLException {
         Offer offer1 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
         Offer offer2 = new Offer(mock(Company.class), "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
@@ -141,7 +136,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getOffersEmpty() {
         Company company = mock(Company.class) ;
         when(companyRepository.findById(anyLong())).thenReturn(Optional.of(company)) ;
@@ -154,7 +148,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getOffersNonExistentCompany() {
         when(offerRepository.findAllByOwner(mock(Company.class))).thenReturn(new ArrayList<>()) ;
 
@@ -164,7 +157,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getValidOffers() {
         Company company = mock(Company.class);
         Offer offer1 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
@@ -196,7 +188,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getValidOffersEmpty() {
         when(offerRepository.findAllByAcceptedIsTrue()).thenReturn(new ArrayList<>()) ;
 
@@ -207,7 +198,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getInvalidOffers() {
         Company company = mock(Company.class);
         Offer offer1 = new Offer(company, "test", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
@@ -239,7 +229,6 @@ public class CompanyServiceTest {
     }
 
     @Test
-    @WithMockUser
     void getInvalidOffersEmpty() {
         when(offerRepository.findAllByAcceptedIsFalse()).thenReturn(new ArrayList<>()) ;
 

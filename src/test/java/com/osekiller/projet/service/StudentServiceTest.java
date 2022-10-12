@@ -76,11 +76,12 @@ public class StudentServiceTest {
 
     @Test
     void saveCVNotStudent() {
+        //Arrange
         Manager mockManager = new Manager("Joe Biden","jbiden@osk.com","password");
         mockManager.setRole(new Role("MANAGER"));
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.txt", "text/plain", "test".getBytes()) ;
 
-
+        //Act & Assert
         assertThatThrownBy(() -> studentService.saveCV(mockFile, 1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -90,6 +91,7 @@ public class StudentServiceTest {
 
     @Test
     void getCVHappyDay() {
+        //Arrange
         Resource resource = mock(Resource.class) ;
         CV cv = mock(CV.class) ;
         Student student = mock(Student.class) ;
@@ -98,14 +100,16 @@ public class StudentServiceTest {
         when(cvRepository.findById(anyLong())).thenReturn(Optional.of(cv)) ;
         when(cv.getId()).thenReturn(1L) ;
 
-
+        //Act
         Resource resourceReturn = studentService.getCV(1L) ;
 
+        //Assert
         Assertions.assertThat(resourceReturn.getClass()).isEqualTo(UrlResource.class) ;
     }
 
     @Test
     void getCVDoesntExist() {
+        //Act & Assert
         assertThatThrownBy(() -> studentService.getCV(1L) )
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);

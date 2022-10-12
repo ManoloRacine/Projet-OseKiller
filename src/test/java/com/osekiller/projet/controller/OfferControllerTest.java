@@ -44,6 +44,7 @@ public class OfferControllerTest {
     @Test
     @WithMockUser
     void getAllValidOffersHappyDay() throws Exception {
+        //Arrange
         GeneralOfferDto generalOfferDto1 = new GeneralOfferDto(1L, 1L, "google", "dev",
                 20.50, "2022-10-22", "2022-10-23") ;
         GeneralOfferDto generalOfferDto2 = new GeneralOfferDto(2L, 2L, "google", "dev",
@@ -56,6 +57,7 @@ public class OfferControllerTest {
         generalOfferDtos.add(generalOfferDto3);
         when(companyService.getAllValidOffers()).thenReturn(generalOfferDtos) ;
 
+        //Act & Assert
         mockMvc.perform(get("/offers?accepted=true"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -67,9 +69,11 @@ public class OfferControllerTest {
     @Test
     @WithMockUser
     void getAllValidOffersEmpty() throws Exception {
+        //Arrange
         List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
         when(companyService.getAllValidOffers()).thenReturn(generalOfferDtos) ;
 
+        //Act & Assert
         mockMvc.perform(get("/offers?accepted=true"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -77,8 +81,9 @@ public class OfferControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void getAllInvalidOffersHappyDay() throws Exception {
+        //Arrange
         GeneralOfferDto generalOfferDto1 = new GeneralOfferDto(1L, 1L, "google", "dev",
                 20.50, "2022-10-22", "2022-10-23") ;
         GeneralOfferDto generalOfferDto2 = new GeneralOfferDto(2L, 2L, "google", "dev",
@@ -91,6 +96,7 @@ public class OfferControllerTest {
         generalOfferDtos.add(generalOfferDto3);
         when(companyService.getAllInvalidOffers()).thenReturn(generalOfferDtos) ;
 
+        //Act & Assert
         mockMvc.perform(get("/offers?accepted=false"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -100,11 +106,13 @@ public class OfferControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void getAllInvalidOffersEmpty() throws Exception {
+        //Arrange
         List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
         when(companyService.getAllInvalidOffers()).thenReturn(generalOfferDtos) ;
 
+        //Act & Assert
         mockMvc.perform(get("/offers?accepted=false"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
