@@ -34,7 +34,7 @@ const Dashboard = () => {
                 <div className="col-6">
                     {authenticatedUser.role === "STUDENT" && studentInfo["cvValidated"] ? (<h3 className="text-success">CV est valide</h3>) : null}
                     {authenticatedUser.role === "STUDENT" && studentInfo["cvRejected"] ? (<h3 className="text-danger">CV n'est pas valide</h3>) : null}
-                    {authenticatedUser.role === "STUDENT" && studentInfo["cvPresent"] === true && (studentInfo["cvRejected"] === true || studentInfo["cvValidated"] === true) ?
+                    {authenticatedUser.role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] || studentInfo["cvValidated"]) ?
                     <div><h4>Feedback :</h4><p>{studentInfo["feedback"]}</p></div> :
                     studentInfo['cvPresent'] === true ? <h4 className="text-warning">CV en attente de validation</h4> : null }
                 </div>
