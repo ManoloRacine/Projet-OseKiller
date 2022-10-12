@@ -5,32 +5,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.service.CompanyService;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.awt.*;
-import java.util.*;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @CrossOrigin
-@RequestMapping("/companies")
+
 public class OfferController {
 
     CompanyService companyService ;
 
-    @PostMapping("/{id}/offers")
+    @PostMapping("/companies/{id}/offers")
     public ResponseEntity<Void> postOffer(@RequestParam(name = "offerDto") String offerDto,
                                           @RequestParam(name = "file") MultipartFile file,
                                           @PathVariable(name = "id") Long id) throws JsonProcessingException {
@@ -40,12 +35,12 @@ public class OfferController {
         return ResponseEntity.accepted().build() ;
     }
 
-    @GetMapping("/{id}/offers")
+    @GetMapping("/companies/{id}/offers")
     public ResponseEntity<List<OfferDtoResponseNoPdf>> getOffers(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(companyService.getAllOffersCompany(id)) ;
     }
 
-    @GetMapping("/{companyId}/offers/{offerId}")
+    @GetMapping("/companies/{companyId}/offers/{offerId}")
     public ResponseEntity<MultiValueMap<String, Object>> getOffers(@PathVariable(name = "companyId") Long companyId,
                                               @PathVariable(name = "offerId") Long offerId) {
         OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
@@ -56,5 +51,20 @@ public class OfferController {
         multipartBody.add("file", offerDtoResponse.offer());
 
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(multipartBody) ;
+    }
+
+    @GetMapping("/offers")
+    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam(required = false) String accepted) {
+        if (accepted.isEmpty()) {
+            return null ;
+        }
+
+        if (accepted.equals("true")) {
+            return ResponseEntity.ok().body(companyService.getAllValidOffers()) ;
+        } else if (accepted.equals("false")) {
+            return ResponseEntity.ok().body(companyService.getAllInvalidOffers()) ;
+        }
+
+        return ResponseEntity.badRequest().build() ;
     }
 }
