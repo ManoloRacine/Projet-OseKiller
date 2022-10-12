@@ -41,7 +41,7 @@ public class OfferController {
     }
 
     @GetMapping("/{id}/offers")
-    public ResponseEntity<List<OfferDtoResponse>> getOffers(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<List<OfferDtoResponseNoPdf>> getOffers(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(companyService.getAllOffersCompany(id)) ;
     }
 
@@ -49,7 +49,8 @@ public class OfferController {
     public ResponseEntity<MultiValueMap<String, Object>> getOffers(@PathVariable(name = "companyId") Long companyId,
                                               @PathVariable(name = "offerId") Long offerId) {
         OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
-        OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(), offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(), offerDtoResponse.endDate()) ;
+        OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(),
+                offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(), offerDtoResponse.endDate()) ;
         MultiValueMap<String, Object> multipartBody = new LinkedMultiValueMap<>();
         multipartBody.add("offerDto", offerDtoResponseNoPdf);
         multipartBody.add("file", offerDtoResponse.offer());

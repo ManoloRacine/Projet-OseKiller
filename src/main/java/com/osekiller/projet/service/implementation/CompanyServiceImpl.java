@@ -2,6 +2,7 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
+import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.model.CV;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
@@ -82,23 +83,17 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<OfferDtoResponse> getAllOffersCompany(Long companyId) {
+    public List<OfferDtoResponseNoPdf> getAllOffersCompany(Long companyId) {
         Optional<Company> company = companyRepository.findById(companyId) ;
         if (company.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
 
         List<Offer> offerList = offerRepository.findAllByOwner(company.get()) ;
 
-        List<OfferDtoResponse> offerDtoResponseList = new ArrayList<>() ;
+        List<OfferDtoResponseNoPdf> offerDtoResponseList = new ArrayList<>() ;
 
         for (Offer offer: offerList) {
-            try {
-                Path file = cvPath.resolve(offer.getId().toString() + ".pdf");
-                Resource resource = new UrlResource(file.toUri());
-                offerDtoResponseList.add(new OfferDtoResponse(offer.getId(), offer.getPosition(), offer.getSalary(),
-                        offer.getStartDate().toString(), offer.getEndDate().toString(), resource)) ;
-            } catch (MalformedURLException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            offerDtoResponseList.add(new OfferDtoResponseNoPdf(offer.getId(), offer.getPosition(), offer.getSalary(),
+                    offer.getStartDate().toString(), offer.getEndDate().toString())) ;
         }
 
         return offerDtoResponseList ;
