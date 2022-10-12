@@ -249,7 +249,8 @@ public class CompanyServiceTest {
 
         //Assert
 
-        verify(offerRepository).delete(offer);
+        assertThat(offer.getFeedback()).isEqualTo(feedback);
+        verify(offerRepository).save(offer);
     }
 
     @Test

@@ -101,6 +101,9 @@ public class CompanyServiceImpl implements CompanyService {
     public void validateOffer(Long offerId, String feedback) {
         Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         offer.setAccepted(true);
+        if(!(feedback == null || feedback.isEmpty() || feedback.isBlank()))
+            offer.setFeedback(feedback);
+
         offerRepository.save(offer);
     }
 
@@ -111,7 +114,8 @@ public class CompanyServiceImpl implements CompanyService {
         Offer offer = offerRepository.findById(offerId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-
+        offer.setFeedback(feedback);
+        offerRepository.save(offer);
     }
 
     public void init() {

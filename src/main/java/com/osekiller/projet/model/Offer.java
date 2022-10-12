@@ -22,6 +22,7 @@ public class Offer {
     private String path;
 
     @NonNull private String position;
+    private String feedback;
     @NonNull private Double salary;
     @NonNull private LocalDate startDate;
     @NonNull private LocalDate endDate;
