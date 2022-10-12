@@ -315,6 +315,30 @@ paths:
       responses:
         '200':
           description: Les offres ont été reçu
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type : object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    position:
+                      type: string
+                      example: Junior Web Developer
+                    salary:
+                      type: number
+                      example: 25
+                    startDate:
+                      type: string
+                      format: date
+                      example: 2022-10-30
+                    endDate:
+                      type: string
+                      format: date
+                      example: 2023-01-30
         '403':
           description: Requête non autorisée
         '404':
@@ -347,6 +371,23 @@ paths:
               schema:
                 type: object
                 properties:
+                  id:
+                    type: number
+                    example: 1
+                  position:
+                    type: string
+                    example: Junior Web Developer
+                  salary:
+                    type: number
+                    example: 25
+                  startDate:
+                    type: string
+                    format: date
+                    example: 2022-10-30
+                  endDate:
+                    type: string
+                    format: date
+                    example: 2023-01-30
                   file:
                     type: string
                     format: binary
