@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
-const Offer = ({ position, salary, startDate, endDate }) => {
+const Offer = ({ position, salary, startDate, endDate, getPdf }) => {
     return (
         <div
             className={
-                "offer d-flex justify-content-evenly text-white my-4 py-4 rounded"
+                "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
             }
             style={{ backgroundColor: "#2C324C" }}
         >
@@ -36,6 +38,7 @@ const Offer = ({ position, salary, startDate, endDate }) => {
                     Désapprouvé
                 </button>
             </div>
+            <FontAwesomeIcon icon={faAngleDown} onClick={getPdf} />
         </div>
     );
 };
@@ -45,6 +48,7 @@ Offer.propTypes = {
     salary: PropTypes.number.isRequired,
     startDate: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
+    getPdf: PropTypes.func.isRequired,
 };
 
 export default Offer;

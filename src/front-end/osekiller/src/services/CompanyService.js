@@ -17,3 +17,12 @@ export const getOffers = async (companyId) => {
         },
     });
 };
+
+export const getOffer = async (companyId, offerId) => {
+    return axios.get(`companies/${companyId}/offers/${offerId}`, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
