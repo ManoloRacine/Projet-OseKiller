@@ -49,6 +49,7 @@ public class WebSecurityConfig {
                                 .antMatchers(HttpMethod.GET,"/students/{id}/cv").hasAnyAuthority(ERole.MANAGER.name(),ERole.STUDENT.name())
                                 .antMatchers(HttpMethod.POST, "/companies/{id}/offers").hasAuthority(ERole.COMPANY.name())
                                 .antMatchers(HttpMethod.GET, "/companies/{id}/offers").hasAnyAuthority(ERole.COMPANY.name(),ERole.MANAGER.name())
+                                .antMatchers("/companies/{companyId}/offers/{offerId}/validate").hasAuthority(ERole.MANAGER.name())
                                 .antMatchers("/students/{id}/cv/validate").hasAuthority(ERole.MANAGER.name())
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()

@@ -151,7 +151,7 @@ public class CompanyControllerTest {
 
     @Test
     @WithMockUser(authorities = {"MANAGER"})
-    void validateOfferNoValidation() throws Exception {
+    void validateAndInvalidateOfferBadRequestValidation() throws Exception {
         //Arrange
 
         ValidationDto dto = new ValidationDto(null, null);
@@ -163,35 +163,24 @@ public class CompanyControllerTest {
                         .content(asJsonString(dto)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void validateAndInvalidateOfferNotFound() throws Exception {
+        //Arrange
+
+        ValidationDto dto = new ValidationDto(true, "One of the offers of all time");
+
+        //Act & Assert
+
+        mockMvc.perform(post("/companies/1/offers/2/validate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(dto)))
+                .andExpect(status().isNotFound());
+    }
     @Test
     @WithMockUser(authorities = {"MANAGER"})
     void invalidateOfferHappyDay(){
-        //Arrange
-
-        //Act & Assert
-
-    }
-    @Test
-    @WithMockUser(authorities = {"MANAGER"})
-    void invalidateOfferNoFeedback(){
-        //Arrange
-
-        //Act & Assert
-
-    }
-
-    @Test
-    @WithMockUser(authorities = {"MANAGER"})
-    void invalidateOfferEmptyFeedback(){
-        //Arrange
-
-        //Act & Assert
-
-    }
-
-    @Test
-    @WithMockUser(authorities = {"MANAGER"})
-    void invalidateOfferBlankFeedback(){
         //Arrange
 
         //Act & Assert
