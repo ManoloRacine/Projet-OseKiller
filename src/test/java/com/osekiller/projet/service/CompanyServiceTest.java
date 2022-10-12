@@ -1,36 +1,29 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.request.OfferDto;
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
-import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;

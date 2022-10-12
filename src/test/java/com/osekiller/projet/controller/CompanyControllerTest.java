@@ -5,7 +5,6 @@ import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
-import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

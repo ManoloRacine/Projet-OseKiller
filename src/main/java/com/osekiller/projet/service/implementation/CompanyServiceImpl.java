@@ -1,9 +1,9 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.request.OfferDto;
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
-import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.repository.OfferRepository;
