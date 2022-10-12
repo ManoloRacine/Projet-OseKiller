@@ -8,6 +8,7 @@ import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.CompanyService;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +44,22 @@ public class CompanyController {
         return ResponseEntity.ok(companyService.getAllOffersCompany(id)) ;
     }
 
+    @GetMapping("/{companyId}/offers/{offerId}/pdf")
+    public ResponseEntity<Resource> getOfferPdf(@PathVariable(name = "companyId") Long companyId,
+                                              @PathVariable(name = "offerId") Long offerId) {
+
+        if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
+
+        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(offerDtoResponse.offer()) ;
+    }
+
     @GetMapping("/{companyId}/offers/{offerId}")
-    public ResponseEntity<MultiValueMap<String, Object>> getOffers(@PathVariable(name = "companyId") Long companyId,
-                                                                   @PathVariable(name = "offerId") Long offerId) {
+    public ResponseEntity<OfferDtoResponseNoPdf> getOffers(@PathVariable(name = "companyId") Long companyId,
+                                              @PathVariable(name = "offerId") Long offerId) {
 
         if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -53,12 +67,10 @@ public class CompanyController {
 
         OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
         OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(),
-                offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(), offerDtoResponse.endDate()) ;
-        MultiValueMap<String, Object> multipartBody = new LinkedMultiValueMap<>();
-        multipartBody.add("offerDto", offerDtoResponseNoPdf);
-        multipartBody.add("file", offerDtoResponse.offer());
+                offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(),
+                offerDtoResponse.endDate()) ;
 
-        return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(multipartBody) ;
+        return ResponseEntity.ok().body(offerDtoResponseNoPdf) ;
     }
 
     @PostMapping("/{companyId}/offers/{offerId}/validate")
