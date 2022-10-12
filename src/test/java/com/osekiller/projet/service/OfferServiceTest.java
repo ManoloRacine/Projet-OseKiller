@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -166,9 +167,17 @@ public class OfferServiceTest {
     void addApplicantToOfferHappyDay(){
         //Arrange
 
+        when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent));
+
         //Act
 
+        offerService.addApplicantToOffer(1L,2L);
+
         //Assert
+
+        assertThat(offer.getApplicants().size()).isEqualTo(1);
+        assertThat(offer.getApplicants()).contains(mockStudent);
 
     }
     @Test
