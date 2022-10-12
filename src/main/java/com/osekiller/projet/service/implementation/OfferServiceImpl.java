@@ -36,7 +36,7 @@ public class OfferServiceImpl implements OfferService {
     }
     @Override
     public void addApplicantToOffer(Long studentId, Long offerId) {
-
+        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
