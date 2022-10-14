@@ -12,7 +12,7 @@ export const OfferCard = ({offer}) => {
             </div>
             <div>
                 <p className={"fs-4 text-decoration-underline"}>Salaire</p>
-                <p>{offer.salary}</p>
+                <p>{offer.salary}$</p>
             </div>
             <div>
                 <p className={"fs-4 text-decoration-underline"}>
@@ -25,7 +25,7 @@ export const OfferCard = ({offer}) => {
                 <p>{offer.endDate}</p>
             </div>
 
-            <button className={"btn btn-primary"}>Détail</button>
+            <button className={"btn btn-primary"}>Détails</button>
         </div>
     );
 };
