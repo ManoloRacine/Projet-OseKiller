@@ -1,20 +1,31 @@
 export const OfferCard = ({offer}) => {
     return (
-        <div className="card">
-            <div className="card-body">
-                <div className="card-title">
-                    {offer.companyName}
-                </div>
-                <div className="card-text">
-                    <p>Position : {offer.position}</p>
-                    <p>Salaire : {offer.salary}$</p>
-                    <p>date de début : {offer.startDate}</p>
-                    <p>date de fin : {offer.endDate}</p>
-                </div>
-                <button className="btn btn-primary me-2">
-                    Voir infos
-                </button>
+        <div
+            className={
+                "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
+            }
+            style={{ backgroundColor: "#2C324C" }}
+        >
+            <div>
+                <p className={"fs-4 text-decoration-underline"}>Position</p>
+                <p>{offer.position}</p>
             </div>
+            <div>
+                <p className={"fs-4 text-decoration-underline"}>Salaire</p>
+                <p>{offer.salary}</p>
+            </div>
+            <div>
+                <p className={"fs-4 text-decoration-underline"}>
+                    Date de début
+                </p>
+                <p>{offer.startDate}</p>
+            </div>
+            <div>
+                <p className={"fs-4 text-decoration-underline"}>Date de fin</p>
+                <p>{offer.endDate}</p>
+            </div>
+
+            <button className={"btn btn-primary"}>Détail</button>
         </div>
-    )
-}
+    );
+};
