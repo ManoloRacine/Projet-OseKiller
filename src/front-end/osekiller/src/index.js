@@ -13,6 +13,7 @@ import UploadCv from "./views/UploadCv";
 import StudentCvs from "./views/StudentCvs";
 import ValidateCv from "./views/ValidateCv";
 import UploadInternship from "./views/UploadInternship";
+import Offers from "./views/Offers";
 import ValidateOffer from "./views/ValidateOffer";
 
 <link
@@ -95,6 +96,17 @@ root.render(
                             allowedRoles={["COMPANY"]}
                         >
                             <UploadInternship />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="offers"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["MANAGER"]}
+                        >
+                            <Offers />
                         </ProtectedRoute>
                     }
                 />

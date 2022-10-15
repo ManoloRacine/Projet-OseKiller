@@ -1,7 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
-const Offer = ({ position, salary, startDate, endDate }) => {
+const Offer = ({
+    position,
+    salary,
+    startDate,
+    endDate,
+    companyId,
+    offerId,
+}) => {
     return (
         <div
             className={
@@ -28,7 +36,13 @@ const Offer = ({ position, salary, startDate, endDate }) => {
                 <p>{endDate}</p>
             </div>
 
-            <button className={"btn btn-primary"}>Détail</button>
+            <Link
+                to={"/validate-offer"}
+                className={"btn btn-primary"}
+                state={{ companyId: companyId, offerId: offerId }}
+            >
+                Détail
+            </Link>
         </div>
     );
 };
@@ -38,6 +52,8 @@ Offer.propTypes = {
     salary: PropTypes.number.isRequired,
     startDate: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
+    companyId: PropTypes.number.isRequired,
+    offerId: PropTypes.number.isRequired,
 };
 
 export default Offer;

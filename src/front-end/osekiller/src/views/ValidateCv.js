@@ -17,13 +17,15 @@ const ValidateCv = () => {
     };
 
     useEffect(() => {
-        getCv(studentId).then((response) => {
-            const blob1 = new Blob([response.data], {
-                type: "application/pdf",
-            });
-            const data_url = window.URL.createObjectURL(blob1);
-            setPdf(data_url);
-        });
+        getCv(studentId)
+            .then((response) => {
+                const blob1 = new Blob([response.data], {
+                    type: "application/pdf",
+                });
+                const data_url = window.URL.createObjectURL(blob1);
+                setPdf(data_url);
+            })
+            .catch((err) => console.log(err));
     }, [studentId]);
 
     return (
