@@ -132,7 +132,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<GeneralOfferDto> getAllInvalidOffers() {
-        List<Offer> offerList = offerRepository.findAllByAcceptedIsFalse() ;
+        List<Offer> offerList = offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull() ;
         List<GeneralOfferDto> generalOfferDtos = offerList.stream().map((offer -> new GeneralOfferDto(
                 offer.getId(), offer.getOwner().getId(), offer.getOwner().getName(), offer.getPosition(),
                 offer.getSalary(), offer.getStartDate().toString(), offer.getEndDate().toString()
