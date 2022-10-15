@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
-const Offer = ({ position, salary, startDate, endDate, getPdf }) => {
+const Offer = ({ position, salary, startDate, endDate }) => {
     return (
         <div
             className={
@@ -30,17 +28,7 @@ const Offer = ({ position, salary, startDate, endDate, getPdf }) => {
                 <p>{endDate}</p>
             </div>
 
-            {/*<button className={"btn btn-primary"}>Détail</button>*/}
-
-            <div>
-                <button className={"btn btn-success d-block mb-2"}>
-                    Approuver
-                </button>
-                <button className={"btn btn-danger d-block"}>
-                    Désapprouvé
-                </button>
-            </div>
-            <FontAwesomeIcon icon={faAngleDown} onClick={getPdf} />
+            <button className={"btn btn-primary"}>Détail</button>
         </div>
     );
 };
@@ -50,7 +38,6 @@ Offer.propTypes = {
     salary: PropTypes.number.isRequired,
     startDate: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
-    getPdf: PropTypes.func.isRequired,
 };
 
 export default Offer;
