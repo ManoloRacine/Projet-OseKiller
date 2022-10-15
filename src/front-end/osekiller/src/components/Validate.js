@@ -1,8 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import ErrorMessage from "./ErrorMessage";
 
 const Validate = ({ pdf, feedBack, setFeedBack, validate }) => {
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleValidate = (isValid) => {
+        if (feedBack === "") {
+            setErrorMessage("Le feedback ne doit pas être vide");
+        } else {
+            validate(isValid);
+        }
+    };
+
     return (
         <>
             <div className="row">
@@ -24,18 +36,21 @@ const Validate = ({ pdf, feedBack, setFeedBack, validate }) => {
             </div>
             <button
                 className="btn btn-success float-left"
-                onClick={() => validate(true)}
+                onClick={() => handleValidate(true)}
             >
                 <FontAwesomeIcon icon={faCheck} className="me-2" />
                 Approuver
             </button>
             <button
                 className="btn btn-danger float-left"
-                onClick={() => validate(false)}
+                onClick={() => handleValidate(false)}
             >
                 <FontAwesomeIcon icon={faX} className="me-2" />
                 Désapprouver
             </button>
+            {errorMessage && (
+                <ErrorMessage message={errorMessage} severity="error" />
+            )}
         </>
     );
 };
