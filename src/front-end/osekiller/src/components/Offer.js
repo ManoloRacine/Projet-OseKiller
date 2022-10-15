@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const Offer = ({
+    companyName,
     position,
     salary,
     startDate,
@@ -17,6 +18,12 @@ const Offer = ({
             }
             style={{ backgroundColor: "#2C324C" }}
         >
+            <div>
+                <p className={"fs-4 text-decoration-underline"}>
+                    Nom de la compagnie
+                </p>
+                <p>{companyName}</p>
+            </div>
             <div>
                 <p className={"fs-4 text-decoration-underline"}>Position</p>
                 <p>{position}</p>
@@ -48,6 +55,7 @@ const Offer = ({
 };
 
 Offer.propTypes = {
+    companyName: PropTypes.string.isRequired,
     position: PropTypes.string.isRequired,
     salary: PropTypes.number.isRequired,
     startDate: PropTypes.string.isRequired,

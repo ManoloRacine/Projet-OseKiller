@@ -20,6 +20,7 @@ const Offers = () => {
             {offers.map((offer, index) => (
                 <Offer
                     key={index}
+                    companyName={offer.companyName}
                     position={offer.position}
                     salary={offer.salary}
                     startDate={offer.startDate}
