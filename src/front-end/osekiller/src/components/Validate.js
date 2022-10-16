@@ -3,6 +3,7 @@ import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import ErrorMessage from "./ErrorMessage";
+import LoadPdf from "./LoadPdf";
 
 const Validate = ({ pdf, feedBack, setFeedBack, validate }) => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -18,13 +19,13 @@ const Validate = ({ pdf, feedBack, setFeedBack, validate }) => {
     return (
         <>
             <div className="row">
-                <iframe
-                    title="student-cv"
-                    type="application/pdf"
+                <LoadPdf
                     src={pdf}
-                    height="500px"
-                    width="50%"
-                ></iframe>
+                    width={"50%"}
+                    title={"student-cv"}
+                    type={"application/pdf"}
+                    height={"500px"}
+                />
             </div>
             <div className="input-group py-3">
                 <span className="input-group-text">Feedback</span>
