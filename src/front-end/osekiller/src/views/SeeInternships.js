@@ -6,7 +6,7 @@ const SeeInternships = () => {
     const [offers, setOffers] = useState([]) ;
 
     useEffect(() => {
-        getOffers().then((response) => {
+        getOffers(true).then((response) => {
             setOffers(response.data) ;
         })
     }, []) ;
