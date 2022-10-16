@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { getOfferPdf } from "../../services/OfferService";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadPdf from "../../components/LoadPdf";
+import { applyToInternship } from "../../services/CompanyService";
 
 const ApplyOffer = () => {
     const [pdf, setPdf] = useState("");
     const location = useLocation();
     const { companyId, offerId } = location.state;
+    const navigate = useNavigate();
 
     useEffect(() => {
         getOfferPdf(companyId, offerId)
@@ -21,7 +23,9 @@ const ApplyOffer = () => {
     }, [companyId, offerId]);
 
     const handleApplyOffer = () => {
-        console.log("Apply offer");
+        applyToInternship(companyId, offerId)
+            .then(() => navigate("/dashboard"))
+            .catch((err) => console.log(err));
     };
 
     return (
