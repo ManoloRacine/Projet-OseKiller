@@ -13,9 +13,7 @@ const SeeInternships = () => {
 
     return (
         <div className="row">
-            <div className="col-2"></div>
-            <div className="col-8">{offers.map((offer, index) => (<OfferCard  offer={offer} ></OfferCard>))}</div>
-            <div className="col-2"></div>
+            <div className="col-12">{offers.map((offer, index) => (<OfferCard  offer={offer} ></OfferCard>))}</div>
         </div>
     )
 }
