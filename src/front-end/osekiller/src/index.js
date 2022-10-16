@@ -57,7 +57,7 @@ root.render(
                 <StudentCvs />
             </ProtectedRoute>
           }/>
-          <Route path="offers" element={
+          <Route path="offers-students" element={
             <ProtectedRoute authenticated>
                 <SeeInternships />
             </ProtectedRoute>

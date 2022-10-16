@@ -60,7 +60,7 @@ export const Header = () => {
                     )}
                     {authenticatedUser.role === "STUDENT" && (
                         <Link
-                            to={"/offers"}
+                            to={"/offers-students"}
                             state={{ userId: authenticatedUser.id }}
                             className="m-4 fs-2 d-flex align-items-center"
                         >
