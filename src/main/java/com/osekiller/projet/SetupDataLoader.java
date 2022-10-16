@@ -61,11 +61,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     void bootStrapOffers() {
         Optional<Company> company = companyRepository.findByEmail("testcompany@osk.com") ;
         if (company.isPresent()) {
-            Offer offer1 = new Offer(company.get(), "test1", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-            Offer offer2 = new Offer(company.get(), "test2", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), true) ;
-            Offer offer3 = new Offer(company.get(), "test3", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), true) ;
-            Offer offer4 = new Offer(company.get(), "test4", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), false) ;
-            Offer offer5 = new Offer(company.get(), "test5", 1, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16), true) ;
+            Offer offer1 = new Offer(company.get(), "test1", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            Offer offer2 = new Offer(company.get(), "test2", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            offer2.setAccepted(true);
+            Offer offer3 = new Offer(company.get(), "test3", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            offer3.setAccepted(true);
+            Offer offer4 = new Offer(company.get(), "test4", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            Offer offer5 = new Offer(company.get(), "test5", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            offer5.setAccepted(true);
             offerRepository.save(offer1) ;
             offerRepository.save(offer2) ;
             offerRepository.save(offer3) ;
