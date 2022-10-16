@@ -72,6 +72,33 @@ public class CompanyControllerTest {
 
     @Test
     @WithMockUser(authorities = {"COMPANY"})
+    void getOfferPdfHappyDay() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
+        doReturn(offerDtoResponse).when(offerService).getOffer(1L) ;
+        doReturn(true).when(companyService).companyExists(anyLong()) ;
+        doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/companies/{companyId}/offers/{offerId}/pdf", 1, 1)).
+                andExpect(status().isOk()) ;
+    }
+
+    @Test
+    @WithMockUser
+    void getOfferPdfNoCompany() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(offerService).getOffer(1L);
+
+        //Act & Assert
+        mockMvc.perform(get("/companies/{companyId}/offers/{offerId}/pdf", 1, 1)).
+                andExpect(status().isNotFound()) ;
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
     void getOffersHappyDay() throws Exception {
         //Arrange
         List<OfferDtoResponseNoPdf> offerDtoResponseList = new ArrayList<>() ;

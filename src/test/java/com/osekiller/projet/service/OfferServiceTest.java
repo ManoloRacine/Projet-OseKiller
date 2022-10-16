@@ -143,7 +143,7 @@ public class OfferServiceTest {
         mockDtoList.add(offerDto1) ;
         mockDtoList.add(offerDto2) ;
         mockDtoList.add(offerDto3) ;
-        when(offerRepository.findAllByAcceptedIsFalse()).thenReturn(mockList) ;
+        when(offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull()).thenReturn(mockList) ;
 
         List<GeneralOfferDto> list = offerService.getAllInvalidOffers() ;
 
