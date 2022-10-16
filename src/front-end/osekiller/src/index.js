@@ -100,7 +100,7 @@ root.render(
                     }
                 />
                 <Route
-                    path="offers"
+                    path="offers-manager"
                     element={
                         <ProtectedRoute
                             authenticated
