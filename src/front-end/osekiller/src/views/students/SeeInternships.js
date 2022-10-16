@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getOffers } from "../services/OfferService";
-import { OfferCard } from "../components/OfferCard";
+import { getOffers } from "../../services/OfferService";
+import { OfferCard } from "../../components/OfferCard";
 
 const SeeInternships = () => {
     const [offers, setOffers] = useState([]) ;
