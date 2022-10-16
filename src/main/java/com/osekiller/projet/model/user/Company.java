@@ -1,11 +1,11 @@
 package com.osekiller.projet.model.user;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 
 @Entity
 @NoArgsConstructor

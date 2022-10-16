@@ -1,8 +1,6 @@
 package com.osekiller.projet.controller.payload.response;
 
-import lombok.Data;
 import org.springframework.core.io.Resource;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

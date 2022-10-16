@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import Upload from "../Upload";
 import { BrowserRouter } from "react-router-dom";
-import UploadCv from "../../views/UploadCv";
+import UploadCv from "../../views/students/UploadCv";
 
 const WrappingComponent = ({
     selectedFile,
@@ -22,6 +22,7 @@ const WrappingComponent = ({
                 onSubmit={onSubmit}
                 subtitle={subtitle}
                 title={title}
+                successMessage={successMessage}
             />
         </BrowserRouter>
     );
@@ -46,6 +47,7 @@ describe("Upload", () => {
                 onSubmit={() => console.log("Submitting")}
                 subtitle={"Choisir votre CV"}
                 title={"Téléverser votre CV"}
+                successMessage={"Offre de stage téléversée avec succès!"}
             />
         );
 

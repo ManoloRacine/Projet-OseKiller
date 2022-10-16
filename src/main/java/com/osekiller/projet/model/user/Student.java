@@ -1,6 +1,6 @@
 package com.osekiller.projet.model.user;
 
-import com.osekiller.projet.model.CV;
+import com.osekiller.projet.model.Cv;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 public class Student extends User {
 
     @OneToOne(cascade = CascadeType.ALL)
-    CV cv = new CV() ;
+    Cv cv = new Cv() ;
 
     private boolean cvRejected ;
 

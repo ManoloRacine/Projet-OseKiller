@@ -1,19 +1,13 @@
 package com.osekiller.projet.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.osekiller.projet.controller.payload.request.OfferDto;
-import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
-import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.service.CompanyService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -25,7 +19,7 @@ public class OfferController {
     CompanyService companyService ;
 
     @GetMapping("/offers")
-    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam String accepted) {
+    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam("accepted") String accepted) {
 
         if (accepted.equals("true")) {
             return ResponseEntity.ok().body(companyService.getAllValidOffers()) ;

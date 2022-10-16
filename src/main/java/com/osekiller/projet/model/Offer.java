@@ -1,13 +1,10 @@
 package com.osekiller.projet.model;
 
 import com.osekiller.projet.model.user.Company;
-import com.osekiller.projet.model.user.Student;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -28,9 +25,10 @@ public class Offer {
     private byte[] pdf;
 
     @NonNull private String position;
-    @NonNull private double salary;
+    private String feedback;
+    @NonNull private Double salary;
     @NonNull private LocalDate startDate;
     @NonNull private LocalDate endDate;
 
-    @NonNull private boolean accepted;
+    private Boolean accepted = false;
 }

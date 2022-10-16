@@ -1,6 +1,6 @@
-import Upload from "../components/Upload";
+import Upload from "../../components/Upload";
 import { useState } from "react";
-import { uploadCv } from "../services/StudentService";
+import { uploadCv } from "../../services/StudentService";
 
 const UploadCv = () => {
     const [selectedFile, setSelectedFile] = useState({});
@@ -27,6 +27,7 @@ const UploadCv = () => {
             onDelete={() => setSelectedFile({})}
             onSubmit={handleSubmit}
             isSubmitted={isCvSubmitted}
+            successMessage={"CV téléversé avec succès !"}
         />
     );
 };

@@ -2,9 +2,9 @@ package com.osekiller.projet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
+import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
-import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +25,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -48,6 +46,8 @@ public class CompanyControllerTest {
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
         doReturn(offerDtoResponse).when(companyService).getOffer(1L) ;
+        doReturn(true).when(companyService).companyExists(anyLong()) ;
+        doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;
 
         //Act & Assert
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}", 1, 1)).
@@ -59,7 +59,6 @@ public class CompanyControllerTest {
     void getOfferNoCompany() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffer(1L);
 
         //Act & Assert
@@ -69,12 +68,41 @@ public class CompanyControllerTest {
 
     @Test
     @WithMockUser
+    void getOfferPdfHappyDay() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
+        doReturn(offerDtoResponse).when(companyService).getOffer(1L) ;
+        doReturn(true).when(companyService).companyExists(anyLong()) ;
+        doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/companies/{companyId}/offers/{offerId}/pdf", 1, 1)).
+                andExpect(status().isOk()) ;
+    }
+
+    @Test
+    @WithMockUser
+    void getOfferPdfNoCompany() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffer(1L);
+
+        //Act & Assert
+        mockMvc.perform(get("/companies/{companyId}/offers/{offerId}/pdf", 1, 1)).
+                andExpect(status().isNotFound()) ;
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
     void getOffersHappyDay() throws Exception {
         //Arrange
         List<OfferDtoResponseNoPdf> offerDtoResponseList = new ArrayList<>() ;
         offerDtoResponseList.add(mock(OfferDtoResponseNoPdf.class)) ;
         offerDtoResponseList.add(mock(OfferDtoResponseNoPdf.class)) ;
         doReturn(offerDtoResponseList).when(companyService).getAllOffersCompany( 1L) ;
+        doReturn(true).when(companyService).companyExists(anyLong()) ;
+        doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;
 
         //Act & Assert
         mockMvc.perform(get("/companies/{id}/offers", 1)).
@@ -82,7 +110,7 @@ public class CompanyControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"MANAGER"})
     void getOffersNoCompany() throws Exception {
         //Arrange
         List<OfferDtoResponse> offerDtoResponseList = new ArrayList<>() ;
@@ -123,6 +151,69 @@ public class CompanyControllerTest {
                         .file(mockMultipartFile)
                         .param("offerDto", asJsonString(offerDto)))
                 .andExpect(status().isNotFound()) ;
+    }
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void validateOfferHappyFeedback() throws Exception {
+
+        //Arrange
+
+        ValidationDto dto = new ValidationDto(true, "One of the offers of all time");
+
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/companies/1/offers/2/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(dto))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void validateAndInvalidateOfferBadRequestValidation() throws Exception {
+        //Arrange
+
+        ValidationDto dto = new ValidationDto(null, null);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/companies/1/offers/2/validate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(dto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void validateAndInvalidateOfferNotFound() throws Exception {
+        //Arrange
+
+        ValidationDto dto = new ValidationDto(true, "One of the offers of all time");
+
+        //Act & Assert
+
+        mockMvc.perform(post("/companies/1/offers/2/validate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(dto)))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void invalidateOfferHappyDay() throws Exception {
+        //Arrange
+
+        ValidationDto dto = new ValidationDto(false, "One of the offers of all time");
+
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/companies/1/offers/2/validate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(dto))).andExpect(status().isOk());
     }
 
 
