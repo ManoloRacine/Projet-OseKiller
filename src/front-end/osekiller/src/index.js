@@ -8,13 +8,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
-import UserValidation from "./views/UserValidation";
-import UploadCv from "./views/UploadCv";
-import StudentCvs from "./views/StudentCvs";
-import ValidateCv from "./views/ValidateCv";
-import UploadInternship from "./views/UploadInternship";
-import Offers from "./views/Offers";
-import ValidateOffer from "./views/ValidateOffer";
+import ValidateUsers from "./views/managers/ValidateUsers";
+import UploadCv from "./views/students/UploadCv";
+import StudentCvs from "./views/students/StudentCvs";
+import ValidateCv from "./views/managers/ValidateCv";
+import UploadInternship from "./views/companies/UploadInternship";
+import OffersManager from "./views/managers/OffersManager";
+import ValidateOffer from "./views/managers/ValidateOffer";
 
 <link
     rel="stylesheet"
@@ -51,7 +51,7 @@ root.render(
                             authenticated
                             allowedRoles={["MANAGER"]}
                         >
-                            <UserValidation />
+                            <ValidateUsers />
                         </ProtectedRoute>
                     }
                 />
@@ -106,7 +106,7 @@ root.render(
                             authenticated
                             allowedRoles={["MANAGER"]}
                         >
-                            <Offers />
+                            <OffersManager />
                         </ProtectedRoute>
                     }
                 />

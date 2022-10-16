@@ -1,7 +1,7 @@
-import Upload from "../components/Upload";
-import {useState} from "react";
-import {uploadInternshipOffer} from "../services/CompanyService";
-import UploadInternshipForm from "../components/forms/UploadInternshipForm";
+import Upload from "../../components/Upload";
+import { useState } from "react";
+import { uploadInternshipOffer } from "../../services/CompanyService";
+import UploadInternshipForm from "../../components/forms/UploadInternshipForm";
 
 const UploadInternship = () => {
     const [position, setPosition] = useState("");

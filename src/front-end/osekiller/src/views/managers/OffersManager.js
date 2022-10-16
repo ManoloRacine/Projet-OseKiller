@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getOffers } from "../services/OfferService";
-import Offer from "../components/Offer";
+import { getOffers } from "../../services/OfferService";
+import Offer from "../../components/Offer";
 
-const Offers = () => {
+const OffersManager = () => {
     const [offers, setOffers] = useState([]);
 
     useEffect(() => {
@@ -33,6 +33,6 @@ const Offers = () => {
     );
 };
 
-Offers.propTypes = {};
+OffersManager.propTypes = {};
 
-export default Offers;
+export default OffersManager;

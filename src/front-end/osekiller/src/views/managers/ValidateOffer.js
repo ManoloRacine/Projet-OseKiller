@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getOfferPdf, validateOffer } from "../services/OfferService";
-import Validate from "../components/Validate";
+import { getOfferPdf, validateOffer } from "../../services/OfferService";
+import Validate from "../../components/Validate";
 
 const ValidateOffer = () => {
     const [pdf, setPdf] = useState("");

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getCv, validateCv } from "../services/StudentService";
-import Validate from "../components/Validate";
+import { getCv, validateCv } from "../../services/StudentService";
+import Validate from "../../components/Validate";
 
 const ValidateCv = () => {
     const [pdf, setPdf] = useState("");
