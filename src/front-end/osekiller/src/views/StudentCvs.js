@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import { getStudents } from "../services/StudentService";
+import {getStudents} from "../services/StudentService";
 
 
 const StudentCvs = () => {

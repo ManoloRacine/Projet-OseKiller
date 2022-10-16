@@ -1,12 +1,11 @@
 package com.osekiller.projet.service;
 
-import com.osekiller.projet.model.CV;
+import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.repository.CVRepository;
+import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
-import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.implementation.StudentServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,13 +33,10 @@ import static org.mockito.Mockito.*;
 public class StudentServiceTest {
 
     @Mock
-    UserRepository userRepository ;
-
-    @Mock
     StudentRepository studentRepository;
 
     @Mock
-    CVRepository cvRepository;
+    CvRepository cvRepository;
 
     @InjectMocks
     private StudentServiceImpl studentService ;
@@ -55,9 +51,9 @@ public class StudentServiceTest {
                 "text/plain",
                 "test".getBytes()
         ) ;
-        CV mockCV = new CV(mockStudent, false);
+        Cv mockCv = new Cv(mockStudent, false);
         when(studentRepository.findById(any())).thenReturn(Optional.of(mockStudent));
-        when(cvRepository.findCVByOwner(any())).thenReturn(mockCV);
+        when(cvRepository.findCVByOwner(any())).thenReturn(mockCv);
 
         // Act
         studentService.saveCV(mockFile, 1L);
@@ -91,7 +87,7 @@ public class StudentServiceTest {
                 "text/plain",
                 "test".getBytes()
         ) ;
-        CV cv = mock(CV.class) ;
+        Cv cv = mock(Cv.class) ;
         Student student = mock(Student.class) ;
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student)) ;
         when(student.getCv()).thenReturn(cv) ;

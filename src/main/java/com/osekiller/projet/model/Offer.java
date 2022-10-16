@@ -18,7 +18,7 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @NonNull
     private Company owner;
 
@@ -29,6 +29,7 @@ public class Offer {
 
     @NonNull private String position;
     @NonNull private Double salary;
+    private String feedback;
     @NonNull private LocalDate startDate;
     @NonNull private LocalDate endDate;
 

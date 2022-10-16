@@ -23,8 +23,22 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
-    private CompanyRepository companyRepository;
-    private OfferRepository offerRepository;
+
+    private CompanyRepository companyRepository ;
+
+    private OfferRepository offerRepository ;
+
+    @Override
+    public Boolean companyExists(Long id) {
+        return companyRepository.existsById(id);
+    }
+
+    @Override
+    public Boolean companyOwnsOffer(Long companyId, Long offerId) {
+        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return offer.getOwner().getId().equals(companyId);
+    }
+
     @Override
     public void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) {
         Optional<Company> companyOptional = companyRepository.findById(companyId) ;
@@ -60,4 +74,26 @@ public class CompanyServiceImpl implements CompanyService {
 
         return offerDtoResponseList ;
     }
+
+    @Override
+    public void validateOffer(Long offerId, String feedback) {
+        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        offer.setAccepted(true);
+        if(!(feedback == null || feedback.isEmpty() || feedback.isBlank()))
+            offer.setFeedback(feedback);
+
+        offerRepository.save(offer);
+    }
+
+    @Override
+    public void invalidateOffer(Long offerId, String feedback) {
+        if(feedback == null || feedback.isEmpty() || feedback.isBlank())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Offer offer = offerRepository.findById(offerId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        offer.setFeedback(feedback);
+        offerRepository.save(offer);
+    }
+
 }

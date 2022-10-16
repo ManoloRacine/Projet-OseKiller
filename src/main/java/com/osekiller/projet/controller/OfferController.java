@@ -1,7 +1,6 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
-import com.osekiller.projet.security.JwtUtils;
 import com.osekiller.projet.service.AuthService;
 import com.osekiller.projet.service.OfferService;
 import lombok.AllArgsConstructor;
