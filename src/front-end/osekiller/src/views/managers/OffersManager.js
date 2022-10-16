@@ -6,7 +6,7 @@ const OffersManager = () => {
     const [offers, setOffers] = useState([]);
 
     useEffect(() => {
-        getOffers()
+        getOffers(false)
             .then(({ data }) => {
                 setOffers(data);
             })

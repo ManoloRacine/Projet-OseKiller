@@ -1,9 +1,9 @@
 import axios from "../api/axios";
 
-export const getOffers = async () => {
+export const getOffers = async (isAccepted) => {
     return axios.get("/offers", {
         params: {
-            accepted: false,
+            accepted: isAccepted,
         },
         headers: {
             "Content-Type": "application/json",
