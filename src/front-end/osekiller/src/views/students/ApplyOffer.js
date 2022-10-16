@@ -7,7 +7,10 @@ import { applyToInternship } from "../../services/CompanyService";
 const ApplyOffer = () => {
     const [pdf, setPdf] = useState("");
     const location = useLocation();
-    const { companyId, offerId } = location.state;
+    const { state } = location;
+    const companyId = state?.companyId;
+    const offerId = state?.offerId;
+    //const { companyId, offerId } = location.state;
     const navigate = useNavigate();
 
     useEffect(() => {
