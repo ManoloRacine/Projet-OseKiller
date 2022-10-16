@@ -1,15 +1,15 @@
 package com.osekiller.projet.repository;
 
-import com.osekiller.projet.model.CV;
+import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.user.Student;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface CVRepository extends CrudRepository<CV, Long> {
+public interface CvRepository extends CrudRepository<Cv, Long> {
 
     @Override
-    List<CV> findAll();
+    List<Cv> findAll();
 
-    CV findCVByOwner(Student owner);
+    Cv findCVByOwner(Student owner);
 }
