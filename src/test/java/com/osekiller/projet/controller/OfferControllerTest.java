@@ -19,6 +19,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -107,5 +108,13 @@ public class OfferControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("[]")) ;
+    }
+
+    @Test
+    @WithMockUser(authorities = {"STUDENT"})
+    void applyToInternshipOfferNotFound() throws Exception {
+        //Act & Assert
+        mockMvc.perform(post("/offers/1/apply"))
+                .andExpect(status().isNotFound());
     }
 }
