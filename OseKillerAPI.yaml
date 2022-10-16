@@ -447,9 +447,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OfferNoPdf'
+                type: array
+                items:
+                  $ref: '#/components/schemas/OfferNoPdf'
         '403':
           description: Requête non autorisée
+
+  /offers/{id}/apply:
+    post:
+      tags:
+        - Offers
+      summary: Appliquer à une offre de stage
+      description: Appliquer à une offre de stage
+      operationId: applyToOffer
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '202':
+          description: Application à l'offre de stage à été envoyé
+        '409':
+          description: L'étudiant a déjà appliqué
+        '403':
+          description: Requête non autorisée ou l'offre de stage est en attente de validation
+        '404':
+          description: Offre non trouvé
 
 components:
   securitySchemes:
