@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 public class Student extends User {
 
     @OneToOne(cascade = CascadeType.ALL)
-    Cv cv = new Cv() ;
+    private Cv cv = new Cv();
 
     private boolean cvRejected ;
 

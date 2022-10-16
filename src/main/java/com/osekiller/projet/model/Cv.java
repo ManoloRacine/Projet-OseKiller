@@ -20,10 +20,10 @@ public class Cv {
 
     private String pdfName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @NonNull private Student owner;
 
-    @NonNull private boolean isValidated;
+    @NonNull private boolean validated;
 
     private String feedback;
 }
