@@ -1,7 +1,7 @@
-import {Link, useLocation, useNavigate} from "react-router-dom";
-import {useContext} from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import calLogo from "../assets/calLogo.jpg";
-import {AuthenticatedUserContext} from "../App";
+import { AuthenticatedUserContext } from "../App";
 
 export const Header = () => {
     const navigate = useNavigate();
@@ -47,6 +47,14 @@ export const Header = () => {
                             className="m-4 fs-2 d-flex align-items-center"
                         >
                             Valider des CV
+                        </Link>
+                    )}
+                    {authenticatedUser.role === "MANAGER" && (
+                        <Link
+                            to={"/offers-manager"}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Valider des offres de stages
                         </Link>
                     )}
                     {authenticatedUser.role === "STUDENT" && (

@@ -20,6 +20,8 @@ svg[data-icon="cloud-arrow-up"]{
 
 svg:hover {
   background-color: rgb(0, 0, 0, 0.3);
-  
-  
+}
+
+.offer p{
+  margin: 0;
 }

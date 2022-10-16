@@ -11,4 +11,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
 
     List<Offer> findAllByAcceptedIsTrue() ;
     List<Offer> findAllByAcceptedIsFalse() ;
+
+    List<Offer> findAllByAcceptedIsFalseAndFeedbackIsNull();
 }
