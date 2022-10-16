@@ -16,6 +16,7 @@ import UploadInternship from "./views/companies/UploadInternship";
 import OffersManager from "./views/managers/OffersManager";
 import ValidateOffer from "./views/managers/ValidateOffer";
 import OffersStudent from "./views/students/OffersStudent";
+import ApplyOffer from "./views/students/ApplyOffer";
 
 <link
     rel="stylesheet"
@@ -75,6 +76,17 @@ root.render(
                             allowedRoles={["STUDENT"]}
                         >
                             <OffersStudent />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="apply-offer"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["STUDENT"]}
+                        >
+                            <ApplyOffer />
                         </ProtectedRoute>
                     }
                 />

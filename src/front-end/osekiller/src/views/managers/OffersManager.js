@@ -27,6 +27,7 @@ const OffersManager = () => {
                     endDate={offer.endDate}
                     companyId={offer.companyId}
                     offerId={offer.offerId}
+                    redirectTo={"/validate-offer"}
                 />
             ))}
         </>

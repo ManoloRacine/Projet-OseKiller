@@ -27,6 +27,7 @@ const OffersStudent = () => {
                     endDate={offer.endDate}
                     companyId={offer.companyId}
                     offerId={offer.offerId}
+                    redirectTo={"/apply-offer"}
                 />
             ))}
         </>

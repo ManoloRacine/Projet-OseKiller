@@ -10,6 +10,7 @@ const Offer = ({
     endDate,
     companyId,
     offerId,
+    redirectTo,
 }) => {
     return (
         <div
@@ -44,7 +45,7 @@ const Offer = ({
             </div>
 
             <Link
-                to={"/validate-offer"}
+                to={redirectTo}
                 className={"btn btn-primary"}
                 state={{ companyId: companyId, offerId: offerId }}
             >
@@ -62,6 +63,7 @@ Offer.propTypes = {
     endDate: PropTypes.string.isRequired,
     companyId: PropTypes.number.isRequired,
     offerId: PropTypes.number.isRequired,
+    redirectTo: PropTypes.string.isRequired,
 };
 
 export default Offer;
