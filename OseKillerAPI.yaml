@@ -270,6 +270,52 @@ paths:
           description: étudiant non trouvé
       security:
         - bearerAuth: []
+  /students/{id}/applications:
+    get:
+      tags:
+      - Student
+      parameters:
+          - in: path
+            name: id
+            schema:
+              type: integer
+            required: true
+      summary: Obtenir les offres de stage auxquelles l'étudiant a appliqué
+      description: Obtenir les offres de stage auxquelles l'étudiant a appliqué
+      operationId: getApplications
+      responses:
+        '200':
+          description: Les offres ont été reçu
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type : object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    position:
+                      type: string
+                      example: Junior Web Developer
+                    salary:
+                      type: number
+                      example: 25
+                    startDate:
+                      type: string
+                      format: date
+                      example: 2022-10-30
+                    endDate:
+                      type: string
+                      format: date
+                      example: 2023-01-30
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: étudiant non trouvé
+        
+  
   /companies/{id}/offers:
     post:
       tags:
@@ -316,7 +362,7 @@ paths:
         '200':
           description: Les offres ont été reçu
           content:
-            multipart/form-data:
+            application/json:
               schema:
                 type: array
                 items:
