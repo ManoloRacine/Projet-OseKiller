@@ -174,7 +174,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthPingResponse'
+                $ref: '#/components/schemas/User'
         '403':
           description: Requête non autorisée
       security:
@@ -291,29 +291,13 @@ paths:
               schema:
                 type: array
                 items:
-                  type : object
-                  properties:
-                    id:
-                      type: number
-                      example: 1
-                    position:
-                      type: string
-                      example: Junior Web Developer
-                    salary:
-                      type: number
-                      example: 25
-                    startDate:
-                      type: string
-                      format: date
-                      example: 2022-10-30
-                    endDate:
-                      type: string
-                      format: date
-                      example: 2023-01-30
+                  $ref: '#/components/schemas/OfferNoPdf'
         '403':
           description: Requête non autorisée
         '404':
           description: étudiant non trouvé
+      security:
+        - bearerAuth: []
         
   
   /companies/{id}/offers:
@@ -434,15 +418,46 @@ paths:
                     type: string
                     format: date
                     example: 2023-01-30
-                  file:
-                    type: string
-                    format: binary
         '403':
           description: Requête non autorisée
         '404':
           description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
+  /companies/{companyId}/offers/{offerId}/applicants:
+    get:
+      tags:
+        - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
+          schema:
+            type: integer
+          required: true
+      summary: Obtenir les étudiants ayant appliqué à une offre de stage
+      description: Obtenir les étudiants ayant appliqué à une offre de stage
+      operationId: getApplicants
+      responses:
+        '200':
+          description: La liste d'applicant à été reçu
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        '403':
+          description: requête non autorisé
+        '404':
+          description: entreprise ou offre non trouvé
+      security:
+        - bearerAuth: []
+           
   /companies/{companyId}/offers/{offerId}/validate:
     post:
       tags:
@@ -498,6 +513,8 @@ paths:
                   $ref: '#/components/schemas/OfferNoPdf'
         '403':
           description: Requête non autorisée
+      security:
+        - bearerAuth: []
 
   /offers/{id}/apply:
     post:
@@ -521,6 +538,8 @@ paths:
           description: Requête non autorisée ou l'offre de stage est en attente de validation
         '404':
           description: Offre non trouvé
+      security:
+        - bearerAuth: []
 
 components:
   securitySchemes:
@@ -541,7 +560,7 @@ components:
         tokenType:
           type: string
           example: Bearer
-    AuthPingResponse:
+    User:
       type: object
       properties:
         email:
@@ -551,6 +570,16 @@ components:
         role:
           type: string
           example: STUDENT
+    Student:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Hugo Lantier 
+        email:
+          type: string
+          format: email
+          example: hugol@example.com
     ValidationRequest:
       type: object
       required:
