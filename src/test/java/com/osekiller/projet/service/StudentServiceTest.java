@@ -1,5 +1,6 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Manager;
@@ -21,10 +22,14 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -110,4 +115,30 @@ public class StudentServiceTest {
 
     }
 
+
+    @Test
+    void getStudentsHappyDay(){
+
+        //Arrange
+
+        Student student1 = new Student("Joe", "jbiden@osk.com", "password");
+        Student student2 = new Student("Obama", "obarrack@osk.com", "password");
+        Student student3 = new Student("Trump", "tdonald@osk.com", "password");
+
+        List<Student> students = List.of(student1, student2, student3);
+
+        when(studentRepository.findAll()).thenReturn(students);
+
+        //Act
+
+        List<StudentDto> actual = studentService.getStudents();
+
+        //Assert
+
+        List<StudentDto> expected = students.stream().map(
+                StudentDto::from
+        ).toList();
+
+        assertEquals(expected,actual);
+    }
 }
