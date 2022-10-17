@@ -71,8 +71,16 @@ export const Header = () => {
                             to={"/offers-applied"}
                             state={{ userId: authenticatedUser.id }}
                             className="m-4 fs-2 d-flex align-items-center"
+                        ></Link>
+                    )}
+                    {authenticatedUser.role === "STUDENT" && (
+                        <Link
+                        Voir offres appliqués
+                        to={"/offers-students"}
+                        state={{ userId: authenticatedUser.id }}
+                        className="m-4 fs-2 d-flex align-items-center"
                         >
-                            Voir offres appliqués
+                            Voir les offres de stage
                         </Link>
                     )}
                     {authenticatedUser.role === "COMPANY" && (

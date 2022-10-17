@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
+import SeeInternships from "./views/students/SeeInternships";
 import ValidateUsers from "./views/managers/ValidateUsers";
 import UploadCv from "./views/students/UploadCv";
 import StudentCvs from "./views/students/StudentCvs";
@@ -110,6 +111,11 @@ root.render(
                         </ProtectedRoute>
                     }
                 />
+                <Route path="offers-students" element={
+                  <ProtectedRoute authenticated>
+                      <SeeInternships />
+                  </ProtectedRoute>
+                }/>
                 <Route
                     path="validate-offer"
                     element={
