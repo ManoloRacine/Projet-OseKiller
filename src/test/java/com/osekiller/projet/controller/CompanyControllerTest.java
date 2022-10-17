@@ -5,6 +5,7 @@ import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
+import com.osekiller.projet.service.OfferService;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,18 +37,21 @@ public class CompanyControllerTest {
     @MockBean
     private CompanyServiceImpl companyService ;
 
+    @MockBean
+    private OfferService offerService;
+
     @Autowired
     private MockMvc mockMvc ;
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"COMPANY"})
     void getOfferHappyDay() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
-        doReturn(offerDtoResponse).when(companyService).getOffer(1L) ;
-        doReturn(true).when(companyService).companyExists(anyLong()) ;
-        doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;
+        doReturn(offerDtoResponse).when(offerService).getOffer(1L);
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
 
         //Act & Assert
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}", 1, 1)).
@@ -55,11 +59,11 @@ public class CompanyControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"COMPANY"})
     void getOfferNoCompany() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffer(1L);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(offerService).getOffer(1L);
 
         //Act & Assert
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}", 1, 1)).
@@ -67,12 +71,12 @@ public class CompanyControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(authorities = {"COMPANY"})
     void getOfferPdfHappyDay() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
-        doReturn(offerDtoResponse).when(companyService).getOffer(1L) ;
+        doReturn(offerDtoResponse).when(offerService).getOffer(1L) ;
         doReturn(true).when(companyService).companyExists(anyLong()) ;
         doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;
 
@@ -86,7 +90,7 @@ public class CompanyControllerTest {
     void getOfferPdfNoCompany() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffer(1L);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(offerService).getOffer(1L);
 
         //Act & Assert
         mockMvc.perform(get("/companies/{companyId}/offers/{offerId}/pdf", 1, 1)).
@@ -100,9 +104,7 @@ public class CompanyControllerTest {
         List<OfferDtoResponseNoPdf> offerDtoResponseList = new ArrayList<>() ;
         offerDtoResponseList.add(mock(OfferDtoResponseNoPdf.class)) ;
         offerDtoResponseList.add(mock(OfferDtoResponseNoPdf.class)) ;
-        doReturn(offerDtoResponseList).when(companyService).getAllOffersCompany( 1L) ;
-        doReturn(true).when(companyService).companyExists(anyLong()) ;
-        doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;
+        doReturn(offerDtoResponseList).when(companyService).getOffersByCompany( 1L) ;
 
         //Act & Assert
         mockMvc.perform(get("/companies/{id}/offers", 1)).
@@ -110,14 +112,14 @@ public class CompanyControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = {"MANAGER"})
+    @WithMockUser(authorities = {"COMPANY"})
     void getOffersNoCompany() throws Exception {
         //Arrange
         List<OfferDtoResponse> offerDtoResponseList = new ArrayList<>() ;
         offerDtoResponseList.add(mock(OfferDtoResponse.class)) ;
         offerDtoResponseList.add(mock(OfferDtoResponse.class)) ;
 
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getAllOffersCompany(1L) ;
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).getOffersByCompany(1L) ;
 
         //Act & Assert
         mockMvc.perform(get("/companies/{id}/offers", 1)).

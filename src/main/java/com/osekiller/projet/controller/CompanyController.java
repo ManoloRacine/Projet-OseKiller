@@ -7,6 +7,7 @@ import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.CompanyService;
+import com.osekiller.projet.service.OfferService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,7 @@ import java.util.List;
 public class CompanyController {
 
     CompanyService companyService ;
+    OfferService offerService;
 
     @PostMapping("/{id}/offers")
     public ResponseEntity<Void> postOffer(@RequestParam(name = "offerDto") String offerDto,
@@ -42,18 +44,18 @@ public class CompanyController {
 
     @GetMapping("/{id}/offers")
     public ResponseEntity<List<OfferDtoResponseNoPdf>> getOffers(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(companyService.getAllOffersCompany(id)) ;
+        return ResponseEntity.ok(companyService.getOffersByCompany(id)) ;
     }
 
     @GetMapping("/{companyId}/offers/{offerId}/pdf")
     public ResponseEntity<Resource> getOfferPdf(@PathVariable(name = "companyId") Long companyId,
-                                              @PathVariable(name = "offerId") Long offerId) {
+                                                @PathVariable(name = "offerId") Long offerId) {
 
         if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
+        OfferDtoResponse offerDtoResponse = offerService.getOffer(offerId) ;
 
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + offerDtoResponse.offer().getFilename() +
@@ -61,14 +63,14 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}/offers/{offerId}")
-    public ResponseEntity<OfferDtoResponseNoPdf> getOffers(@PathVariable(name = "companyId") Long companyId,
-                                              @PathVariable(name = "offerId") Long offerId) {
+    public ResponseEntity<OfferDtoResponseNoPdf> getOffer(@PathVariable(name = "companyId") Long companyId,
+                                                                   @PathVariable(name = "offerId") Long offerId) {
 
         if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        OfferDtoResponse offerDtoResponse = companyService.getOffer(offerId) ;
+        OfferDtoResponse offerDtoResponse = offerService.getOffer(offerId) ;
         OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(),
                 offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(),
                 offerDtoResponse.endDate()) ;
