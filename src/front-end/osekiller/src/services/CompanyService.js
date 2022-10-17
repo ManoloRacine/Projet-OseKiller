@@ -8,12 +8,3 @@ export const uploadInternshipOffer = async (data, companyId) => {
         },
     });
 };
-
-export const applyToInternship = async (companyId, offerId) => {
-    return axios.post(`/companies/${companyId}/offers/${offerId}/apply`, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: localStorage.getItem("accessToken"),
-        },
-    });
-};

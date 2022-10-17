@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getOfferPdf } from "../../services/OfferService";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadPdf from "../../components/LoadPdf";
-import { applyToInternship } from "../../services/CompanyService";
+import { applyToInternship } from "../../services/OfferService";
 
 const ApplyOffer = () => {
     const [pdf, setPdf] = useState("");
@@ -26,7 +26,7 @@ const ApplyOffer = () => {
     }, [companyId, offerId]);
 
     const handleApplyOffer = () => {
-        applyToInternship(companyId, offerId)
+        applyToInternship(offerId)
             .then(() => navigate("/dashboard"))
             .catch((err) => console.log(err));
     };

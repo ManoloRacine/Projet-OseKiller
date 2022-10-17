@@ -34,3 +34,12 @@ export const validateOffer = async (companyId, offerId, dto) => {
         }
     );
 };
+
+export const applyToInternship = async (offerId) => {
+    return axios.post(`/offers/${offerId}/apply`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
