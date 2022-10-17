@@ -103,7 +103,7 @@ public class StudentServiceTest {
         //Act
         Resource resourceReturn = studentService.getCV(1L) ;
 
-        Assertions.assertThat(resourceReturn.getClass()).isEqualTo(ByteArrayResource.class) ;
+        assertThat(resourceReturn.getClass()).isEqualTo(ByteArrayResource.class) ;
     }
 
     @Test
@@ -139,7 +139,9 @@ public class StudentServiceTest {
 
         //Assert
 
-        assertEquals(expected,actual);
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(expected);
     }
 
     @Test
@@ -149,5 +151,27 @@ public class StudentServiceTest {
         assertThatThrownBy(() -> studentService.getStudent(1))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getStudentHappyDay() {
+
+        //Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+
+        StudentDto expected = StudentDto.from(student);
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+        //Act
+
+        StudentDto actual = studentService.getStudent(1);
+
+        //Assert
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(expected);
     }
 }
