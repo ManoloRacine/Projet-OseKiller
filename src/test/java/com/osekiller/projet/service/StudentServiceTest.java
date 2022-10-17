@@ -208,4 +208,14 @@ public class StudentServiceTest {
                 .isNotBlank()
                 .isEqualTo("This is one the the resumes of all time");
     }
+
+    @Test
+    void invalidateCvNotfound(){
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.invalidateCV(1, "This is one the the resumes of all time"))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
