@@ -36,7 +36,7 @@ public class OfferController {
     public ResponseEntity<Void> applyToInternshipOffer(@PathVariable(name = "id") Long offerId, @RequestHeader(HttpHeaders.AUTHORIZATION) String header){
         String jwt = header.substring(7);
         Long studentId = authService.getUserFromToken(jwt).id();
-        offerService.addApplicantToOffer(offerId, studentId);
+        offerService.addApplicantToOffer(studentId, offerId);
         return ResponseEntity.ok().build();
     }
 }
