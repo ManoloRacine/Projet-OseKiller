@@ -1,8 +1,11 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentDto;
 import com.osekiller.projet.model.Cv;
+import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
+import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
@@ -22,6 +25,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -250,5 +254,24 @@ public class StudentServiceTest {
         assertThatThrownBy(() -> studentService.getApplications(1))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getApplicationsHappyDay(){
+
+        // Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+
+        Company company = mock(Company.class);
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        student.setApplications(List.of(offer1, offer2, offer3));
+
+
+        when(studentRepository.findByIdAndFetchApplications(anyLong())).thenReturn(Optional.of(student));
+
+        //
     }
 }
