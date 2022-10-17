@@ -3,14 +3,15 @@ import { getOfferPdf } from "../../services/OfferService";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadPdf from "../../components/LoadPdf";
 import { applyToInternship } from "../../services/OfferService";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const ApplyOffer = () => {
     const [pdf, setPdf] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const location = useLocation();
     const { state } = location;
     const companyId = state?.companyId;
     const offerId = state?.offerId;
-    //const { companyId, offerId } = location.state;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +29,11 @@ const ApplyOffer = () => {
     const handleApplyOffer = () => {
         applyToInternship(offerId)
             .then(() => navigate("/dashboard"))
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                if (err.response.data.status === 409) {
+                    setErrorMessage("Vous avez déjà postulé pour ce stage.");
+                }
+            });
     };
 
     return (
@@ -50,6 +55,9 @@ const ApplyOffer = () => {
             >
                 Appliquer
             </button>
+            {errorMessage && (
+                <ErrorMessage message={errorMessage} severity="error" />
+            )}
         </div>
     );
 };
