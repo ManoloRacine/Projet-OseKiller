@@ -55,6 +55,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<GeneralOfferDto> getApplications(long studentId) {
+        Student student = studentRepository.findByIdAndFetchApplications(studentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return null;
     }
 
