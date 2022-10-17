@@ -218,4 +218,28 @@ public class StudentServiceTest {
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    void invalidateCvHappyDay(){
+
+        // Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+        // Act
+
+        studentService.invalidateCV(1, "This is one the the resumes of all time");
+
+        // Assert
+
+        assertThat(student.isCvRejected())
+                .isEqualTo(true);
+        assertThat(student.getCv().isValidated())
+                .isEqualTo(false);
+        assertThat(student.getCv().getFeedback())
+                .isNotBlank()
+                .isEqualTo("This is one the the resumes of all time");
+    }
 }
