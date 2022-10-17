@@ -1,10 +1,12 @@
 package com.osekiller.projet;
 
 import com.osekiller.projet.model.ERole;
+import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.service.CompanyService;
 import com.osekiller.projet.service.StudentService;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -31,6 +35,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private RoleRepository roleRepository;
     private StudentService studentService;
     private CompanyService companyService;
+    private OfferRepository offerRepository;
 
 
     @Override
@@ -39,6 +44,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         //Si il y a des chose à setup au lancement du serveur c'est ici
         initializeRoles();
         initializeCompanies();
+        bootStrapOffers();
         initializeManagers();
         initializeStudents();
         alreadySetup = true;
@@ -49,6 +55,27 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         for(ERole role : ERole.values()){
             createRoleIfNotFound(role);
         }
+    }
+
+    @Transactional
+    void bootStrapOffers() {
+        Optional<Company> company = companyRepository.findByEmail("testcompany@osk.com") ;
+        if (company.isPresent()) {
+            Offer offer1 = new Offer(company.get(), "test1", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            Offer offer2 = new Offer(company.get(), "test2", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            offer2.setAccepted(true);
+            Offer offer3 = new Offer(company.get(), "test3", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            offer3.setAccepted(true);
+            Offer offer4 = new Offer(company.get(), "test4", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            Offer offer5 = new Offer(company.get(), "test5", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            offer5.setAccepted(true);
+            offerRepository.save(offer1) ;
+            offerRepository.save(offer2) ;
+            offerRepository.save(offer3) ;
+            offerRepository.save(offer4) ;
+            offerRepository.save(offer5) ;
+        }
+
     }
 
     @Transactional
