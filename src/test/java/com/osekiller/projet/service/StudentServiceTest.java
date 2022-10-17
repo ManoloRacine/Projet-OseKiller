@@ -127,6 +127,10 @@ public class StudentServiceTest {
 
         List<Student> students = List.of(student1, student2, student3);
 
+        List<StudentDto> expected = students.stream().map(
+                StudentDto::from
+        ).toList();
+
         when(studentRepository.findAll()).thenReturn(students);
 
         //Act
@@ -135,10 +139,15 @@ public class StudentServiceTest {
 
         //Assert
 
-        List<StudentDto> expected = students.stream().map(
-                StudentDto::from
-        ).toList();
-
         assertEquals(expected,actual);
+    }
+
+    @Test
+    void getStudentNotFound(){
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.getStudent(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
