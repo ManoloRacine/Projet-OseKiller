@@ -66,6 +66,15 @@ export const Header = () => {
                             Téléverser votre CV
                         </Link>
                     )}
+                    {authenticatedUser.role === "STUDENT" && (
+                        <Link
+                            to={"/offers-applied"}
+                            state={{ userId: authenticatedUser.id }}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Voir offres appliqués
+                        </Link>
+                    )}
                     {authenticatedUser.role === "COMPANY" && (
                         <Link
                             to={"/upload-internship"}

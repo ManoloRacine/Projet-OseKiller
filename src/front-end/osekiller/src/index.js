@@ -121,6 +121,17 @@ root.render(
                         </ProtectedRoute>
                     }
                 />
+                <Route
+                    path="offers-applied"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["STUDENT"]}
+                        >
+                            <ValidateOffer />
+                        </ProtectedRoute>
+                    }
+                />
             </Route>
         </Routes>
     </BrowserRouter>
