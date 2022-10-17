@@ -242,4 +242,13 @@ public class StudentServiceTest {
                 .isNotBlank()
                 .isEqualTo("This is one the the resumes of all time");
     }
+
+    @Test
+    void getApplicationsStudentNotFound() {
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.getApplications(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
