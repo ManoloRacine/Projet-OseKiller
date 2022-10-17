@@ -269,9 +269,18 @@ public class StudentServiceTest {
         Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
         student.setApplications(List.of(offer1, offer2, offer3));
 
+        List<GeneralOfferDto> expected = student.getApplications().stream().map(GeneralOfferDto::from).toList();
 
         when(studentRepository.findByIdAndFetchApplications(anyLong())).thenReturn(Optional.of(student));
 
-        //
+        // Act
+
+        List<GeneralOfferDto> actual = studentService.getApplications(1);
+
+        // Assert
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(expected);
     }
 }
