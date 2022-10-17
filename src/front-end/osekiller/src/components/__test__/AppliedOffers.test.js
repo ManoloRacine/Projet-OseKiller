@@ -1,25 +1,36 @@
 import { render, screen } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
-import SeeInternships from "../../views/students/SeeInternships"
+import AppliedOffers from "../../views/students/AppliedOffers"
 import React from "react"
 
-const MockSeeInternships = () => {
+const MockAppliedOffers = () => {
     return (
         <BrowserRouter>
-            <SeeInternships/>
+            <AppliedOffers/>
         </BrowserRouter>
     )
 }
 
-describe("internships", () => {
+describe("applied offers test", () => {
 
-    it("test give offer to card", async () => {
+    it("test one offer", async () => {
 
         const stubInitialState = [{position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}]
 
         React.useState = jest.fn().mockReturnValueOnce([stubInitialState, {}]) ;
 
-        render(<SeeInternships/>) ;
+        const mockSetAuthenticatedUser = jest.fn().mockImplementation(authenticatedUser => {
+            authenticatedUser = authenticatedUser;
+
+            return authenticatedUser;
+        })
+
+        React.useContext = jest.fn().mockImplementation(() => ({
+            authenticatedUser : {id : 1},
+            setAuthenticatedUser : mockSetAuthenticatedUser,
+        })) ;
+
+        render(<AppliedOffers/>) ;
         
         const position = screen.getByText(/testPos/i);
         const salary = screen.getByText(/1\$/i);
@@ -41,7 +52,18 @@ describe("internships", () => {
 
         React.useState = jest.fn().mockReturnValueOnce([stubInitialState, {}]) ;
 
-        render(<SeeInternships/>) ;
+        const mockSetAuthenticatedUser = jest.fn().mockImplementation(authenticatedUser => {
+            authenticatedUser = authenticatedUser;
+
+            return authenticatedUser;
+        })
+
+        React.useContext = jest.fn().mockImplementation(() => ({
+            authenticatedUser : {id : 1},
+            setAuthenticatedUser : mockSetAuthenticatedUser,
+        })) ;
+
+        render(<AppliedOffers/>) ;
         
         const positions = screen.queryAllByText(/testPos/i);
         const salaries = screen.queryAllByText(/1\$/i);

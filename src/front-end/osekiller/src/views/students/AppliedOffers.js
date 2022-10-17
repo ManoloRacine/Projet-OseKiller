@@ -1,5 +1,6 @@
-import {useContext, useEffect, useState} from "react";
-import {AuthenticatedUserContext} from "../App";
+import { useContext, useEffect, useState } from "react";
+import { OfferCard } from "../../components/OfferCard";
+import {AuthenticatedUserContext} from "../../App";
 import { getOffersStudent } from "../../services/StudentService"
 
 
@@ -14,6 +15,10 @@ const AppliedOffers = () => {
     }, [authenticatedUser.id]) ;
 
     return (
-        
+        <div className="row">
+            <div className="col-12">{offers.map((offer, index) => (<OfferCard offer={offer}></OfferCard>))}</div>
+        </div>
     )
 }
+
+export default AppliedOffers ;
