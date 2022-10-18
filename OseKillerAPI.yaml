@@ -298,7 +298,29 @@ paths:
           description: étudiant non trouvé
       security:
         - bearerAuth: []
-        
+  /students/{id}/interviews:
+    get:
+      tags:
+      - Student
+      parameters:
+          - in: path
+            name: id
+            schema:
+              type: integer
+            required: true
+      summary: Convoquer un étudiant à une entrevue
+      description: Convoquer un étudiant à une entrevue
+      operationId: inviteToInterview
+      responses:
+        '202':
+          description: La convocation à été envoyé et est en attente de validation.
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: étudiant non trouvé
+      security:
+        - bearerAuth: []
+  
   
   /companies/{id}/offers:
     post:
