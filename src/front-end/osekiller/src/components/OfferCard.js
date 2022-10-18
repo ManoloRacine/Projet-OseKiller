@@ -8,6 +8,7 @@ export const OfferCard = ({ offer, redirectTo }) => {
                 "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
             }
             style={{ backgroundColor: "#2C324C" }}
+            data-testid={"offer-card"}
         >
             {offer.companyName && (
                 <div>

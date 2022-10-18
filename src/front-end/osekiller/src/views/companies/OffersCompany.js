@@ -4,14 +4,16 @@ import { getOffersByCompany } from "../../services/CompanyService";
 import { AuthenticatedUserContext } from "../../App";
 
 const OffersCompany = () => {
-    const { authenticatedUser } = useContext(AuthenticatedUserContext);
+    const authenticatedUser = useContext(
+        AuthenticatedUserContext
+    )?.authenticatedUser;
     const [offers, setOffers] = useState([]);
 
     useEffect(() => {
-        getOffersByCompany(authenticatedUser.id)
+        getOffersByCompany(authenticatedUser?.id)
             .then(({ data }) => setOffers(data))
             .catch((err) => console.log(err));
-    }, []);
+    }, [authenticatedUser?.id]);
 
     return (
         <>

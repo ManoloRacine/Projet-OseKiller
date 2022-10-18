@@ -9,14 +9,13 @@ const InternshipApplications = () => {
     const [applicants, setApplicants] = useState([]);
     const location = useLocation();
     const { state } = location;
-    const companyId = authenticatedUser.id;
     const offerId = state?.offerId;
 
     useEffect(() => {
-        getApplicantsByOffer(companyId, offerId)
+        getApplicantsByOffer(authenticatedUser.id, offerId)
             .then((response) => setApplicants(response.data))
             .catch((err) => console.log(err));
-    }, []);
+    }, [authenticatedUser.id, offerId]);
 
     return (
         <main>
