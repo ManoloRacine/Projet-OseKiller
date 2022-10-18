@@ -31,6 +31,35 @@ describe("OffersCompany", () => {
         expect(offerCard).toBeInTheDocument();
     });
 
+    it("should render multiple OfferCard", async () => {
+        const response = {
+            data: [
+                {
+                    position: "Développeur Java",
+                    salary: 123,
+                    endDate: "2022-10-18",
+                    startDate: "2022-10-25",
+                },
+                {
+                    position: "Développeur Python",
+                    salary: 100,
+                    endDate: "2022-09-18",
+                    startDate: "2022-11-18",
+                },
+            ],
+        };
+
+        axios.get.mockImplementation(() => Promise.resolve(response));
+
+        await act(async () => {
+            render(<OffersCompany />, { wrapper: BrowserRouter });
+        });
+
+        const offerCard = screen.getAllByTestId("offer-card");
+
+        expect(offerCard.length).toBe(2);
+    });
+
     it("should not render OfferCard", async () => {
         render(<OffersCompany />, { wrapper: BrowserRouter });
 

@@ -9,6 +9,7 @@ const StudentCard = ({ student, redirectTo }) => {
                 "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
             }
             style={{ backgroundColor: "#2C324C" }}
+            data-testid={"student-card"}
         >
             <div>
                 <p className={"fs-4 text-decoration-underline"}>
