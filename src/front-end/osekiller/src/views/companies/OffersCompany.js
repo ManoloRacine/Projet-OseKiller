@@ -3,7 +3,7 @@ import { OfferCard } from "../../components/OfferCard";
 import { getOffersByCompany } from "../../services/CompanyService";
 import { AuthenticatedUserContext } from "../../App";
 
-const InternshipApplication = () => {
+const OffersCompany = () => {
     const { authenticatedUser } = useContext(AuthenticatedUserContext);
     const [offers, setOffers] = useState([]);
 
@@ -16,10 +16,14 @@ const InternshipApplication = () => {
     return (
         <>
             {offers.map((offer, index) => (
-                <OfferCard key={index} offer={offer} redirectTo={""} />
+                <OfferCard
+                    key={index}
+                    offer={offer}
+                    redirectTo={"/internship-applications"}
+                />
             ))}
         </>
     );
 };
 
-export default InternshipApplication;
+export default OffersCompany;

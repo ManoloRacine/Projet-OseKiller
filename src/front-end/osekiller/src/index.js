@@ -17,7 +17,8 @@ import UploadInternship from "./views/companies/UploadInternship";
 import OffersManager from "./views/managers/OffersManager";
 import ValidateOffer from "./views/managers/ValidateOffer";
 import ApplyOffer from "./views/students/ApplyOffer";
-import InternshipApplication from "./views/companies/InternshipApplication";
+import OffersCompany from "./views/companies/OffersCompany";
+import InternshipApplications from "./views/companies/InternshipApplications";
 
 <link
     rel="stylesheet"
@@ -147,13 +148,24 @@ root.render(
                     }
                 />
                 <Route
-                    path="internship-application"
+                    path="offers-company"
                     element={
                         <ProtectedRoute
                             authenticated
                             allowedRoles={["COMPANY"]}
                         >
-                            <InternshipApplication />
+                            <OffersCompany />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="internship-applications"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["COMPANY"]}
+                        >
+                            <InternshipApplications />
                         </ProtectedRoute>
                     }
                 />
