@@ -1,7 +1,7 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
-import com.osekiller.projet.controller.payload.response.StudentDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
@@ -11,7 +11,6 @@ import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.StudentServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,14 +25,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -131,15 +127,15 @@ public class StudentServiceTest {
 
         List<Student> students = List.of(student1, student2, student3);
 
-        List<StudentDto> expected = students.stream().map(
-                StudentDto::from
+        List<StudentWithCvStateDto> expected = students.stream().map(
+                StudentWithCvStateDto::from
         ).toList();
 
         when(studentRepository.findAll()).thenReturn(students);
 
         //Act
 
-        List<StudentDto> actual = studentService.getStudents();
+        List<StudentWithCvStateDto> actual = studentService.getStudents();
 
         //Assert
 
@@ -164,13 +160,13 @@ public class StudentServiceTest {
 
         Student student = new Student("Joe", "jbiden@osk.com", "password");
 
-        StudentDto expected = StudentDto.from(student);
+        StudentWithCvStateDto expected = StudentWithCvStateDto.from(student);
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
 
         //Act
 
-        StudentDto actual = studentService.getStudent(1);
+        StudentWithCvStateDto actual = studentService.getStudent(1);
 
         //Assert
 
