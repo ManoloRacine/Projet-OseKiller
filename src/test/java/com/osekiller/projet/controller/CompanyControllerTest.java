@@ -7,9 +7,7 @@ import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.model.ERole;
-import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
-import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.service.OfferService;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
@@ -30,7 +28,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
