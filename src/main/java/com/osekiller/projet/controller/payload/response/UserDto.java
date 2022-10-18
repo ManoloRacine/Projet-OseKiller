@@ -3,11 +3,12 @@ package com.osekiller.projet.controller.payload.response;
 import com.osekiller.projet.model.user.User;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public record UserDto(@NotBlank String email,
                       @NotBlank String name,
-                      @NotBlank boolean enabled,
-                      @NotBlank Long id,
+                      @NotNull boolean enabled,
+                      @NotNull Long id,
                       @NotBlank String role) {
 
     public static UserDto from(User user){
