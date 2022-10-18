@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { getApplicantsByOffer } from "../../services/CompanyService";
-import { OfferCard } from "../../components/OfferCard";
 import { useLocation } from "react-router-dom";
 import { AuthenticatedUserContext } from "../../App";
+import StudentCard from "../../components/StudentCard";
 
 const InternshipApplications = () => {
     const { authenticatedUser } = useContext(AuthenticatedUserContext);
@@ -14,21 +14,14 @@ const InternshipApplications = () => {
 
     useEffect(() => {
         getApplicantsByOffer(companyId, offerId)
-            .then((response) => {
-                console.log(response);
-                setApplicants(response.data);
-            })
+            .then((response) => setApplicants(response.data))
             .catch((err) => console.log(err));
     }, []);
 
     return (
         <main>
-            {applicants.map((offer, index) => (
-                <OfferCard
-                    key={index}
-                    offer={offer}
-                    redirectTo={"/internship-applications"}
-                />
+            {applicants.map((student, index) => (
+                <StudentCard key={index} student={student} redirectTo={""} />
             ))}
         </main>
     );
