@@ -48,3 +48,15 @@ export const getStudent = async (studentId) => {
         },
     });
 };
+
+export const getOffersStudent = async (studentId) => {
+    return axios.get(
+        `/students/${studentId}/applications`, {
+            headers : {
+                "Content-Type" : "application/json",
+                Authorization: localStorage.getItem("accessToken")
+            }
+        }
+    ) ;
+}
+
