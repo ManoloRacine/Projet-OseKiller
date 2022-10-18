@@ -1,7 +1,7 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.ValidationDto;
-import com.osekiller.projet.controller.payload.response.StudentDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -21,11 +21,11 @@ import java.util.List;
 public class StudentController {
     StudentService studentService;
     @GetMapping
-    public ResponseEntity<List<StudentDto>> getStudents() {
+    public ResponseEntity<List<StudentWithCvStateDto>> getStudents() {
         return ResponseEntity.ok(studentService.getStudents()) ;
     }
     @GetMapping("/{id}")
-    public ResponseEntity<StudentDto> getStudents(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<StudentWithCvStateDto> getStudents(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(studentService.getStudent(id)) ;
     }
     @PutMapping("/{id}/cv")

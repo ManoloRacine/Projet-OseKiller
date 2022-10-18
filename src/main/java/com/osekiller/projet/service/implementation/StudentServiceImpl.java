@@ -1,6 +1,6 @@
 package com.osekiller.projet.service.implementation;
 
-import com.osekiller.projet.controller.payload.response.StudentDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -81,14 +81,14 @@ public class StudentServiceImpl implements StudentService {
 
         return resource;
     }
-    public List<StudentDto> getStudents() {
+    public List<StudentWithCvStateDto> getStudents() {
         return studentRepository.findAll().stream().map(
-                StudentDto::from
+                StudentWithCvStateDto::from
         ).toList() ;
     }
-    public StudentDto getStudent(Long id) {
+    public StudentWithCvStateDto getStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return StudentDto.from(student);
+        return StudentWithCvStateDto.from(student);
     }
 
 }

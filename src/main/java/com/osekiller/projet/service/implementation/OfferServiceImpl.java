@@ -1,6 +1,7 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Student;
@@ -24,7 +25,7 @@ public class OfferServiceImpl implements OfferService {
 
     private StudentRepository studentRepository;
     @Override
-    public OfferDtoResponse getOffer(Long offerId) {
+    public OfferDtoResponse getOffer(long offerId) {
 
         Optional<Offer> offer = offerRepository.findById(offerId) ;
 
@@ -39,7 +40,7 @@ public class OfferServiceImpl implements OfferService {
 
     }
     @Override
-    public void addApplicantToOffer(Long studentId, Long offerId) {
+    public void addApplicantToOffer(long studentId, long offerId) {
         Offer offer = offerRepository.findByIdAndFetchApplicants(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -49,6 +50,11 @@ public class OfferServiceImpl implements OfferService {
         offer.getApplicants().add(student);
 
         offerRepository.save(offer);
+    }
+
+    @Override
+    public List<NameAndEmailDto> getApplicants(long offerId) {
+        return null;
     }
 
     @Override

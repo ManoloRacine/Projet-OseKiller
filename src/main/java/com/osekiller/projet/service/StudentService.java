@@ -1,6 +1,6 @@
 package com.osekiller.projet.service;
 
-import com.osekiller.projet.controller.payload.response.StudentDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,8 +16,8 @@ public interface StudentService {
 
     Resource getCV(Long studentId);
 
-    List<StudentDto> getStudents();
+    List<StudentWithCvStateDto> getStudents();
 
-    StudentDto getStudent(Long id);
+    StudentWithCvStateDto getStudent(Long id);
 
 }

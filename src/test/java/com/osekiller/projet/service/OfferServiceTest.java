@@ -220,4 +220,13 @@ public class OfferServiceTest {
 
     }
 
+    @Test
+    void getApplicantsOfferNotFound() {
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.getApplicants(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
