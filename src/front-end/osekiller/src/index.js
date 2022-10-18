@@ -19,7 +19,7 @@ import ValidateOffer from "./views/managers/ValidateOffer";
 import ApplyOffer from "./views/students/ApplyOffer";
 import OffersCompany from "./views/companies/OffersCompany";
 import InternshipApplications from "./views/companies/InternshipApplications";
-import AppliedOffers from "./views/students/AppliedOffers"
+import AppliedOffers from "./views/students/AppliedOffers";
 
 <link
     rel="stylesheet"
