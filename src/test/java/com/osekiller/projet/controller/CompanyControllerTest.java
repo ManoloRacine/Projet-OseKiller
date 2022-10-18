@@ -218,6 +218,15 @@ public class CompanyControllerTest {
                 .content(asJsonString(dto))).andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void getOfferApplicantsOfferNotFound() throws Exception {
+        //Act & Assert
+
+        mockMvc.perform(get("/companies/1/offers/2/applicants"))
+                .andExpect(status().isNotFound());
+    }
+
 
     static String asJsonString(final Object obj) {
         try {
