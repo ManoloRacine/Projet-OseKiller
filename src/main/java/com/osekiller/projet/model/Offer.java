@@ -28,7 +28,7 @@ public class Offer {
     private byte[] pdf;
 
     @NonNull private String position;
-    @NonNull private Double salary;
+    @NonNull private double salary;
     private String feedback;
     @NonNull private LocalDate startDate;
     @NonNull private LocalDate endDate;

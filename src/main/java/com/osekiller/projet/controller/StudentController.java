@@ -1,6 +1,7 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.ValidationDto;
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
@@ -29,16 +30,21 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudent(id)) ;
     }
     @PutMapping("/{id}/cv")
-    public ResponseEntity<Void> saveCV(@Valid @RequestBody MultipartFile file, @PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> saveCv(@Valid @RequestBody MultipartFile file, @PathVariable(name = "id") Long id) {
         studentService.saveCV(file, id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/cv")
-    public ResponseEntity<Resource> getCV(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Resource> getCv(@PathVariable(name = "id") Long id) {
         Resource cv = studentService.getCV(id);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFilename() + "\"").body(cv);
+    }
+
+    @GetMapping("/{id}/applications")
+    public ResponseEntity<List<GeneralOfferDto>> getApplications(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(studentService.getApplications(id));
     }
 
     @PostMapping("/{id}/cv/validate")

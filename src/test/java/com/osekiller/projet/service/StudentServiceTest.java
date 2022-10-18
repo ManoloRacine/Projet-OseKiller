@@ -1,13 +1,16 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.model.Cv;
+import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
+import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.StudentServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +24,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -98,7 +103,7 @@ public class StudentServiceTest {
         //Act
         Resource resourceReturn = studentService.getCV(1L) ;
 
-        Assertions.assertThat(resourceReturn.getClass()).isEqualTo(ByteArrayResource.class) ;
+        assertThat(resourceReturn.getClass()).isEqualTo(ByteArrayResource.class) ;
     }
 
     @Test
@@ -110,4 +115,168 @@ public class StudentServiceTest {
 
     }
 
+
+    @Test
+    void getStudentsHappyDay(){
+
+        //Arrange
+
+        Student student1 = new Student("Joe", "jbiden@osk.com", "password");
+        Student student2 = new Student("Obama", "obarrack@osk.com", "password");
+        Student student3 = new Student("Trump", "tdonald@osk.com", "password");
+
+        List<Student> students = List.of(student1, student2, student3);
+
+        List<StudentWithCvStateDto> expected = students.stream().map(
+                StudentWithCvStateDto::from
+        ).toList();
+
+        when(studentRepository.findAll()).thenReturn(students);
+
+        //Act
+
+        List<StudentWithCvStateDto> actual = studentService.getStudents();
+
+        //Assert
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void getStudentNotFound(){
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.getStudent(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getStudentHappyDay() {
+
+        //Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+
+        StudentWithCvStateDto expected = StudentWithCvStateDto.from(student);
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+        //Act
+
+        StudentWithCvStateDto actual = studentService.getStudent(1);
+
+        //Assert
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(expected);
+    }
+
+    @Test
+    void validateCvNotfound(){
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.validateCV(1, "This is one the the resumes of all time"))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void validateCvHappyDay(){
+
+        // Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+        // Act
+
+        studentService.validateCV(1, "This is one the the resumes of all time");
+
+        // Assert
+
+        assertThat(student.isCvRejected())
+                .isEqualTo(false);
+        assertThat(student.getCv().isValidated())
+                .isEqualTo(true);
+        assertThat(student.getCv().getFeedback())
+                .isNotBlank()
+                .isEqualTo("This is one the the resumes of all time");
+    }
+
+    @Test
+    void invalidateCvNotfound(){
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.invalidateCV(1, "This is one the the resumes of all time"))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void invalidateCvHappyDay(){
+
+        // Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+        // Act
+
+        studentService.invalidateCV(1, "This is one the the resumes of all time");
+
+        // Assert
+
+        assertThat(student.isCvRejected())
+                .isEqualTo(true);
+        assertThat(student.getCv().isValidated())
+                .isEqualTo(false);
+        assertThat(student.getCv().getFeedback())
+                .isNotBlank()
+                .isEqualTo("This is one the the resumes of all time");
+    }
+
+    @Test
+    void getApplicationsStudentNotFound() {
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.getApplications(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getApplicationsHappyDay(){
+
+        // Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+
+        Company company = mock(Company.class);
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        student.setApplications(List.of(offer1, offer2, offer3));
+
+        List<GeneralOfferDto> expected = student.getApplications().stream().map(GeneralOfferDto::from).toList();
+
+        when(studentRepository.findByIdAndFetchApplications(anyLong())).thenReturn(Optional.of(student));
+
+        // Act
+
+        List<GeneralOfferDto> actual = studentService.getApplications(1);
+
+        // Assert
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(expected);
+    }
 }
