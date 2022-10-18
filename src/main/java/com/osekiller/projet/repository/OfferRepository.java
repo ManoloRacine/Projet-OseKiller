@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface OfferRepository extends JpaRepository<Offer, Long> {
     List<Offer> findAllByOwner(Company company) ;
-    @Query("SELECT o FROM Offer o JOIN FETCH o.applicants WHERE o.id = (:id)")
-    Optional<Offer> findByIdAndFetchApplicants(Long id);
+    @Query("SELECT o FROM Offer o LEFT JOIN FETCH o.applicants WHERE o.id = (:id)")
+    Optional<Offer> findByIdAndFetchApplicants(long id);
     List<Offer> findAllByAcceptedIsTrue() ;
     List<Offer> findAllByAcceptedIsFalse() ;
     List<Offer> findAllByAcceptedIsFalseAndFeedbackIsNull();
