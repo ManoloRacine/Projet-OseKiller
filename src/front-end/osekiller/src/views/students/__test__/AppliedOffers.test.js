@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
-import AppliedOffers from "../../views/students/AppliedOffers"
+import AppliedOffers from "../AppliedOffers"
 import React from "react"
-import axios from "../../api/axios"
+import axios from "../../../api/axios"
 import { act } from "react-dom/test-utils"
 
 const MockAppliedOffers = () => {
@@ -13,7 +13,7 @@ const MockAppliedOffers = () => {
     )
 }
 
-jest.mock("../../api/axios")
+jest.mock("../../../api/axios")
 
 describe("applied offers test", () => {
 

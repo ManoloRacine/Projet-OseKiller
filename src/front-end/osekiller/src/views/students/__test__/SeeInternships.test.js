@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
-import SeeInternships from "../../views/students/SeeInternships"
+import SeeInternships from "../SeeInternships"
 import React from "react"
-import axios from "../../api/axios"
+import axios from "../../../api/axios"
 import { act } from "react-dom/test-utils"
 
 const MockSeeInternships = () => {
@@ -13,7 +13,7 @@ const MockSeeInternships = () => {
     )
 }
 
-jest.mock("../../api/axios")
+jest.mock("../../../api/axios")
 
 describe("internships", () => {
 
