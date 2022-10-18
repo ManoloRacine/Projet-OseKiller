@@ -8,3 +8,12 @@ export const uploadInternshipOffer = async (data, companyId) => {
         },
     });
 };
+
+export const getOffersByCompany = async (companyId) => {
+    return axios.get(`/companies/${companyId}/offers`, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};

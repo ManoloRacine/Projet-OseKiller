@@ -60,6 +60,7 @@ export const Header = () => {
                     {authenticatedUser.role === "COMPANY" && (
                         <Link
                             to={"/internship-application"}
+                            state={{ userId: authenticatedUser.id }}
                             className="m-4 fs-2 d-flex align-items-center"
                         >
                             Application à mes offres de stage

@@ -9,12 +9,14 @@ export const OfferCard = ({ offer, redirectTo }) => {
             }
             style={{ backgroundColor: "#2C324C" }}
         >
-            <div>
-                <p className={"fs-4 text-decoration-underline"}>
-                    Nom de la compagnie
-                </p>
-                <p>{offer.companyName}</p>
-            </div>
+            {offer.companyName && (
+                <div>
+                    <p className={"fs-4 text-decoration-underline"}>
+                        Nom de la compagnie
+                    </p>
+                    <p>{offer.companyName}</p>
+                </div>
+            )}
             <div>
                 <p className={"fs-4 text-decoration-underline"}>Position</p>
                 <p>{offer.position}</p>
