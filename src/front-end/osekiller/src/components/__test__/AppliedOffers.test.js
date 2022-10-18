@@ -2,6 +2,8 @@ import { render, screen } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
 import AppliedOffers from "../../views/students/AppliedOffers"
 import React from "react"
+import axios from "../../api/axios"
+import { act } from "react-dom/test-utils"
 
 const MockAppliedOffers = () => {
     return (
@@ -11,13 +13,13 @@ const MockAppliedOffers = () => {
     )
 }
 
+jest.mock("../../api/axios")
+
 describe("applied offers test", () => {
 
     it("test one offer", async () => {
 
-        const stubInitialState = [{position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}]
-
-        React.useState = jest.fn().mockReturnValueOnce([stubInitialState, {}]) ;
+        const response = {data : [{position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}]}
 
         const mockSetAuthenticatedUser = jest.fn().mockImplementation(authenticatedUser => {
             authenticatedUser = authenticatedUser;
@@ -30,7 +32,11 @@ describe("applied offers test", () => {
             setAuthenticatedUser : mockSetAuthenticatedUser,
         })) ;
 
-        render(<AppliedOffers/>) ;
+        axios.get.mockImplementation(() => Promise.resolve(response))
+
+        await act(async () => {
+            render(<AppliedOffers/>) ;
+        })
         
         const position = screen.getByText(/testPos/i);
         const salary = screen.getByText(/1\$/i);
@@ -46,11 +52,10 @@ describe("applied offers test", () => {
 
     it("test give multiple offers", async () => {
 
-        const stubInitialState = [{position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"},
+        const response = {data : [{position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"},
          {position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}, 
-         {position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}] ;
+         {position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}]} ;
 
-        React.useState = jest.fn().mockReturnValueOnce([stubInitialState, {}]) ;
 
         const mockSetAuthenticatedUser = jest.fn().mockImplementation(authenticatedUser => {
             authenticatedUser = authenticatedUser;
@@ -63,7 +68,11 @@ describe("applied offers test", () => {
             setAuthenticatedUser : mockSetAuthenticatedUser,
         })) ;
 
-        render(<AppliedOffers/>) ;
+        axios.get.mockImplementation(() => Promise.resolve(response))
+
+        await act(async () => {
+            render(<AppliedOffers/>) ;
+        })
         
         const positions = screen.queryAllByText(/testPos/i);
         const salaries = screen.queryAllByText(/1\$/i);
