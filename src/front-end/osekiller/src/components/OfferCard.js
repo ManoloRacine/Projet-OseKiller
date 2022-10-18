@@ -1,17 +1,23 @@
-export const OfferCard = ({offer}) => {
+import { Link } from "react-router-dom";
+import React from "react";
+
+export const OfferCard = ({ offer, redirectTo }) => {
     return (
         <div
             className={
                 "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
             }
             style={{ backgroundColor: "#2C324C" }}
+            data-testid={"offer-card"}
         >
-            <div>
-                <p className={"fs-4 text-decoration-underline"}>
-                    Nom de la compagnie
-                </p>
-                <p>{offer.companyName}</p>
-            </div>
+            {offer.companyName && (
+                <div>
+                    <p className={"fs-4 text-decoration-underline"}>
+                        Nom de la compagnie
+                    </p>
+                    <p>{offer.companyName}</p>
+                </div>
+            )}
             <div>
                 <p className={"fs-4 text-decoration-underline"}>Position</p>
                 <p>{offer.position}</p>
@@ -31,7 +37,13 @@ export const OfferCard = ({offer}) => {
                 <p>{offer.endDate}</p>
             </div>
 
-            <button className={"btn btn-primary"}>Détails</button>
+            <Link
+                to={redirectTo}
+                className={"btn btn-primary"}
+                state={{ companyId: offer.companyId, offerId: offer.offerId }}
+            >
+                Détail
+            </Link>
         </div>
     );
 };

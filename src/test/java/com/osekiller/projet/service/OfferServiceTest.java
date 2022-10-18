@@ -1,6 +1,7 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Offer;
@@ -49,13 +50,21 @@ public class OfferServiceTest {
 
     static Company company;
     static Offer offer;
-
-    static Student mockStudent;
+    static Student mockStudent1;
+    static Student mockStudent2;
+    static Student mockStudent3;
     @BeforeAll
     static void setup(){
-        mockStudent = new Student("Joe Biden","jbiden@osk.com","encrypted-pass");
-        mockStudent.setRole(new Role(ERole.STUDENT.name()));
-        mockStudent.setId(1L);
+        mockStudent1 = new Student("Joe Biden","jbiden@osk.com","encrypted-pass");
+        mockStudent1.setRole(new Role(ERole.STUDENT.name()));
+        mockStudent1.setId(1L);
+        mockStudent2 = new Student("Obama Barrack","obarrackn@osk.com","encrypted-pass");
+        mockStudent2.setRole(new Role(ERole.STUDENT.name()));
+        mockStudent2.setId(2L);
+        mockStudent3 = new Student("Trump donald","tdonald@osk.com","encrypted-pass");
+        mockStudent3.setRole(new Role(ERole.STUDENT.name()));
+        mockStudent3.setId(3L);
+
         company = mock(Company.class);
         offer = new Offer(company, "Junior dev", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
     }
@@ -167,7 +176,7 @@ public class OfferServiceTest {
         //Arrange
 
         when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
-        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent));
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent1));
 
         //Act
 
@@ -176,7 +185,7 @@ public class OfferServiceTest {
         //Assert
 
         assertThat(offer.getApplicants().size()).isEqualTo(1);
-        assertThat(offer.getApplicants()).contains(mockStudent);
+        assertThat(offer.getApplicants()).contains(mockStudent1);
         verify(offerRepository).save(offer);
 
     }
@@ -184,9 +193,9 @@ public class OfferServiceTest {
     void addApplicantToOfferAlreadyApplied(){
         //Arrange
 
-        offer.getApplicants().add(mockStudent);
+        offer.getApplicants().add(mockStudent1);
         when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
-        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent));
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent1));
 
         //Act & Assert
 
@@ -220,4 +229,38 @@ public class OfferServiceTest {
 
     }
 
+    @Test
+    void getApplicantsOfferNotFound() {
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.getApplicants(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getApplicantsHappyDay() {
+
+        //Arrange
+
+        offer.setApplicants(List.of(mockStudent1,mockStudent2,mockStudent3));
+
+        when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
+
+        List<NameAndEmailDto> expected = offer.getApplicants().stream()
+                .map(applicant ->
+                        new NameAndEmailDto(applicant.getName(),applicant.getEmail())
+                ).toList();
+
+        //Act
+
+        List<NameAndEmailDto> actual = offerService.getApplicants(1);
+
+        //Assert
+
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(expected);
+    }
 }

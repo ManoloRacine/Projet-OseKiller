@@ -3,8 +3,12 @@ package com.osekiller.projet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.request.ValidationDto;
+import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
+import com.osekiller.projet.model.ERole;
+import com.osekiller.projet.model.Role;
+import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.service.OfferService;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -20,12 +24,15 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -216,6 +223,51 @@ public class CompanyControllerTest {
         mockMvc.perform(post("/companies/1/offers/2/validate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(dto))).andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void getOfferApplicantsOfferNotFound() throws Exception {
+        //Act & Assert
+
+        mockMvc.perform(get("/companies/1/offers/2/applicants"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void getOfferApplicantsHappyDay() throws Exception {
+
+        //Arrange
+
+        Student mockStudent1 = new Student("Joe Biden","jbiden@osk.com","encrypted-pass");
+        mockStudent1.setRole(new Role(ERole.STUDENT.name()));
+        mockStudent1.setId(1L);
+        Student mockStudent2 = new Student("Obama Barrack","obarrackn@osk.com","encrypted-pass");
+        mockStudent2.setRole(new Role(ERole.STUDENT.name()));
+        mockStudent2.setId(2L);
+        Student mockStudent3 = new Student("Trump donald","tdonald@osk.com","encrypted-pass");
+        mockStudent3.setRole(new Role(ERole.STUDENT.name()));
+        mockStudent3.setId(3L);
+
+        List<NameAndEmailDto> dtoList = Stream.of(mockStudent1,mockStudent2,mockStudent3)
+                .map(applicant -> new NameAndEmailDto(applicant.getName(),applicant.getEmail())).toList();
+
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
+        when(offerService.getApplicants(anyLong())).thenReturn(dtoList);
+
+        String expected = asJsonString(dtoList);
+
+        //Act & Assert
+
+        MvcResult result = mockMvc.perform(get("/companies/1/offers/2/applicants"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String actual = result.getResponse().getContentAsString();
+
+        assertThat(actual).isNotBlank().isEqualTo(expected);
     }
 
 

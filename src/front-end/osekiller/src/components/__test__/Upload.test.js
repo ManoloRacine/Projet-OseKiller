@@ -3,43 +3,10 @@ import Upload from "../Upload";
 import { BrowserRouter } from "react-router-dom";
 import UploadCv from "../../views/students/UploadCv";
 
-const WrappingComponent = ({
-    selectedFile,
-    onDelete,
-    onChange,
-    isSubmitted,
-    onSubmit,
-    subtitle,
-    title,
-}) => {
-    return (
-        <BrowserRouter>
-            <Upload
-                selectedFile={selectedFile}
-                onDelete={onDelete}
-                onChange={onChange}
-                isSubmitted={isSubmitted}
-                onSubmit={onSubmit}
-                subtitle={subtitle}
-                title={title}
-                successMessage={successMessage}
-            />
-        </BrowserRouter>
-    );
-};
-
-const MockUploadCv = () => {
-    return (
-        <BrowserRouter>
-            <UploadCv />
-        </BrowserRouter>
-    );
-};
-
 describe("Upload", () => {
     it("should render same text passed into props", function () {
         render(
-            <WrappingComponent
+            <Upload
                 selectedFile={{}}
                 onDelete={() => console.log("deleting...")}
                 onChange={() => console.log("Changing")}
@@ -48,7 +15,8 @@ describe("Upload", () => {
                 subtitle={"Choisir votre CV"}
                 title={"Téléverser votre CV"}
                 successMessage={"Offre de stage téléversée avec succès!"}
-            />
+            />,
+            { wrapper: BrowserRouter }
         );
 
         const subtitle = screen.getByText(/Choisir votre CV/i);
@@ -62,7 +30,7 @@ describe("Upload", () => {
 
     it("should not render subtitle", function () {
         render(
-            <WrappingComponent
+            <Upload
                 selectedFile={{ name: "Mon CV", size: 10000 }}
                 onDelete={() => console.log("deleting...")}
                 onChange={() => console.log("Changing")}
@@ -70,7 +38,9 @@ describe("Upload", () => {
                 onSubmit={() => console.log("Submitting")}
                 subtitle={"Choisir votre CV"}
                 title={"Téléverser votre CV"}
-            />
+                successMessage={"Offre de stage téléversée avec succès!"}
+            />,
+            { wrapper: BrowserRouter }
         );
 
         const subtitle = screen.queryByText(/Choisir votre CV/i);
@@ -83,7 +53,7 @@ describe("Upload", () => {
     });
 
     it("should be able to add file", function () {
-        render(<MockUploadCv />);
+        render(<UploadCv />, { wrapper: BrowserRouter });
 
         const inputElement = screen.getByTestId("pdfInput");
         const file = new File(["(⌐□_□)"], "chucknorris.pdf", {
