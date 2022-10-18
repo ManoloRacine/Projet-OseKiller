@@ -12,7 +12,7 @@ export const uploadInternshipOffer = async (data, companyId) => {
 export const getOffersByCompany = async (companyId) => {
     return axios.get(`/companies/${companyId}/offers`, {
         headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             Authorization: localStorage.getItem("accessToken"),
         },
     });
@@ -21,7 +21,7 @@ export const getOffersByCompany = async (companyId) => {
 export const getApplicantsByOffer = async (companyId, offerId) => {
     return axios.get(`/companies/${companyId}/offers/${offerId}/applicants`, {
         headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             Authorization: localStorage.getItem("accessToken"),
         },
     });
