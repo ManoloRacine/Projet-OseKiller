@@ -1,7 +1,6 @@
 package com.osekiller.projet.service.implementation;
 
-import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
-import com.osekiller.projet.controller.payload.response.StudentDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -28,7 +27,7 @@ public class StudentServiceImpl implements StudentService {
     private CvRepository cvRepository;
 
     @Override
-    public void validateCV(long studentId, String feedback) {
+    public void validateCV(Long studentId, String feedback) {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
@@ -41,7 +40,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void invalidateCV(long studentId, String feedback) {
+    public void invalidateCV(Long studentId, String feedback) {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
@@ -54,15 +53,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<GeneralOfferDto> getApplications(long studentId) {
-        Student student = studentRepository.findByIdAndFetchApplications(studentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        return student.getApplications().stream().map(GeneralOfferDto::from).toList();
-    }
-
-    @Override
-    public void saveCV(MultipartFile cv, long studentId) {
+    public void saveCV(MultipartFile cv, Long studentId) {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
@@ -81,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
-    public Resource getCV(long studentId) {
+    public Resource getCV(Long studentId) {
         Optional<Student> student = studentRepository.findById(studentId) ;
         if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
         if (cvRepository.findById(student.get().getCv().getId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
@@ -90,14 +81,14 @@ public class StudentServiceImpl implements StudentService {
 
         return resource;
     }
-    public List<StudentDto> getStudents() {
+    public List<StudentWithCvStateDto> getStudents() {
         return studentRepository.findAll().stream().map(
-                StudentDto::from
-        ).toList();
+                StudentWithCvStateDto::from
+        ).toList() ;
     }
-    public StudentDto getStudent(long id) {
+    public StudentWithCvStateDto getStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return StudentDto.from(student);
+        return StudentWithCvStateDto.from(student);
     }
 
 }

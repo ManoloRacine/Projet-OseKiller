@@ -1,7 +1,6 @@
 package com.osekiller.projet.service;
 
-import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
-import com.osekiller.projet.controller.payload.response.StudentDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,18 +8,16 @@ import java.util.List;
 
 public interface StudentService {
 
-    void validateCV(long studentId, String feedback);
+    void validateCV(Long studentId, String feedback);
 
-    void invalidateCV(long studentId, String feedback);
+    void invalidateCV(Long studentId, String feedback);
 
-    List<GeneralOfferDto> getApplications(long studentId);
+    void saveCV(MultipartFile cv, Long studentId);
 
-    void saveCV(MultipartFile cv, long studentId);
+    Resource getCV(Long studentId);
 
-    Resource getCV(long studentId);
+    List<StudentWithCvStateDto> getStudents();
 
-    List<StudentDto> getStudents();
-
-    StudentDto getStudent(long id);
+    StudentWithCvStateDto getStudent(Long id);
 
 }

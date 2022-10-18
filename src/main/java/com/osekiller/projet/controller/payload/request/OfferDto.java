@@ -4,9 +4,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public record OfferDto(
-        @NotBlank String position,
-        @NotNull double salary,
-        @NotBlank String startDate,
-        @NotBlank String endDate
+        @NotBlank(message = "position-is-mandatory") String position,
+        @NotNull(message = "salary-is-mandatory") double salary,
+        @NotBlank(message = "startDate-is-mandatory") String startDate,
+        @NotBlank(message = "endDate-is-mandatory") String endDate
         ) {
 }
