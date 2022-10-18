@@ -17,6 +17,7 @@ import UploadInternship from "./views/companies/UploadInternship";
 import OffersManager from "./views/managers/OffersManager";
 import ValidateOffer from "./views/managers/ValidateOffer";
 import ApplyOffer from "./views/students/ApplyOffer";
+import InternshipApplication from "./views/companies/InternshipApplication";
 
 <link
     rel="stylesheet"
@@ -142,6 +143,17 @@ root.render(
                             allowedRoles={["MANAGER"]}
                         >
                             <ValidateOffer />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="internship-application"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["COMPANY"]}
+                        >
+                            <InternshipApplication />
                         </ProtectedRoute>
                     }
                 />
