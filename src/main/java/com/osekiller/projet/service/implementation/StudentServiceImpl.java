@@ -28,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
     private CvRepository cvRepository;
 
     @Override
-    public void validateCV(Long studentId, String feedback) {
+    public void validateCV(long studentId, String feedback) {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
@@ -41,7 +41,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void invalidateCV(Long studentId, String feedback) {
+    public void invalidateCV(long studentId, String feedback) {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
@@ -54,7 +54,15 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void saveCV(MultipartFile cv, Long studentId) {
+    public List<GeneralOfferDto> getApplications(long studentId) {
+        Student student = studentRepository.findByIdAndFetchApplications(studentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        return student.getApplications().stream().map(GeneralOfferDto::from).toList();
+    }
+
+    @Override
+    public void saveCV(MultipartFile cv, long studentId) {
         Optional<Student> student = studentRepository.findById(studentId);
 
         if (student.isEmpty())
@@ -73,7 +81,7 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
-    public Resource getCV(Long studentId) {
+    public Resource getCV(long studentId) {
         Optional<Student> student = studentRepository.findById(studentId) ;
         if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
         if (cvRepository.findById(student.get().getCv().getId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;

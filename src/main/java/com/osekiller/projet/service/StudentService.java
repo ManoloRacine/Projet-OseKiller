@@ -9,13 +9,15 @@ import java.util.List;
 
 public interface StudentService {
 
-    void validateCV(Long studentId, String feedback);
+    void validateCV(long studentId, String feedback);
 
-    void invalidateCV(Long studentId, String feedback);
+    void invalidateCV(long studentId, String feedback);
 
-    void saveCV(MultipartFile cv, Long studentId);
+    List<GeneralOfferDto> getApplications(long studentId);
 
-    Resource getCV(Long studentId);
+    void saveCV(MultipartFile cv, long studentId);
+
+    Resource getCV(long studentId);
 
     List<StudentWithCvStateDto> getStudents();
 
