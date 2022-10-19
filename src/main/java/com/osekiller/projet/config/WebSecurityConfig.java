@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                                 .antMatchers(HttpMethod.PUT,"/students/{id}/cv").hasAuthority(ERole.STUDENT.name())
                                 .antMatchers(HttpMethod.GET,"/students/{id}/cv").hasAnyAuthority(ERole.MANAGER.name(),ERole.STUDENT.name())
                                 .antMatchers("/students/{id}/applications").hasAnyAuthority(ERole.MANAGER.name(),ERole.STUDENT.name())
+                                .antMatchers(HttpMethod.POST,"/students/{id}/interviews").hasAuthority(ERole.COMPANY.name())
                                 .antMatchers(HttpMethod.POST, "/companies/{id}/offers").hasAuthority(ERole.COMPANY.name())
                                 .antMatchers(HttpMethod.POST,"/offers/{id}/apply").hasAuthority(ERole.STUDENT.name())
                                 .antMatchers("/offers?accepted=false").hasAuthority(ERole.MANAGER.name())

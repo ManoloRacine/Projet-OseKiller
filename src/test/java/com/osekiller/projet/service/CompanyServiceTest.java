@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class CompanyServiceTest {
 
@@ -101,9 +102,6 @@ public class CompanyServiceTest {
         offer1.setId(1L);
         offer2.setId(2L);
         offer3.setId(3L);
-        when(cvPath.resolve("1.pdf")).thenReturn(Path.of("1.pdf")) ;
-        when(cvPath.resolve("2.pdf")).thenReturn(Path.of("2.pdf")) ;
-        when(cvPath.resolve("3.pdf")).thenReturn(Path.of("3.pdf")) ;
         OfferDtoResponseNoPdf offerDto1 = new OfferDtoResponseNoPdf(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString()) ;
         OfferDtoResponseNoPdf offerDto2 = new OfferDtoResponseNoPdf(offer2.getId(), offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString()) ;
         OfferDtoResponseNoPdf offerDto3 = new OfferDtoResponseNoPdf(offer3.getId(), offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString()) ;
@@ -150,9 +148,6 @@ public class CompanyServiceTest {
 
     @Test
     void getOffersNonExistentCompany() {
-        //Arrange
-
-        when(offerRepository.findAllByOwner(mock(Company.class))).thenReturn(new ArrayList<>()) ;
 
         //Act & Assert
 

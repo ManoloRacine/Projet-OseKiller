@@ -1,7 +1,7 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
-import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
+import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Student;
@@ -48,31 +48,30 @@ public class OfferServiceImpl implements OfferService {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
 
         offer.getApplicants().add(student);
+        student.getApplications().add(offer);
 
         offerRepository.save(offer);
     }
 
     @Override
-    public List<NameAndEmailDto> getApplicants(long offerId) {
+    public List<UserInfoDto> getApplicants(long offerId) {
         List<Student> students = offerRepository.findByIdAndFetchApplicants(offerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
                 .getApplicants();
 
 
-        return students.stream().map(applicant -> new NameAndEmailDto(applicant.getName(), applicant.getEmail())).toList();
+        return students.stream().map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail())).toList();
     }
 
     @Override
     public List<GeneralOfferDto> getAllValidOffers() {
         List<Offer> offerList = offerRepository.findAllByAcceptedIsTrue() ;
-        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map(GeneralOfferDto::from).toList() ;
-        return generalOfferDtos;
+        return offerList.stream().map(GeneralOfferDto::from).toList();
     }
 
     @Override
     public List<GeneralOfferDto> getAllInvalidOffers() {
         List<Offer> offerList = offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull();
-        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map(GeneralOfferDto::from).toList() ;
-        return generalOfferDtos;
+        return offerList.stream().map(GeneralOfferDto::from).toList();
     }
 }

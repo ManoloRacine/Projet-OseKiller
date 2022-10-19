@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.request.ValidationDto;
-import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
+import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.CompanyService;
@@ -62,8 +62,8 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}/offers/{offerId}/applicants")
-    public ResponseEntity<List<NameAndEmailDto>> getOfferApplicants(@PathVariable(name = "companyId") Long companyId,
-                                                                    @PathVariable(name = "offerId") Long offerId) {
+    public ResponseEntity<List<UserInfoDto>> getOfferApplicants(@PathVariable(name = "companyId") Long companyId,
+                                                                @PathVariable(name = "offerId") Long offerId) {
 
         if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
