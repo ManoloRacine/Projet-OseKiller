@@ -22,7 +22,7 @@ const InternshipApplications = () => {
     return (
         <main>
             {applicants.map((student, index) => (
-                <StudentCard key={index} student={student} redirectTo={""} />
+                <StudentCard key={index} offerId={offerId} student={student} redirectTo={"/invite-student"} />
             ))}
         </main>
     );
