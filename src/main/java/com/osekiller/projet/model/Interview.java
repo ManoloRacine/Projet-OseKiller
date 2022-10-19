@@ -4,6 +4,8 @@ import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import lombok.*;
 import org.hibernate.annotations.Any;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -25,7 +27,7 @@ public class Interview {
     @ManyToOne(cascade = CascadeType.MERGE)
     @NonNull private Student interviewee;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @NonNull private List<LocalDate> proposedInterviewDates;
 
     public void setProposedInterviewDates(List<LocalDate> proposedInterviewDates) {

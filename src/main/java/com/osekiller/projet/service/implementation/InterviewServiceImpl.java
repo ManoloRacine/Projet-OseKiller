@@ -13,13 +13,9 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class InterviewServiceImpl implements InterviewService {
-
     StudentRepository studentRepository;
-
     CompanyRepository companyRepository;
-
     InterviewRepository interviewRepository;
-
     @Override
     public void inviteApplicantToInterview(long studentId, long companyId, List<LocalDate> proposedInterviewDates) {
 

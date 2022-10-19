@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class OfferServiceTest {
 
@@ -169,8 +170,6 @@ public class OfferServiceTest {
 
     @Test
     void getInvalidOffersEmpty() {
-        when(offerRepository.findAllByAcceptedIsFalse()).thenReturn(new ArrayList<>()) ;
-
         List<GeneralOfferDto> list = offerService.getAllValidOffers() ;
 
         assertNotNull(list);
@@ -222,10 +221,6 @@ public class OfferServiceTest {
 
     @Test
     void addApplicantNotFoundToOffer(){
-
-        //Arrange
-
-        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
 
         //Act & Assert
 
