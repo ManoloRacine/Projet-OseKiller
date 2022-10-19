@@ -3,9 +3,6 @@ package com.osekiller.projet.model;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import lombok.*;
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,17 +17,17 @@ public class Interview {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne(cascade = CascadeType.MERGE)
-    @NonNull private Company interviewer;
+    @NonNull private Offer offer;
     @ManyToOne(cascade = CascadeType.MERGE)
     @NonNull private Student interviewee;
     @ElementCollection(fetch = FetchType.EAGER)
     @NonNull private List<LocalDate> proposedInterviewDates;
 
-    public Interview(@NonNull Company interviewer, @NonNull Student interviewee, @NonNull List<LocalDate> proposedInterviewDates) {
+    public Interview(@NonNull Offer offer, @NonNull Student interviewee, @NonNull List<LocalDate> proposedInterviewDates) {
         if(proposedInterviewDates.size() != 3)
             throw new IllegalArgumentException("List of proposed interview dates must contain exactly 3 dates");
 
-        this.interviewer = interviewer;
+        this.offer = offer;
         this.interviewee = interviewee;
         this.proposedInterviewDates = proposedInterviewDates;
     }

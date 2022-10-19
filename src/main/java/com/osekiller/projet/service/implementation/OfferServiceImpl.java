@@ -65,14 +65,12 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public List<GeneralOfferDto> getAllValidOffers() {
         List<Offer> offerList = offerRepository.findAllByAcceptedIsTrue() ;
-        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map(GeneralOfferDto::from).toList() ;
-        return generalOfferDtos;
+        return offerList.stream().map(GeneralOfferDto::from).toList();
     }
 
     @Override
     public List<GeneralOfferDto> getAllInvalidOffers() {
         List<Offer> offerList = offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull();
-        List<GeneralOfferDto> generalOfferDtos = offerList.stream().map(GeneralOfferDto::from).toList() ;
-        return generalOfferDtos;
+        return offerList.stream().map(GeneralOfferDto::from).toList();
     }
 }

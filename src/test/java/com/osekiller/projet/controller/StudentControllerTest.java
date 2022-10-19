@@ -2,9 +2,14 @@ package com.osekiller.projet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.service.AuthService;
+import com.osekiller.projet.service.CompanyService;
+import com.osekiller.projet.service.InterviewService;
+import com.osekiller.projet.service.StudentService;
 import com.osekiller.projet.service.implementation.StudentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +20,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.InputStream;
@@ -28,10 +37,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -42,13 +51,22 @@ public class StudentControllerTest {
     private final String FILE_NAME = "file.txt";
     private InputStream inputStream;
     @MockBean
-    private StudentServiceImpl studentService ;
+    private StudentService studentService;
+
+    @MockBean
+    private AuthService authService;
+
+    @MockBean
+    private InterviewService interviewService;
+
+    @MockBean
+    private CompanyService companyService;
 
     @Autowired
     MockMvc mockMvc ;
 
     @InjectMocks
-    StudentController controller = new StudentController(studentService);
+    StudentController controller;
 
     @Test
     @WithMockUser(authorities = {"MANAGER"})
@@ -106,6 +124,70 @@ public class StudentControllerTest {
         assertThat(actual)
                 .isNotBlank()
                 .isEqualTo(expected);
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void inviteToInterviewOfferNotFound() throws Exception {
+        //Arrange
+
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,1L,"STUDENT"));
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews?offerId=2")
+                .contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"company-jwt")
+                .content(asJsonString(List.of("2023-03-23","2023-03-24","2023-03-27"))))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void inviteToInterviewNotCompanysOffer() throws Exception {
+        //Arrange
+
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,1L,"STUDENT"));
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(false);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews?offerId=2")
+                        .contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"company-jwt")
+                        .content(asJsonString(List.of("2023-03-23","2023-03-24","2023-03-27"))))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void inviteToInterviewBadDateFormat() throws Exception {
+        //Arrange
+
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,1L,"STUDENT"));
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews?offerId=2")
+                        .contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"company-jwt")
+                        .content(asJsonString(List.of("202303-23","2023-03-24","202303-27"))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void inviteToInterviewHappyDay() throws Exception {
+        //Arrange
+
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,1L,"STUDENT"));
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews?offerId=2")
+                        .contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"company-jwt")
+                        .content(asJsonString(List.of("2023-03-23","2023-03-24","2023-03-27"))))
+                .andExpect(status().isOk());
     }
     static String asJsonString(final Object obj) {
         try {
