@@ -48,6 +48,7 @@ public class OfferServiceImpl implements OfferService {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
 
         offer.getApplicants().add(student);
+        student.getApplications().add(offer);
 
         offerRepository.save(offer);
     }
