@@ -8,6 +8,7 @@ const LoadPdf = ({ title, type, src, height, width }) => {
             src={src}
             height={height}
             width={width}
+            data-testid={"pdf"}
         ></iframe>
     );
 };

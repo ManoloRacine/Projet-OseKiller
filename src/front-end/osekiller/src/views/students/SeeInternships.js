@@ -3,19 +3,27 @@ import { getOffers } from "../../services/OfferService";
 import { OfferCard } from "../../components/OfferCard";
 
 const SeeInternships = () => {
-    const [offers, setOffers] = useState([]) ;
+    const [offers, setOffers] = useState([]);
 
     useEffect(() => {
         getOffers(true).then((response) => {
-            setOffers(response.data) ;
-        })
-    }, []) ;
+            setOffers(response.data);
+        });
+    }, []);
 
     return (
         <div className="row">
-            <div className="col-12">{offers.map((offer, index) => (<OfferCard  offer={offer} ></OfferCard>))}</div>
+            <div className="col-12">
+                {offers.map((offer, index) => (
+                    <OfferCard
+                        key={index}
+                        offer={offer}
+                        redirectTo={"/apply-offer"}
+                    ></OfferCard>
+                ))}
+            </div>
         </div>
-    )
-}
+    );
+};
 
-export default SeeInternships ;
+export default SeeInternships;

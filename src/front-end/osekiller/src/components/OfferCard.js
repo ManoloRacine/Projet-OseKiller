@@ -1,4 +1,7 @@
-export const OfferCard = ({offer}) => {
+import { Link } from "react-router-dom";
+import React from "react";
+
+export const OfferCard = ({ offer, redirectTo }) => {
     return (
         <div
             className={
@@ -31,7 +34,13 @@ export const OfferCard = ({offer}) => {
                 <p>{offer.endDate}</p>
             </div>
 
-            <button className={"btn btn-primary"}>Détails</button>
+            <Link
+                to={redirectTo}
+                className={"btn btn-primary"}
+                state={{ companyId: offer.companyId, offerId: offer.offerId }}
+            >
+                Détail
+            </Link>
         </div>
     );
 };
