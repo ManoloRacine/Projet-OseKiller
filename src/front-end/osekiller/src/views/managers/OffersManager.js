@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getOffers } from "../../services/OfferService";
-import Offer from "../../components/Offer";
+import { OfferCard } from "../../components/OfferCard";
 
 const OffersManager = () => {
     const [offers, setOffers] = useState([]);
@@ -18,15 +18,10 @@ const OffersManager = () => {
     return (
         <>
             {offers.map((offer, index) => (
-                <Offer
+                <OfferCard
                     key={index}
-                    companyName={offer.companyName}
-                    position={offer.position}
-                    salary={offer.salary}
-                    startDate={offer.startDate}
-                    endDate={offer.endDate}
-                    companyId={offer.companyId}
-                    offerId={offer.offerId}
+                    offer={offer}
+                    redirectTo={"/validate-offer"}
                 />
             ))}
         </>
