@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-const StudentCard = ({ student, redirectTo }) => {
+const StudentCard = ({ student, redirectTo, offerId }) => {
+    console.log(student) ;
     return (
         <div
             className={
@@ -25,7 +26,7 @@ const StudentCard = ({ student, redirectTo }) => {
             <Link
                 to={redirectTo}
                 className={"btn btn-primary"}
-                state={{ studentEmail: student.email }}
+                state={{ studentEmail: student.email, studentId : student.id, offerId : offerId }}
             >
                 Convoquer
             </Link>
@@ -36,6 +37,7 @@ const StudentCard = ({ student, redirectTo }) => {
 StudentCard.propTypes = {
     student: PropTypes.object.isRequired,
     redirectTo: PropTypes.string.isRequired,
+    offerId: PropTypes.number.isRequired
 };
 
 export default StudentCard;
