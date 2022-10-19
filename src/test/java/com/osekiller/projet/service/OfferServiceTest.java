@@ -12,6 +12,7 @@ import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.OfferServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,7 +55,7 @@ public class OfferServiceTest {
     static Student mockStudent2;
     static Student mockStudent3;
     @BeforeAll
-    static void setup(){
+    static void setupAll(){
         mockStudent1 = new Student("Joe Biden","jbiden@osk.com","encrypted-pass");
         mockStudent1.setRole(new Role(ERole.STUDENT.name()));
         mockStudent1.setId(1L);
@@ -67,6 +68,11 @@ public class OfferServiceTest {
 
         company = mock(Company.class);
         offer = new Offer(company, "Junior dev", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+    }
+
+    @BeforeEach
+    void setupEach(){
+        offer.setApplicants(new ArrayList<>());
     }
 
     @Test

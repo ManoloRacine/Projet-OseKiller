@@ -1,6 +1,7 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.ValidationDto;
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;

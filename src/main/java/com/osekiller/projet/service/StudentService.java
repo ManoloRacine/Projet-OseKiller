@@ -1,5 +1,6 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,6 @@ public interface StudentService {
 
     List<StudentWithCvStateDto> getStudents();
 
-    StudentWithCvStateDto getStudent(Long id);
+    StudentWithCvStateDto getStudent(long id);
 
 }
