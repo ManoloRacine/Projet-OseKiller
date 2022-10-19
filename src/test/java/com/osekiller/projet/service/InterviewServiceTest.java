@@ -1,5 +1,6 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.InterviewRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
@@ -54,5 +55,33 @@ public class InterviewServiceTest {
         assertThatThrownBy(() -> interviewService.inviteApplicantToInterview(1,1, List.of(mock(LocalDate.class),mock(LocalDate.class),mock(LocalDate.class))))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void inviteApplicantToInterviewNotEnoughDates(){
+        //Arrange
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+
+        // Act & Assert
+
+        assertThatThrownBy(() -> interviewService.inviteApplicantToInterview(1,1, List.of(mock(LocalDate.class),mock(LocalDate.class))))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void inviteApplicantToInterviewTooManyDates(){
+        //Arrange
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+
+        // Act & Assert
+
+        assertThatThrownBy(() -> interviewService.inviteApplicantToInterview(1,1, List.of(mock(LocalDate.class),mock(LocalDate.class),mock(LocalDate.class),mock(LocalDate.class))))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
