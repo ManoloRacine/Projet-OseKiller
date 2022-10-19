@@ -1,32 +1,41 @@
 import { render, screen } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
-import SeeInternships from "../SeeInternships"
+import AppliedOffers from "../AppliedOffers"
 import React from "react"
 import axios from "../../../api/axios"
 import { act } from "react-dom/test-utils"
 
-const MockSeeInternships = () => {
+const MockAppliedOffers = () => {
     return (
         <BrowserRouter>
-            <SeeInternships/>
+            <AppliedOffers/>
         </BrowserRouter>
     )
 }
 
 jest.mock("../../../api/axios")
 
-describe("internships", () => {
+describe("applied offers test", () => {
 
-    
+    it("test one offer", async () => {
 
-    it("test give offer to card", async () => {
+        const response = {data : [{position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}]}
 
-        const response = {data : [{position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}]} ;
+        const mockSetAuthenticatedUser = jest.fn().mockImplementation(authenticatedUser => {
+            authenticatedUser = authenticatedUser;
+
+            return authenticatedUser;
+        })
+
+        React.useContext = jest.fn().mockImplementation(() => ({
+            authenticatedUser : {id : 1},
+            setAuthenticatedUser : mockSetAuthenticatedUser,
+        })) ;
 
         axios.get.mockImplementation(() => Promise.resolve(response))
 
         await act(async () => {
-            render(<SeeInternships/>) ;
+            render(<AppliedOffers/>) ;
         })
         
         const position = screen.getByText(/testPos/i);
@@ -47,10 +56,22 @@ describe("internships", () => {
          {position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}, 
          {position : "testPos", salary : 1, endDate : "10-12-2022", startDate : "10-11-2022", companyName: "testCompany"}]} ;
 
+
+        const mockSetAuthenticatedUser = jest.fn().mockImplementation(authenticatedUser => {
+            authenticatedUser = authenticatedUser;
+
+            return authenticatedUser;
+        })
+
+        React.useContext = jest.fn().mockImplementation(() => ({
+            authenticatedUser : {id : 1},
+            setAuthenticatedUser : mockSetAuthenticatedUser,
+        })) ;
+
         axios.get.mockImplementation(() => Promise.resolve(response))
 
         await act(async () => {
-            render(<SeeInternships/>) ;
+            render(<AppliedOffers/>) ;
         })
         
         const positions = screen.queryAllByText(/testPos/i);
