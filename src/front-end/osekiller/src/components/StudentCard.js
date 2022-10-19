@@ -37,6 +37,7 @@ const StudentCard = ({ student, redirectTo, offerId }) => {
 StudentCard.propTypes = {
     student: PropTypes.object.isRequired,
     redirectTo: PropTypes.string.isRequired,
+    offerId: PropTypes.number.isRequired
 };
 
 export default StudentCard;

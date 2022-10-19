@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import LoadPdf from "../../components/LoadPdf"
 import { sendConvocation } from "../../services/CompanyService";
 import { getCv } from "../../services/StudentService"
+import ErrorMessage from "../../components/ErrorMessage";
 
 const InviteStudent = () => {
     const [firstDate, setFirstDate] = useState("")
     const [secondDate, setSecondDate] = useState("")
     const [thirdDate, setThirdDate] = useState("")
     const [pdf, setPdf] = useState("")
+    const [isOpen, setIsOpen] = useState(false);
+    const [hasOpenError, setHasOpenError] = useState(false);
     const location = useLocation();
     const { studentEmail, studentId, offerId } = location.state ;
 
@@ -24,7 +27,7 @@ const InviteStudent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault() ;
-        sendConvocation({offerId : offerId, dates : [firstDate, secondDate, thirdDate]}, studentId);
+        sendConvocation({offerId : offerId, dates : [firstDate, secondDate, thirdDate]}, studentId).then(() => setIsOpen(true)).catch(() => setHasOpenError(true));
     }
 
     return (
@@ -88,6 +91,18 @@ const InviteStudent = () => {
                     disabled={firstDate === "" || secondDate === "" || thirdDate === ""}
                 ></input>
             </form>
+            {isOpen && (
+                <ErrorMessage
+                    message={"Votre convocation a été envoyée !"}
+                    severity="success"
+                />
+            )}
+            {hasOpenError && (
+                <ErrorMessage
+                    message={"Votre convocation n'as pas été envoyée !"}
+                    severity="error"
+                />
+            )}
         </div>
     )
 }
