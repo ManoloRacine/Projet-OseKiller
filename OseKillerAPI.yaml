@@ -299,7 +299,7 @@ paths:
       security:
         - bearerAuth: []
   /students/{id}/interviews:
-    get:
+    post:
       tags:
       - Student
       parameters:
@@ -311,6 +311,20 @@ paths:
       summary: Convoquer un étudiant à une entrevue
       description: Convoquer un étudiant à une entrevue
       operationId: inviteToInterview
+      requestBody:
+        description: dates d'interviews
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: date
+              example:
+                - 2023-01-30
+                - 2023-02-02
+                - 2023-02-09
+
       responses:
         '202':
           description: La convocation à été envoyé et est en attente de validation.

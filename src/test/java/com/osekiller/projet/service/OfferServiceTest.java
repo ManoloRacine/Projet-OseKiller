@@ -1,7 +1,7 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
-import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
+import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Offer;
@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 public class OfferServiceTest {
 
@@ -169,8 +169,6 @@ public class OfferServiceTest {
 
     @Test
     void getInvalidOffersEmpty() {
-        when(offerRepository.findAllByAcceptedIsFalse()).thenReturn(new ArrayList<>()) ;
-
         List<GeneralOfferDto> list = offerService.getAllValidOffers() ;
 
         assertNotNull(list);
@@ -223,10 +221,6 @@ public class OfferServiceTest {
     @Test
     void addApplicantNotFoundToOffer(){
 
-        //Arrange
-
-        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
-
         //Act & Assert
 
         assertThatThrownBy(() -> offerService.addApplicantToOffer(1L,2L))
@@ -254,14 +248,14 @@ public class OfferServiceTest {
 
         when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
 
-        List<NameAndEmailDto> expected = offer.getApplicants().stream()
+        List<UserInfoDto> expected = offer.getApplicants().stream()
                 .map(applicant ->
-                        new NameAndEmailDto(applicant.getName(),applicant.getEmail())
+                        new UserInfoDto(applicant.getId(), applicant.getName(),applicant.getEmail())
                 ).toList();
 
         //Act
 
-        List<NameAndEmailDto> actual = offerService.getApplicants(1);
+        List<UserInfoDto> actual = offerService.getApplicants(1);
 
         //Assert
 
