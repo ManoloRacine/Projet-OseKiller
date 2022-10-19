@@ -8,13 +8,16 @@ export const OfferCard = ({ offer, redirectTo }) => {
                 "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
             }
             style={{ backgroundColor: "#2C324C" }}
+            data-testid={"offer-card"}
         >
-            <div>
-                <p className={"fs-4 text-decoration-underline"}>
-                    Nom de la compagnie
-                </p>
-                <p>{offer.companyName}</p>
-            </div>
+            {offer.companyName && (
+                <div>
+                    <p className={"fs-4 text-decoration-underline"}>
+                        Nom de la compagnie
+                    </p>
+                    <p>{offer.companyName}</p>
+                </div>
+            )}
             <div>
                 <p className={"fs-4 text-decoration-underline"}>Position</p>
                 <p>{offer.position}</p>
