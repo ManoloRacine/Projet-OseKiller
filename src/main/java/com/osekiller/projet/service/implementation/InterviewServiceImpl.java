@@ -1,5 +1,6 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.model.Interview;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.InterviewRepository;
@@ -22,8 +23,16 @@ public class InterviewServiceImpl implements InterviewService {
     InterviewRepository interviewRepository;
     @Override
     public void inviteApplicantToInterview(long studentId, long companyId, List<LocalDate> proposedInterviewDates) {
-       Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-       Company company = companyRepository.findById(companyId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        Interview interview;
+
+        try {
+            interview = new Interview(company, student, proposedInterviewDates);
+        } catch (IllegalArgumentException e){
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }
