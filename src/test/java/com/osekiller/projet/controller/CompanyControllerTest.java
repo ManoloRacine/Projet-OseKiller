@@ -3,7 +3,7 @@ package com.osekiller.projet.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.request.ValidationDto;
-import com.osekiller.projet.controller.payload.response.NameAndEmailDto;
+import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.model.ERole;
@@ -250,8 +250,8 @@ public class CompanyControllerTest {
         mockStudent3.setRole(new Role(ERole.STUDENT.name()));
         mockStudent3.setId(3L);
 
-        List<NameAndEmailDto> dtoList = Stream.of(mockStudent1,mockStudent2,mockStudent3)
-                .map(applicant -> new NameAndEmailDto(applicant.getName(),applicant.getEmail())).toList();
+        List<UserInfoDto> dtoList = Stream.of(mockStudent1,mockStudent2,mockStudent3)
+                .map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail())).toList();
 
         when(companyService.companyExists(anyLong())).thenReturn(true);
         when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);

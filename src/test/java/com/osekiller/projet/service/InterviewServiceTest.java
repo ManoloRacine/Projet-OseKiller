@@ -37,6 +37,10 @@ public class InterviewServiceTest {
     InterviewServiceImpl interviewService;
 
     @Test
+    void inviteApplicantToInterviewHappyDay(){
+
+    }
+    @Test
     void inviteApplicantToInterviewApplicationNotFound(){
         // Act & Assert
 
