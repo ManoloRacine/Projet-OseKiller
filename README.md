@@ -12,3 +12,10 @@ action points sprint 1 :
 - 1 heure de peer par semaine
 - faire du peer avec les personnes bloquées
 - pratique de démo
+
+action points sprint 1 :
+- rencontre plus formel au milieu du sprint
+- faire du peer avec les personnes bloquées
+- pratique de démo
+- faire un wireframe pour les story des front-ends en même temps que l'API
+- tout le monde doit review les API
