@@ -1,5 +1,6 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.model.Interview;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.InterviewRepository;
@@ -21,8 +22,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -39,6 +39,18 @@ public class InterviewServiceTest {
     @Test
     void inviteApplicantToInterviewHappyDay(){
 
+        //Arrange
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+
+        //Act
+
+        interviewService.inviteApplicantToInterview(1,1,List.of(LocalDate.now().plusDays(1),LocalDate.now().plusDays(2),LocalDate.now().plusDays(3)));
+
+        //Assert
+
+        verify(interviewRepository).save(any(Interview.class));
     }
     @Test
     void inviteApplicantToInterviewApplicationNotFound(){
