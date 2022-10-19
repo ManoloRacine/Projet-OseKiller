@@ -40,6 +40,6 @@ public class InterviewServiceImpl implements InterviewService {
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-
+        interviewRepository.save(interview);
     }
 }
