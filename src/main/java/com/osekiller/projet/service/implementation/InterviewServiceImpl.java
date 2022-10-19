@@ -27,6 +27,11 @@ public class InterviewServiceImpl implements InterviewService {
 
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+        for (LocalDate date : proposedInterviewDates) {
+          if (date.isBefore(LocalDate.now()))
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
         Interview interview;
 
         try {
@@ -34,5 +39,7 @@ public class InterviewServiceImpl implements InterviewService {
         } catch (IllegalArgumentException e){
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
+
     }
 }
