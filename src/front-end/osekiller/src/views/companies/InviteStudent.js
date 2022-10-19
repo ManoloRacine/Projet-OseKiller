@@ -10,7 +10,7 @@ const InviteStudent = () => {
     const [thirdDate, setThirdDate] = useState("")
     const [pdf, setPdf] = useState("")
     const location = useLocation();
-    const { studentEmail, studentId } = location.state ;
+    const { studentEmail, studentId, offerId } = location.state ;
 
     useEffect(() => {
         getCv(studentId).then((response) => {
@@ -24,18 +24,25 @@ const InviteStudent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault() ;
-        sendConvocation([firstDate, secondDate, thirdDate], studentId);
+        sendConvocation({offerId : offerId, dates : [firstDate, secondDate, thirdDate]}, studentId);
     }
 
     return (
         <div>
-            <LoadPdf
-                src={pdf}
-                width={"75%"}
-                title={`${studentEmail}-cv`}
-                type={"application/pdf"}
-                height={"500px"}
-            />
+            <div className="row">
+                <div className="col-2"></div>
+                <div className="col-8">
+                    <LoadPdf
+                        src={pdf}
+                        width={"100%"}
+                        title={`${studentEmail}-cv`}
+                        type={"application/pdf"}
+                        height={"500px"}
+                    />
+                </div>
+                <div className="col-2"></div>
+            </div>
+            
             <form className="row" onSubmit={handleSubmit}>
                 <div className="col-4">
                     <label htmlFor="firstDate" className={"form-label"}>
