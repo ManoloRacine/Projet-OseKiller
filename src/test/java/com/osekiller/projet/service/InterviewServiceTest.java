@@ -84,4 +84,18 @@ public class InterviewServiceTest {
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.BAD_REQUEST);
     }
+
+    @Test
+    void inviteApplicantToInterviewDatesBeforeNow(){
+        //Arrange
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+
+        // Act & Assert
+
+        assertThatThrownBy(() -> interviewService.inviteApplicantToInterview(1,1, List.of(LocalDate.now().minusDays(1),LocalDate.now().minusDays(2),LocalDate.now().minusDays(3))))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.CONFLICT);
+    }
 }
