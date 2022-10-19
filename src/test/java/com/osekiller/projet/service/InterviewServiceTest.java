@@ -1,10 +1,11 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.model.Interview;
+import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.InterviewRepository;
-import com.osekiller.projet.repository.user.CompanyRepository;
+import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.InterviewServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class InterviewServiceTest {
     @Mock
     StudentRepository studentRepository;
     @Mock
-    CompanyRepository companyRepository;
+    OfferRepository offerRepository;
     @Mock
     InterviewRepository interviewRepository;
     @InjectMocks
@@ -42,7 +43,7 @@ public class InterviewServiceTest {
         //Arrange
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
-        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(mock(Offer.class)));
 
         //Act
 
@@ -78,7 +79,7 @@ public class InterviewServiceTest {
         //Arrange
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
-        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(mock(Offer.class)));
 
         // Act & Assert
 
@@ -92,7 +93,7 @@ public class InterviewServiceTest {
         //Arrange
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
-        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(mock(Offer.class)));
 
         // Act & Assert
 
@@ -106,7 +107,7 @@ public class InterviewServiceTest {
         //Arrange
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
-        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class)));
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(mock(Offer.class)));
 
         // Act & Assert
 
