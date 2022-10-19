@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const StudentCard = ({ student, redirectTo }) => {
+    console.log(student) ;
     return (
         <div
             className={
@@ -25,7 +26,7 @@ const StudentCard = ({ student, redirectTo }) => {
             <Link
                 to={redirectTo}
                 className={"btn btn-primary"}
-                state={{ studentEmail: student.email }}
+                state={{ studentEmail: student.email, studentId : student.id }}
             >
                 Convoquer
             </Link>

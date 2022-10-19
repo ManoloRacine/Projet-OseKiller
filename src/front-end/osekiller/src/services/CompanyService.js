@@ -26,3 +26,12 @@ export const getApplicantsByOffer = async (companyId, offerId) => {
         },
     });
 };
+
+export const sendConvocation = async (data, studentId) => {
+    return axios.post(`/students/${studentId}/interviews`, data, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+}
