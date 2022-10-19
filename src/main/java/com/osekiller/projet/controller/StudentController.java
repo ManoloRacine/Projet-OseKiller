@@ -79,7 +79,7 @@ public class StudentController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
         }
-        interviewService.inviteApplicantToInterview(studentId,companyId,dates);
+        interviewService.inviteApplicantToInterview(studentId,offerId,dates);
         return ResponseEntity.ok().build();
 
     }
