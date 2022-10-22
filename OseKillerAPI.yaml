@@ -337,7 +337,7 @@ paths:
   
   
   /companies/{id}/offers:
-    post:
+    put:
       tags:
         - Company
       parameters:
@@ -346,8 +346,8 @@ paths:
           schema:
             type: integer
           required: true
-      summary: Poster l'offre de stage d'une entreprise
-      description: Poster l'offre de stage d'une entreprise
+      summary: Poster/Updater l'offre de stage d'une entreprise
+      description: Poster/Updater l'offre de stage d'une entreprise
       operationId: uploadOffer
       requestBody:
         description: Postulé une offre de stage
@@ -405,6 +405,12 @@ paths:
                       type: string
                       format: date
                       example: 2023-01-30
+                    isValidated:
+                      type: boolean
+                      example: true
+                    isAccepted:
+                      type: boolean
+                      example: true
         '403':
           description: Requête non autorisée
         '404':
