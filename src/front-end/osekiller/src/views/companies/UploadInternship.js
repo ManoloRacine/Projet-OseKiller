@@ -3,17 +3,25 @@ import { useState } from "react";
 import { uploadInternshipOffer } from "../../services/CompanyService";
 import UploadInternshipForm from "../../components/forms/UploadInternshipForm";
 import ErrorMessage from "../../components/ErrorMessage";
+import { useLocation } from "react-router-dom";
 
 const UploadInternship = () => {
-    const [position, setPosition] = useState("");
-    const [salary, setSalary] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const location = useLocation();
+    const { state } = location;
+    const [position, setPosition] = useState(
+        state?.position ? state.position : ""
+    );
+    const [salary, setSalary] = useState(state?.salary ? state.salary : "");
+    const [startDate, setStartDate] = useState(
+        state?.startDate ? state.startDate : ""
+    );
+    const [endDate, setEndDate] = useState(state?.endDate ? state.endDate : "");
     const [selectedFile, setSelectedFile] = useState({});
     const [isOfferSubmitted, setIsOfferSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = (userId) => {
+        console.log(position);
         if (position.trim() === "") {
             setErrorMessage("La position ne doit pas être vide");
             return;

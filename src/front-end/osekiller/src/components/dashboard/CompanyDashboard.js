@@ -6,6 +6,7 @@ import {
     faCircleXmark,
     faClock,
 } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 const CompanyDashboard = ({ offers }) => {
     return (
@@ -15,7 +16,7 @@ const CompanyDashboard = ({ offers }) => {
                 <div
                     key={index}
                     className={
-                        "d-flex justify-content-around text-white m-2 rounded"
+                        "d-flex justify-content-around text-white m-2 rounded align-items-center"
                     }
                     style={{ backgroundColor: "#2C324C" }}
                 >
@@ -23,7 +24,7 @@ const CompanyDashboard = ({ offers }) => {
                         <p className={"fs-4 text-decoration-underline"}>
                             Nom du poste
                         </p>
-                        <p>{offer.title}</p>
+                        <p>{offer.position}</p>
                     </div>
 
                     <div className={"d-flex flex-column align-items-center"}>
@@ -54,6 +55,21 @@ const CompanyDashboard = ({ offers }) => {
                             </div>
                         )}
                     </div>
+
+                    {!(offer.isValidated && offer.isAccepted) && (
+                        <Link
+                            to={"/upload-internship"}
+                            className={"btn btn-primary"}
+                            state={{
+                                position: offer.position,
+                                salary: offer.salary,
+                                startDate: offer.startDate,
+                                endDate: offer.endDate
+                            }}
+                        >
+                            Modifier
+                        </Link>
+                    )}
                 </div>
             ))}
         </div>
