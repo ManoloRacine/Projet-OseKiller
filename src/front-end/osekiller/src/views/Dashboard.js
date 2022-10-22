@@ -2,10 +2,16 @@ import { useContext, useEffect, useState } from "react";
 import { AuthenticatedUserContext } from "../App";
 import { getCv, getStudent } from "../services/StudentService";
 import StudentDashboard from "../components/dashboard/StudentDashboard";
+import CompanyDashboard from "../components/dashboard/CompanyDashboard";
 
 const Dashboard = () => {
     const [userPdf, setUserPdf] = useState("");
     const [studentInfo, setStudentInfo] = useState({});
+    const [offers, setOffers] = useState([
+        { title: "Développeur Java", isValidated: true, isAccepted: true },
+        { title: "Développeur Python", isValidated: true, isAccepted: false },
+        { title: "Développeur Cobolt", isValidated: false, isAccepted: false },
+    ]); // À enlever lorsque l'API sera fait
 
     const { authenticatedUser } = useContext(AuthenticatedUserContext);
 
@@ -38,6 +44,9 @@ const Dashboard = () => {
                     feedback={studentInfo["feedback"]}
                     userPdf={userPdf}
                 />
+            )}
+            {authenticatedUser.role === "COMPANY" && (
+                <CompanyDashboard offers={offers} />
             )}
         </div>
     );
