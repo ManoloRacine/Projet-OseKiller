@@ -25,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -39,6 +40,9 @@ public class AuthServiceImpl implements AuthService {
         private UserRepository userRepository;
 
         private RoleRepository roleRepository;
+
+        private final int LAST_MONTH = 5 ;
+        private final int LAST_DAY = 31 ;
 
         @Override
         public JwtResponseDto signIn(SignInDto dto) {
@@ -72,6 +76,12 @@ public class AuthServiceImpl implements AuthService {
                         Role studentRole = roleRepository.findByName(ERole.STUDENT.name())
                                         .orElseThrow(EntityNotFoundException::new);
                         student.setRole(studentRole);
+                        if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().getYear(), LAST_MONTH, LAST_DAY))) {
+                                student.setSessionYear(LocalDate.now().getYear());
+                        }
+                        else {
+                                student.setSessionYear(LocalDate.now().getYear() + 1);
+                        }
                         studentRepository.save(student);
                         return;
                 }

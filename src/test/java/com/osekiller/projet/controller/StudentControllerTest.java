@@ -189,6 +189,9 @@ public class StudentControllerTest {
                         .content(asJsonString(List.of("2023-03-23","2023-03-24","2023-03-27"))))
                 .andExpect(status().isOk());
     }
+
+
+
     static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
