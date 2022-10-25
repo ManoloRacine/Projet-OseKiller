@@ -36,6 +36,14 @@ const Dashboard = () => {
         }
     }
 
+    const updateSessionClick = (id) => {
+        updateStudentSession(authenticatedUser.id).then(
+            (response) => {
+                setStudentInfo(response.data)
+            }
+        )
+    }
+
     return (
         <div className="p-3">
             <h1>{`Bonjour, ${authenticatedUser.name}`}</h1>
@@ -43,7 +51,7 @@ const Dashboard = () => {
             <div className="row">
                 <div className="col-6">
                     {authenticatedUser.role === "STUDENT" && studentInfo["sessionYear"] ? (<h3 >Session : {studentInfo["sessionYear"]}</h3>) : null}
-                    {authenticatedUser.role === "STUDENT" && isSessionOver(studentInfo["sessionYear"]) ? (<button onClick={() => updateStudentSession(authenticatedUser.id)}>S'inscrire à la prochaine session</button>) : null}
+                    {authenticatedUser.role === "STUDENT" && isSessionOver(studentInfo["sessionYear"]) ? (<button onClick={() => updateSessionClick(authenticatedUser.id)}>S'inscrire à la prochaine session</button>) : null}
                     {authenticatedUser.role === "STUDENT" && studentInfo["cvValidated"] ? (<h3 className="text-success">CV est valide</h3>) : null}
                     {authenticatedUser.role === "STUDENT" && studentInfo["cvRejected"] ? (<h3 className="text-danger">CV n'est pas valide</h3>) : null}
                     {authenticatedUser.role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] || studentInfo["cvValidated"]) ?

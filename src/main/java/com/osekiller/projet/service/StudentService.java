@@ -16,4 +16,5 @@ public interface StudentService {
     List<StudentWithCvStateDto> getStudents();
     StudentWithCvStateDto getStudent(long id);
 
+    StudentWithCvStateDto updateSession(long id);
 }

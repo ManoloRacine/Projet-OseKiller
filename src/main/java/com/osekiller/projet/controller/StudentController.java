@@ -95,4 +95,9 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{id}/updateSession")
+    public ResponseEntity<StudentWithCvStateDto> updateStudentSession(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(studentService.updateSession(id)) ;
+    }
+
 }
