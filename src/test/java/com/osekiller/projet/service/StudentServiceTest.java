@@ -2,6 +2,7 @@ package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
+import com.osekiller.projet.model.CurrentDateFactory;
 import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
@@ -39,6 +40,9 @@ public class StudentServiceTest {
 
     @Mock
     StudentRepository studentRepository;
+
+    @Mock
+    CurrentDateFactory currentDateFactory;
 
     @Mock
     CvRepository cvRepository;
@@ -278,5 +282,30 @@ public class StudentServiceTest {
         assertThat(actual)
                 .isNotNull()
                 .isEqualTo(expected);
+    }
+
+
+    @Test
+    void getCurrentSessionHappyDay() {
+        //Arrange
+        when(currentDateFactory.getCurrentDate()).thenReturn(LocalDate.of(2023, 1, 1)) ;
+
+        //Act
+        int currentSession = studentService.getCurrentSession() ;
+
+        //Assert
+        assertThat(currentSession).isEqualTo(2023) ;
+    }
+
+    @Test
+    void getCurrentSessionAfterDate() {
+        //Arrange
+        when(currentDateFactory.getCurrentDate()).thenReturn(LocalDate.of(2023, 1, 1)) ;
+
+        //Act
+        int currentSession = studentService.getCurrentSession() ;
+
+        //Assert
+        assertThat(currentSession).isEqualTo(2023) ;
     }
 }

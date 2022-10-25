@@ -62,7 +62,7 @@ export const getOffersStudent = async (studentId) => {
 
 export const updateStudentSession = async (studentId) => {
     return axios.post(
-        `/students/${studentId}/updateSession`, {
+        `/students/${studentId}/updateSession`, {}, {
             headers : {
                 "Content-Type" : "application/json",
                 Authorization: localStorage.getItem("accessToken")

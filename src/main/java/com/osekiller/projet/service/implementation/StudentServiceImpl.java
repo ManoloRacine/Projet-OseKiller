@@ -2,6 +2,7 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
+import com.osekiller.projet.model.CurrentDateFactory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -27,6 +28,8 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     private CvRepository cvRepository;
+
+    private CurrentDateFactory currentDateFactory ;
 
     private final int LAST_MONTH = 5 ;
     private final int LAST_DAY = 31 ;
@@ -105,14 +108,19 @@ public class StudentServiceImpl implements StudentService {
 
     public StudentWithCvStateDto updateSession(long id) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().getYear(), LAST_MONTH, LAST_DAY))) {
-            student.setSessionYear(LocalDate.now().getYear());
-        }
-        else {
-            student.setSessionYear(LocalDate.now().getYear() + 1);
-        }
+        student.setSessionYear(getCurrentSession());
         studentRepository.save(student) ;
         return StudentWithCvStateDto.from(student) ;
+    }
+
+    public int getCurrentSession() {
+        LocalDate currentDate = currentDateFactory.getCurrentDate() ;
+        if (currentDate.isBefore(LocalDate.of(currentDate.getYear(), LAST_MONTH, LAST_DAY))) {
+            return currentDate.getYear();
+        }
+        else {
+            return currentDate.getYear() + 1;
+        }
     }
 
 }

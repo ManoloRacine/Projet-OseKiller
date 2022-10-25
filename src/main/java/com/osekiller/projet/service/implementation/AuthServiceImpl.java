@@ -15,6 +15,7 @@ import com.osekiller.projet.repository.RefreshTokenRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
 import com.osekiller.projet.service.AuthService;
+import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,8 @@ public class AuthServiceImpl implements AuthService {
         private StudentRepository studentRepository;
         private ManagerRepository managerRepository;
         private UserRepository userRepository;
+
+        private StudentService studentService;
 
         private RoleRepository roleRepository;
 
@@ -76,12 +79,7 @@ public class AuthServiceImpl implements AuthService {
                         Role studentRole = roleRepository.findByName(ERole.STUDENT.name())
                                         .orElseThrow(EntityNotFoundException::new);
                         student.setRole(studentRole);
-                        if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().getYear(), LAST_MONTH, LAST_DAY))) {
-                                student.setSessionYear(LocalDate.now().getYear());
-                        }
-                        else {
-                                student.setSessionYear(LocalDate.now().getYear() + 1);
-                        }
+                        student.setSessionYear(studentService.getCurrentSession());
                         studentRepository.save(student);
                         return;
                 }

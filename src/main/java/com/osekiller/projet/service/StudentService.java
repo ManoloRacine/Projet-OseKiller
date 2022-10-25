@@ -17,4 +17,6 @@ public interface StudentService {
     StudentWithCvStateDto getStudent(long id);
 
     StudentWithCvStateDto updateSession(long id);
+
+    int getCurrentSession() ;
 }
