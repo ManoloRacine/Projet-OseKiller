@@ -59,37 +59,7 @@ public class CompanyServiceTest {
         offer.setId(1L);
     }
 
-    @Test
-    void addOfferHappyDay() {
 
-        //Arrange
-
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
-        Company company = mock(Company.class) ;
-        when(companyRepository.findById(any())).thenReturn(Optional.of(company)) ;
-
-        companyService.addOffer(1L, offerDto, mockMultipartFile);
-
-        verify(offerRepository).save(any()) ;
-    }
-
-    @Test
-    void addOfferCompanyNonExistent() {
-
-        //Arrange
-
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
-
-        when(companyRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
-
-        //Act & Assert
-
-        assertThatThrownBy(() -> companyService.addOffer(1L, offerDto, mockMultipartFile))
-                .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
-    }
 
     @Test
     void getOffersHappyDay() {

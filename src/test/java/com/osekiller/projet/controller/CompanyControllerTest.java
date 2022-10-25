@@ -153,7 +153,7 @@ public class CompanyControllerTest {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
         OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(companyService).addOffer(eq(1L), any(OfferDto.class), any(MultipartFile.class));
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(offerService).addOffer(eq(1L), any(OfferDto.class), any(MultipartFile.class));
 
         //Act & Assert
         mockMvc.perform(multipart("/companies/{id}/offers", 1)

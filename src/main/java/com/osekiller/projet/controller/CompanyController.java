@@ -37,7 +37,7 @@ public class CompanyController {
                                           @PathVariable(name = "id") Long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         OfferDto offerDto1 = mapper.readValue(offerDto, OfferDto.class) ;
-        companyService.addOffer(id, offerDto1, file);
+        offerService.addOffer(id, offerDto1, file);
         return ResponseEntity.accepted().build() ;
     }
 
