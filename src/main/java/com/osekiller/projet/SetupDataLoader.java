@@ -115,10 +115,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
         student.setRole(studentRole);
         if (LocalDate.now().isBefore(LocalDate.of(LocalDate.now().getYear(), 5, 31))) {
-            student.setSessionYear(LocalDate.now().getYear());
+            student.setSessionYear(2020);
         }
         else {
-            student.setSessionYear(LocalDate.now().getYear() + 1);
+            student.setSessionYear(2020);
         }
         studentRepository.save(student);
     }
