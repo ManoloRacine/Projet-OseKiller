@@ -1,6 +1,10 @@
 import LoadPdf from "../LoadPdf";
 import { useContext, useEffect, useState } from "react";
-import { getCv, getStudent } from "../../services/StudentService";
+import {
+    getCv,
+    getStudent,
+    updateStudentSession,
+} from "../../services/StudentService";
 import { AuthenticatedUserContext } from "../../App";
 
 const StudentDashboard = () => {
@@ -24,9 +28,34 @@ const StudentDashboard = () => {
         });
     }, [studentId]);
 
+    const isSessionOver = (year) => {
+        if (Date.now() > new Date(year + "-05-31")) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    const updateSessionClick = () => {
+        updateStudentSession(studentId).then((response) => {
+            setStudentInfo(response.data);
+        });
+    };
+
     return (
         <div className="row">
             <div className="col-6">
+                {studentInfo["sessionYear"] ? (
+                    <h3>Session : {studentInfo["sessionYear"]}</h3>
+                ) : null}
+                {isSessionOver(studentInfo["sessionYear"]) ? (
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => updateSessionClick()}
+                    >
+                        S'inscrire à la prochaine session
+                    </button>
+                ) : null}
                 {studentInfo["cvValidated"] && (
                     <h3 className="text-success">CV est valide</h3>
                 )}
