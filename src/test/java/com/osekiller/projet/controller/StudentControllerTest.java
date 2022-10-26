@@ -2,6 +2,7 @@ package com.osekiller.projet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
@@ -36,12 +37,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -188,6 +190,21 @@ public class StudentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"company-jwt")
                         .content(asJsonString(List.of("2023-03-23","2023-03-24","2023-03-27"))))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    void updateSessionHappyDay() throws Exception {
+        //Arrange
+        when(studentService.updateSession(1)).thenReturn(new StudentWithCvStateDto("email@test.com",
+                "test", 1L, true, true, false, true, "testfeedback",
+                2023)) ;
+
+        //Act & Assert
+        mockMvc.perform(post("/students/1/updateSession"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.sessionYear", is(2023))) ;
     }
 
 
