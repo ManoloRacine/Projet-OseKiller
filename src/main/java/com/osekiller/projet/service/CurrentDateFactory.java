@@ -1,12 +1,12 @@
-package com.osekiller.projet.model;
+package com.osekiller.projet.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
+@Service
 public class CurrentDateFactory {
 
     public LocalDate getCurrentDate() {

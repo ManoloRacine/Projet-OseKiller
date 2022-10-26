@@ -2,7 +2,6 @@ package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
-import com.osekiller.projet.model.CurrentDateFactory;
 import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
@@ -300,12 +299,46 @@ public class StudentServiceTest {
     @Test
     void getCurrentSessionAfterDate() {
         //Arrange
-        when(currentDateFactory.getCurrentDate()).thenReturn(LocalDate.of(2023, 1, 1)) ;
+        when(currentDateFactory.getCurrentDate()).thenReturn(LocalDate.of(2023, 6, 1)) ;
 
         //Act
         int currentSession = studentService.getCurrentSession() ;
 
         //Assert
-        assertThat(currentSession).isEqualTo(2023) ;
+        assertThat(currentSession).isEqualTo(2024) ;
+    }
+
+    @Test
+    void updateSessionHappyDay() {
+        //Arrange
+        Student student = mock(Student.class) ;
+        Cv cv = mock(Cv.class) ;
+        when(student.getCv()).thenReturn(cv) ;
+        when(currentDateFactory.getCurrentDate()).thenReturn(LocalDate.of(2023, 1, 1)) ;
+        when(studentRepository.findById(any())).thenReturn(Optional.of(student)) ;
+
+        //Act
+        studentService.updateSession(1) ;
+
+        //Assert
+        verify(student).setSessionYear(2023);
+        verify(studentRepository).save(student) ;
+    }
+
+    @Test
+    void updateSessionAfterDate() {
+        //Arrange
+        Student student = mock(Student.class) ;
+        Cv cv = mock(Cv.class) ;
+        when(student.getCv()).thenReturn(cv) ;
+        when(currentDateFactory.getCurrentDate()).thenReturn(LocalDate.of(2023, 6, 1)) ;
+        when(studentRepository.findById(any())).thenReturn(Optional.of(student)) ;
+
+        //Act
+        studentService.updateSession(1) ;
+
+        //Assert
+        verify(student).setSessionYear(2024);
+        verify(studentRepository).save(student) ;
     }
 }

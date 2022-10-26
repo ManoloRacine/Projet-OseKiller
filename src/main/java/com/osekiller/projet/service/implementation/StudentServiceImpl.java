@@ -2,7 +2,7 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
-import com.osekiller.projet.model.CurrentDateFactory;
+import com.osekiller.projet.service.CurrentDateFactory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -29,7 +29,7 @@ public class StudentServiceImpl implements StudentService {
 
     private CvRepository cvRepository;
 
-    private CurrentDateFactory currentDateFactory ;
+    private CurrentDateFactory currentDateFactory;
 
     private final int LAST_MONTH = 5 ;
     private final int LAST_DAY = 31 ;
