@@ -1,14 +1,17 @@
-import {useContext, useEffect, useState} from "react";
+import { useContext, useEffect, useState } from "react";
 import { date } from "yup";
-import {AuthenticatedUserContext} from "../App";
-import {getCv, getStudent, updateStudentSession} from "../services/StudentService";
-
+import { AuthenticatedUserContext } from "../App";
+import {
+    getCv,
+    getStudent,
+    updateStudentSession,
+} from "../services/StudentService";
 
 const Dashboard = () => {
     const [userPdf, setUserPdf] = useState("");
     const [studentInfo, setStudentInfo] = useState({});
 
-    const {authenticatedUser} = useContext(AuthenticatedUserContext);
+    const { authenticatedUser } = useContext(AuthenticatedUserContext);
 
     useEffect(() => {
         if (authenticatedUser.role === "STUDENT") {
@@ -28,21 +31,18 @@ const Dashboard = () => {
     }, [authenticatedUser.id, authenticatedUser.role]);
 
     const isSessionOver = (year) => {
-        if ((Date.now() > new Date(year + "-05-31"))) {
-            return true ;
+        if (Date.now() > new Date(year + "-05-31")) {
+            return true;
+        } else {
+            return false;
         }
-        else {
-            return false ;
-        }
-    }
+    };
 
     const updateSessionClick = () => {
-        updateStudentSession(authenticatedUser.id).then(
-            (response) => {
-                setStudentInfo(response.data)
-            }
-        )
-    }
+        updateStudentSession(authenticatedUser.id).then((response) => {
+            setStudentInfo(response.data);
+        });
+    };
 
     return (
         <div className="p-3">
@@ -50,13 +50,40 @@ const Dashboard = () => {
 
             <div className="row">
                 <div className="col-6">
-                    {authenticatedUser.role === "STUDENT" && studentInfo["sessionYear"] ? (<h3 >Session : {studentInfo["sessionYear"]}</h3>) : null}
-                    {authenticatedUser.role === "STUDENT" && isSessionOver(studentInfo["sessionYear"]) ? (<button className="btn btn-primary" onClick={() => updateSessionClick()}>S'inscrire à la prochaine session</button>) : null}
-                    {authenticatedUser.role === "STUDENT" && studentInfo["cvValidated"] ? (<h3 className="text-success">CV est valide</h3>) : null}
-                    {authenticatedUser.role === "STUDENT" && studentInfo["cvRejected"] ? (<h3 className="text-danger">CV n'est pas valide</h3>) : null}
-                    {authenticatedUser.role === "STUDENT" && studentInfo["cvPresent"] && (studentInfo["cvRejected"] || studentInfo["cvValidated"]) ?
-                    <div><h4>Feedback :</h4><p>{studentInfo["feedback"]}</p></div> :
-                    studentInfo['cvPresent'] === true ? <h4 className="text-warning">CV en attente de validation</h4> : null }
+                    {authenticatedUser.role === "STUDENT" &&
+                    studentInfo["sessionYear"] ? (
+                        <h3>Session : {studentInfo["sessionYear"]}</h3>
+                    ) : null}
+                    {authenticatedUser.role === "STUDENT" &&
+                    isSessionOver(studentInfo["sessionYear"]) ? (
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => updateSessionClick()}
+                        >
+                            S'inscrire à la prochaine session
+                        </button>
+                    ) : null}
+                    {authenticatedUser.role === "STUDENT" &&
+                    studentInfo["cvValidated"] ? (
+                        <h3 className="text-success">CV est valide</h3>
+                    ) : null}
+                    {authenticatedUser.role === "STUDENT" &&
+                    studentInfo["cvRejected"] ? (
+                        <h3 className="text-danger">CV n'est pas valide</h3>
+                    ) : null}
+                    {authenticatedUser.role === "STUDENT" &&
+                    studentInfo["cvPresent"] &&
+                    (studentInfo["cvRejected"] ||
+                        studentInfo["cvValidated"]) ? (
+                        <div>
+                            <h4>Feedback :</h4>
+                            <p>{studentInfo["feedback"]}</p>
+                        </div>
+                    ) : studentInfo["cvPresent"] === true ? (
+                        <h4 className="text-warning">
+                            CV en attente de validation
+                        </h4>
+                    ) : null}
                 </div>
                 <div className="col-6">
                     {authenticatedUser.role === "STUDENT" ? (
