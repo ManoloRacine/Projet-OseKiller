@@ -12,4 +12,7 @@ public interface OfferService {
     OfferDtoResponse getOffer(long offerId);
     void addApplicantToOffer(long studentId, long offerId);
     List<UserInfoDto> getApplicants(long offerId);
+
+    List<GeneralOfferDto> getAllValidOffersBySession(int session);
+    List<GeneralOfferDto> getAllInvalidOffersBySession(int session);
 }
