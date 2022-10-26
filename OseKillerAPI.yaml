@@ -582,7 +582,83 @@ paths:
           description: Offre non trouvé
       security:
         - bearerAuth: []
-
+  /interview/{id}/info:
+    get:
+      tags:
+        - Interviews
+      summary: Demande d'informations sur une entrevue
+      description: Demande d'informations sur une entrevue
+      operationId: infoInterview
+      parameters:
+        - in: query
+          name: id
+          description: interviewId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Les informations ont été envoyés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    position:
+                      type: string
+                      example: Junior Web Developer
+                    date1:
+                      type: string
+                      format: date
+                      example: 2022-11-04
+                    date2:
+                      type: string
+                      format: date
+                      example: 2022-11-07
+                    date3:
+                      type: string
+                      format: date
+                      example: 2022-11-15
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Interview non trouvé
+      security:
+        - bearerAuth: [ ]
+  /interview/{id}/confirm:
+    post:
+      tags:
+        - Interviews
+      summary: Confirmation d'une date d'entrevue
+      description: Confirmation d'une date d'entrevue de la part d'un étudiant
+      operationId: confirmInterviewDate
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChosenInterviewDate'
+      responses:
+        '202':
+          description: La date de l'interview a été confirmée
+        '409':
+          description: La date de l'interview a déjà été confirmée
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Interview non trouvé
+      security:
+        - bearerAuth: [ ]
 components:
   securitySchemes:
     bearerAuth:
@@ -633,6 +709,14 @@ components:
         feedBack:
           type: string
           example: trop long
+    ChosenInterviewDate:
+      type: object
+      required:
+        - chosenDate
+      properties:
+        chosenDate:
+          type: string
+          example: 2022-11-07
     SignUpRequest:
       type: object
       required:
