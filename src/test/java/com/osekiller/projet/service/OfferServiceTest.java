@@ -317,6 +317,43 @@ public class OfferServiceTest {
 
     @Test
     void modifyOfferHappyDay(){
+        //Arrange
 
+        Offer offer = new Offer(
+                company,
+                "dev",
+                23.50,
+                LocalDate.of(2022,11,23),
+                LocalDate.of(2023,1,23)
+        );
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(
+                "file",
+                "test.pdf",
+                "application/pdf",
+                "test".getBytes()
+        );
+
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14");
+
+        Offer offerExpected = new Offer(
+                company,
+                offerDto.position(),
+                offerDto.salary(),
+                LocalDate.parse(offerDto.startDate()),
+                LocalDate.parse(offerDto.endDate())
+        );
+
+        offerExpected.setPdfName(mockMultipartFile.getOriginalFilename());
+
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+
+        //Act
+
+        offerService.modifyOffer(1, offerDto, mockMultipartFile);
+
+        //Assert
+
+        assertThat(offer).isEqualTo(offerExpected);
     }
 }
