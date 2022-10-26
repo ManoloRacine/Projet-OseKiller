@@ -9,6 +9,15 @@ export const uploadInternshipOffer = async (data, companyId) => {
     });
 };
 
+export const updateInternshipOffer = async (data, companyId) => {
+    return axios.put(`/companies/${companyId}/offers`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
+
 export const getOffersByCompany = async (companyId) => {
     return axios.get(`/companies/${companyId}/offers`, {
         headers: {
@@ -28,10 +37,14 @@ export const getApplicantsByOffer = async (companyId, offerId) => {
 };
 
 export const sendConvocation = async (data, studentId) => {
-    return axios.post(`/students/${studentId}/interviews?offerId=${data.offerId}`, data.dates, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("accessToken"),
-        },
-    });
-}
+    return axios.post(
+        `/students/${studentId}/interviews?offerId=${data.offerId}`,
+        data.dates,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+            },
+        }
+    );
+};
