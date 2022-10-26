@@ -13,6 +13,20 @@ const StudentDashboard = () => {
         ?.id;
     const [userPdf, setUserPdf] = useState("");
     const [studentInfo, setStudentInfo] = useState({});
+    const [convocations, setConvocation] = useState([
+        {
+            position: "Développeur Java",
+            date1: "2022-10-23",
+            date2: "2022-10-24",
+            date3: "2022-10-25",
+        },
+        {
+            position: "Développeur Python",
+            date1: "2022-11-04",
+            date2: "2022-11-07",
+            date3: "2022-11-15",
+        },
+    ]);
 
     useEffect(() => {
         getStudent(studentId).then((response) => {
@@ -30,79 +44,9 @@ const StudentDashboard = () => {
     }, [studentId]);
 
     return (
-        <div className={"mt-3 col-6"}>
-            <h1>Mon CV</h1>
-            {userPdf !== "" ? (
-                <LoadPdf
-                    src={userPdf}
-                    width={"100%"}
-                    title={"studentCv"}
-                    type={"application/json"}
-                    height={"600px"}
-                />
-            ) : (
-                <p>Vous n'avez pas téléversé de CV</p>
-            )}
-            <div
-                className={"text-white rounded p-2"}
-                style={{ backgroundColor: "#2C324C" }}
-            >
-                <div className={"d-flex align-items-center"}>
-                    <p className={"fs-2 me-3"}>État :</p>
-                    {studentInfo["cvValidated"] && (
-                        <div className={"d-flex flex-column"}>
-                            <FontAwesomeIcon
-                                icon={faCircleCheck}
-                                className="fa-2x text-success"
-                            />
-                            <p>Valide</p>
-                        </div>
-                    )}
-                    {studentInfo["cvRejected"] && (
-                        <div className={"d-flex flex-column"}>
-                            <FontAwesomeIcon
-                                icon={faCircleXmark}
-                                className="fa-2x text-danger"
-                            />
-                            <p>Invalide</p>
-                        </div>
-                    )}
-                </div>
-
-                {studentInfo["cvPresent"] &&
-                (studentInfo["cvRejected"] || studentInfo["cvValidated"]) ? (
-                    <div>
-                        <h4>Feedback :</h4>
-                        <p>{studentInfo["feedback"]}</p>
-                    </div>
-                ) : studentInfo["cvPresent"] ? (
-                    <h4 className="text-warning">
-                        CV en attente de validation
-                    </h4>
-                ) : null}
-            </div>
-        </div>
-        /*<div className="row">
-            <div className="col-6">
-                {studentInfo["cvValidated"] && (
-                    <h3 className="text-success">CV est valide</h3>
-                )}
-                {studentInfo["cvRejected"] && (
-                    <h3 className="text-danger">CV n'est pas valide</h3>
-                )}
-                {studentInfo["cvPresent"] &&
-                (studentInfo["cvRejected"] || studentInfo["cvValidated"]) ? (
-                    <div>
-                        <h4>Feedback :</h4>
-                        <p>{studentInfo["feedback"]}</p>
-                    </div>
-                ) : studentInfo["cvPresent"] ? (
-                    <h4 className="text-warning">
-                        CV en attente de validation
-                    </h4>
-                ) : null}
-            </div>
-            <div className="col-6">
+        <div className={"mt-3 row"}>
+            <div className={"col-6"}>
+                <h2>Mon CV</h2>
                 {userPdf !== "" ? (
                     <LoadPdf
                         src={userPdf}
@@ -114,8 +58,119 @@ const StudentDashboard = () => {
                 ) : (
                     <p>Vous n'avez pas téléversé de CV</p>
                 )}
+                <div
+                    className={"text-white rounded p-2"}
+                    style={{ backgroundColor: "#2C324C" }}
+                >
+                    <div className={"d-flex align-items-center"}>
+                        <p className={"fs-2 me-3"}>État :</p>
+                        {studentInfo["cvValidated"] && (
+                            <div className={"d-flex flex-column"}>
+                                <FontAwesomeIcon
+                                    icon={faCircleCheck}
+                                    className="fa-2x text-success"
+                                />
+                                <p>Valide</p>
+                            </div>
+                        )}
+                        {studentInfo["cvRejected"] && (
+                            <div className={"d-flex flex-column"}>
+                                <FontAwesomeIcon
+                                    icon={faCircleXmark}
+                                    className="fa-2x text-danger"
+                                />
+                                <p>Invalide</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {studentInfo["cvPresent"] &&
+                    (studentInfo["cvRejected"] ||
+                        studentInfo["cvValidated"]) ? (
+                        <div>
+                            <h4>Feedback :</h4>
+                            <p>{studentInfo["feedback"]}</p>
+                        </div>
+                    ) : studentInfo["cvPresent"] ? (
+                        <h4 className="text-warning">
+                            CV en attente de validation
+                        </h4>
+                    ) : null}
+                </div>
             </div>
-        </div>*/
+            <div className={"col-6"}>
+                <h2>Mes convocations</h2>
+
+                {convocations.map((convocation) => (
+                    <div
+                        className={
+                            "text-white d-flex justify-content-around rounded m-2"
+                        }
+                        style={{ backgroundColor: "#2C324C" }}
+                    >
+                        <div>
+                            <p className={"fs-4 m-0 text-decoration-underline"}>
+                                Poste
+                            </p>
+                            <p>{convocation.position}</p>
+                        </div>
+                        <div>
+                            <p className={"fs-4 m-0 text-decoration-underline"}>
+                                Dates possible
+                            </p>
+
+                            <div className="mb-3 form-check">
+                                <input
+                                    type="radio"
+                                    className="form-check-input"
+                                    id="date1"
+                                    name={"dates"}
+                                />
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="exampleCheck1"
+                                >
+                                    {convocation.date1}
+                                </label>
+                            </div>
+                            <div className="mb-3 form-check">
+                                <input
+                                    type="radio"
+                                    className="form-check-input"
+                                    id="date2"
+                                    name={"dates"}
+                                />
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="exampleCheck1"
+                                >
+                                    {convocation.date2}
+                                </label>
+                            </div>
+                            <div className="mb-3 form-check">
+                                <input
+                                    type="radio"
+                                    className="form-check-input"
+                                    id="date3"
+                                    name={"dates"}
+                                />
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="exampleCheck1"
+                                >
+                                    {convocation.date3}
+                                </label>
+                            </div>
+                        </div>
+                        <div className={"d-flex align-items-end"}>
+                            <button className={"btn btn-primary mb-3"}>
+                                Choisir
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 };
 
