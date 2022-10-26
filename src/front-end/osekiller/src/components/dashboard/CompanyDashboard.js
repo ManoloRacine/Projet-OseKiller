@@ -23,7 +23,7 @@ const CompanyDashboard = () => {
             .catch((err) => {
                 console.log(err);
             });
-    });
+    }, []);
 
     return (
         <div className={"mt-3 col-4"} style={{ border: "3px solid #2C324C" }}>
