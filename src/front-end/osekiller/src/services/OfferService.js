@@ -1,9 +1,10 @@
 import axios from "../api/axios";
 
-export const getOffers = async (isAccepted) => {
+export const getOffers = async (isAccepted, session) => {
     return axios.get("/offers", {
         params: {
             accepted: isAccepted,
+            session: session
         },
         headers: {
             "Content-Type": "application/json",
