@@ -1,6 +1,9 @@
 import Upload from "../../components/Upload";
 import { useState } from "react";
-import { uploadInternshipOffer } from "../../services/CompanyService";
+import {
+    updateInternshipOffer,
+    uploadInternshipOffer,
+} from "../../services/CompanyService";
 import UploadInternshipForm from "../../components/forms/UploadInternshipForm";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useLocation } from "react-router-dom";
@@ -53,10 +56,15 @@ const UploadInternship = () => {
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("offerDto", JSON.stringify(dto));
-        uploadInternshipOffer(formData, userId)
-            .then(() => setIsOfferSubmitted(true))
+        state.position
+            ? updateInternshipOffer(formData, userId)
+                  .then(() => setIsOfferSubmitted(true))
 
-            .catch((err) => console.log("Error:", err));
+                  .catch((err) => console.log("Error:", err))
+            : uploadInternshipOffer(formData, userId)
+                  .then(() => setIsOfferSubmitted(true))
+
+                  .catch((err) => console.log("Error:", err));
     };
     return (
         <div>

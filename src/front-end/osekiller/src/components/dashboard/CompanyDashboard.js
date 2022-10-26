@@ -1,5 +1,4 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCircleCheck,
@@ -7,8 +6,25 @@ import {
     faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { AuthenticatedUserContext } from "../../App";
+import { getOffersByCompany } from "../../services/CompanyService";
 
-const CompanyDashboard = ({ offers }) => {
+const CompanyDashboard = () => {
+    const companyId = useContext(AuthenticatedUserContext)?.authenticatedUser
+        ?.id;
+    const [offers, setOffers] = useState([]);
+
+    useEffect(() => {
+        getOffersByCompany(companyId)
+            .then((response) => {
+                console.log(response);
+                setOffers(response.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
+
     return (
         <div className={"mt-3 col-4"} style={{ border: "3px solid #2C324C" }}>
             <h1>Mes offres de stages</h1>
@@ -64,7 +80,7 @@ const CompanyDashboard = ({ offers }) => {
                                 position: offer.position,
                                 salary: offer.salary,
                                 startDate: offer.startDate,
-                                endDate: offer.endDate
+                                endDate: offer.endDate,
                             }}
                         >
                             Modifier
@@ -74,10 +90,6 @@ const CompanyDashboard = ({ offers }) => {
             ))}
         </div>
     );
-};
-
-CompanyDashboard.propTypes = {
-    offers: PropTypes.array.isRequired,
 };
 
 export default CompanyDashboard;
