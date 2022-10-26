@@ -19,3 +19,11 @@ action points sprint 1 :
 - pratique de démo
 - faire un wireframe pour les story des front-ends en même temps que l'API
 - tout le monde doit review les API
+
+
+CREDENTIALS :
+courriel : testcompany@osk.com, mot de passe : 123
+courriel : testmanager@osk.com, mot de passe : 123
+courriel : teststudent1@osk.com, mot de passe : 123
+courriel : teststudent2@osk.com, mot de passe : 123
+courriel : teststudent3@osk.com, mot de passe : 123
