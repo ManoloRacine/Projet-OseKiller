@@ -1,28 +1,45 @@
-import PropTypes from "prop-types";
 import LoadPdf from "../LoadPdf";
+import { useContext, useEffect, useState } from "react";
+import { getCv, getStudent } from "../../services/StudentService";
+import { AuthenticatedUserContext } from "../../App";
 
-const StudentDashboard = ({
-    isCvValidated,
-    isCvRejected,
-    isCvPresent,
-    feedback,
-    userPdf,
-}) => {
+const StudentDashboard = () => {
+    const studentId = useContext(AuthenticatedUserContext)?.authenticatedUser
+        ?.id;
+    const [userPdf, setUserPdf] = useState("");
+    const [studentInfo, setStudentInfo] = useState({});
+
+    useEffect(() => {
+        getStudent(studentId).then((response) => {
+            setStudentInfo(response.data);
+        });
+        getCv(studentId).then((response) => {
+            if (response.status !== 204) {
+                const blob1 = new Blob([response.data], {
+                    type: "application/pdf",
+                });
+                const data_url = window.URL.createObjectURL(blob1);
+                setUserPdf(data_url);
+            }
+        });
+    }, [studentId]);
+
     return (
         <div className="row">
             <div className="col-6">
-                {isCvValidated && (
+                {studentInfo["cvValidated"] && (
                     <h3 className="text-success">CV est valide</h3>
                 )}
-                {isCvRejected && (
+                {studentInfo["cvRejected"] && (
                     <h3 className="text-danger">CV n'est pas valide</h3>
                 )}
-                {isCvPresent && (isCvRejected || isCvValidated) ? (
+                {studentInfo["cvPresent"] &&
+                (studentInfo["cvRejected"] || studentInfo["cvValidated"]) ? (
                     <div>
                         <h4>Feedback :</h4>
-                        <p>{feedback}</p>
+                        <p>{studentInfo["feedback"]}</p>
                     </div>
-                ) : isCvPresent ? (
+                ) : studentInfo["cvPresent"] ? (
                     <h4 className="text-warning">
                         CV en attente de validation
                     </h4>
@@ -43,14 +60,6 @@ const StudentDashboard = ({
             </div>
         </div>
     );
-};
-
-StudentDashboard.propTypes = {
-    isCvValidated: PropTypes.bool.isRequired,
-    isCvRejected: PropTypes.bool.isRequired,
-    isCvPresent: PropTypes.bool.isRequired,
-    feedback: PropTypes.string.isRequired,
-    userPdf: PropTypes.string.isRequired,
 };
 
 export default StudentDashboard;
