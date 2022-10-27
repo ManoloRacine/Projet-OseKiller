@@ -1,6 +1,7 @@
 import StudentCv from "./StudentCv";
 import StudentConvocation from "./StudentConvocation";
 import { useState } from "react";
+import { confirmInterviewDate } from "../../../services/InterviewService";
 
 const StudentDashboard = () => {
     const [convocations, setConvocation] = useState([
@@ -21,9 +22,14 @@ const StudentDashboard = () => {
     ]);
 
     const handleConfirmInterviewDate = (interviewId, confirmDate) => {
-        console.log(
-            `Confirm date ${confirmDate} for interview #${interviewId}`
-        );
+        confirmInterviewDate(interviewId, confirmDate)
+            .then((response) => {
+                console.log(response);
+                setConvocation(response.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     return (
