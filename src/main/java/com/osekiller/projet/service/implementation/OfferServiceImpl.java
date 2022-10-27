@@ -74,7 +74,25 @@ public class OfferServiceImpl implements OfferService {
     public void modifyOffer(long offerId, OfferDto offerDto, MultipartFile file) {
         Offer offer = offerRepository.findById(offerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if(file != null && !file.isEmpty()){
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            offer.setPdfName(fileName);
+            try {
+                offer.setPdf(file.getBytes());
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        offer.setPosition(offerDto.position());
+        offer.setSalary(offerDto.salary());
+        offer.setStartDate(LocalDate.parse(offerDto.startDate()));
+        offer.setEndDate(LocalDate.parse(offerDto.endDate()));
+
+        offerRepository.save(offer);
     }
+
 
     @Override
     public List<GeneralOfferDto> getAllValidOffers() {
@@ -105,6 +123,6 @@ public class OfferServiceImpl implements OfferService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        offerRepository.save(offer) ;
+        offerRepository.save(offer);
     }
 }

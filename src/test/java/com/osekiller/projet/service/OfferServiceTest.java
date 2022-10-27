@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.util.StringUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -316,7 +317,7 @@ public class OfferServiceTest {
     }
 
     @Test
-    void modifyOfferHappyDay(){
+    void modifyOfferHappyDay() throws IOException {
         //Arrange
 
         Offer offer = new Offer(
@@ -344,7 +345,8 @@ public class OfferServiceTest {
                 LocalDate.parse(offerDto.endDate())
         );
 
-        offerExpected.setPdfName(mockMultipartFile.getOriginalFilename());
+        offerExpected.setPdf(mockMultipartFile.getBytes());
+        offerExpected.setPdfName(StringUtils.cleanPath(mockMultipartFile.getOriginalFilename()));
 
         when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
 
@@ -355,5 +357,6 @@ public class OfferServiceTest {
         //Assert
 
         assertThat(offer).isEqualTo(offerExpected);
+        verify(offerRepository).save(offer);
     }
 }
