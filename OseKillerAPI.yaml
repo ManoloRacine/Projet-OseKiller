@@ -334,6 +334,56 @@ paths:
           description: étudiant non trouvé
       security:
         - bearerAuth: []
+  /students/{id}/convocations:
+    get:
+      tags:
+        - Student
+      parameters:
+        - in: path
+          name: id
+          description: studentId
+          schema:
+            type: integer
+          required: true
+      summary: Obtenir les convocations d'un étudiant
+      description: Obtenir les convocations d'un étudiant
+      operationId: getConvocations
+      responses:
+        '200':
+          description: Les convocations ont été envoyées
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    position:
+                      type: string
+                      example: Junior Web Developer
+                    date1:
+                      type: string
+                      format: date
+                      example: 2022-11-04
+                    date2:
+                      type: string
+                      format: date
+                      example: 2022-11-07
+                    date3:
+                      type: string
+                      format: date
+                      example: 2022-11-15
+
+
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Étudiant non trouvé
+      security:
+        - bearerAuth: [ ]
   
   
   /companies/{id}/offers:
@@ -582,54 +632,6 @@ paths:
           description: Offre non trouvé
       security:
         - bearerAuth: []
-  /interview/{id}/info:
-    get:
-      tags:
-        - Interviews
-      summary: Demande d'informations sur une entrevue
-      description: Demande d'informations sur une entrevue
-      operationId: infoInterview
-      parameters:
-        - in: query
-          name: id
-          description: interviewId
-          schema:
-            type: integer
-          required: true
-      responses:
-        '200':
-          description: Les informations ont été envoyés
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: number
-                      example: 1
-                    position:
-                      type: string
-                      example: Junior Web Developer
-                    date1:
-                      type: string
-                      format: date
-                      example: 2022-11-04
-                    date2:
-                      type: string
-                      format: date
-                      example: 2022-11-07
-                    date3:
-                      type: string
-                      format: date
-                      example: 2022-11-15
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: Interview non trouvé
-      security:
-        - bearerAuth: [ ]
   /interview/{id}/confirm:
     post:
       tags:
