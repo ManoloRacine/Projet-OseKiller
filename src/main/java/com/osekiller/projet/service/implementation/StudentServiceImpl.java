@@ -2,6 +2,7 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
+import com.osekiller.projet.service.CurrentDateFactory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +28,11 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     private CvRepository cvRepository;
+
+    private CurrentDateFactory currentDateFactory;
+
+    private final int LAST_MONTH = 5 ;
+    private final int LAST_DAY = 31 ;
 
     @Override
     public void validateCV(long studentId, String feedback) {
@@ -97,6 +104,23 @@ public class StudentServiceImpl implements StudentService {
     public StudentWithCvStateDto getStudent(long id) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return StudentWithCvStateDto.from(student);
+    }
+
+    public StudentWithCvStateDto updateSession(long id) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        student.setSessionYear(getCurrentSession());
+        studentRepository.save(student) ;
+        return StudentWithCvStateDto.from(student) ;
+    }
+
+    public int getCurrentSession() {
+        LocalDate currentDate = currentDateFactory.getCurrentDate() ;
+        if (currentDate.isBefore(LocalDate.of(currentDate.getYear(), LAST_MONTH, LAST_DAY))) {
+            return currentDate.getYear();
+        }
+        else {
+            return currentDate.getYear() + 1;
+        }
     }
 
 }

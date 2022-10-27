@@ -25,6 +25,8 @@ public class Student extends User {
 
     private boolean cvRejected ;
 
+    private int sessionYear ;
+
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Offer> applications = new ArrayList<>();
 
