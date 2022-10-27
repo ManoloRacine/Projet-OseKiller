@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AuthenticatedUserContext } from "../App";
-import StudentDashboard from "../components/dashboard/StudentDashboard";
-import CompanyDashboard from "../components/dashboard/CompanyDashboard";
+import StudentDashboard from "../components/dashboard/student/StudentDashboard";
+import CompanyDashboard from "../components/dashboard/company/CompanyDashboard";
 
 const Dashboard = () => {
     const { authenticatedUser } = useContext(AuthenticatedUserContext);

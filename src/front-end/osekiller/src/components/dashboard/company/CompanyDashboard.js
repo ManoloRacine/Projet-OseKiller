@@ -6,8 +6,8 @@ import {
     faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { AuthenticatedUserContext } from "../../App";
-import { getOffersByCompany } from "../../services/CompanyService";
+import { AuthenticatedUserContext } from "../../../App";
+import { getOffersByCompany } from "../../../services/CompanyService";
 
 const CompanyDashboard = () => {
     const companyId = useContext(AuthenticatedUserContext)?.authenticatedUser
