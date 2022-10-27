@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCloudArrowUp} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import SelectedCV from "./SelectedCV";
-import {useLocation} from "react-router-dom";
 import ErrorMessage from "./ErrorMessage";
+import { useContext } from "react";
+import { AuthenticatedUserContext } from "../App";
 
 const Upload = ({
     title,
@@ -15,9 +16,7 @@ const Upload = ({
     isSubmitted,
     successMessage,
 }) => {
-    const location = useLocation();
-    const { state } = location;
-    const userId = state?.userId;
+    const userId = useContext(AuthenticatedUserContext)?.authenticatedUser?.id;
 
     return (
         <main className="d-flex justify-content-center align-items-center p-3 vh-100">

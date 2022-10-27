@@ -15,6 +15,7 @@ import com.osekiller.projet.repository.RefreshTokenRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
 import com.osekiller.projet.service.AuthService;
+import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -38,7 +40,12 @@ public class AuthServiceImpl implements AuthService {
         private ManagerRepository managerRepository;
         private UserRepository userRepository;
 
+        private StudentService studentService;
+
         private RoleRepository roleRepository;
+
+        private final int LAST_MONTH = 5 ;
+        private final int LAST_DAY = 31 ;
 
         @Override
         public JwtResponseDto signIn(SignInDto dto) {
@@ -72,6 +79,7 @@ public class AuthServiceImpl implements AuthService {
                         Role studentRole = roleRepository.findByName(ERole.STUDENT.name())
                                         .orElseThrow(EntityNotFoundException::new);
                         student.setRole(studentRole);
+                        student.setSessionYear(studentService.getCurrentSession());
                         studentRepository.save(student);
                         return;
                 }
