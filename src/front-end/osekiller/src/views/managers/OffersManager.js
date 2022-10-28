@@ -32,9 +32,13 @@ const OffersManager = () => {
         setSessionFilter(e.target.text);
     };
 
+    const resetSession = () => {
+        setSessionFilter("");
+    };
+
     return (
         <div>
-            <div className="dropdown">
+            <div className="dropdown mt-3">
                 <button
                     aria-expanded="false"
                     data-bs-toggle="dropdown"
@@ -43,15 +47,20 @@ const OffersManager = () => {
                     type="button"
                 >
                     {sessionFilter === ""
-                        ? "Filtrer par session"
+                        ? "Toutes les sessions"
                         : sessionFilter}
                 </button>
                 <ul
                     className="dropdown-menu dropdown-menu-dark"
                     aria-labelledby="session-dropdown"
                 >
+                    <li>
+                        <a className="dropdown-item" onClick={resetSession}>
+                            Toutes les sessions
+                        </a>
+                    </li>
                     {sessions.map((session, index) => (
-                        <li>
+                        <li key={index}>
                             <a
                                 onClick={handleChangeSession}
                                 className={
@@ -67,13 +76,22 @@ const OffersManager = () => {
                     ))}
                 </ul>
             </div>
-            {offers.map((offer, index) => (
-                <OfferCard
-                    key={index}
-                    offer={offer}
-                    redirectTo={"/validate-offer"}
-                />
-            ))}
+            {offers
+                .filter((session) =>
+                    sessionFilter === ""
+                        ? true
+                        : sessionFilter.toString() ===
+                          getSessionFromDate(
+                              new Date(session.startDate)
+                          ).toString()
+                )
+                .map((offer, index) => (
+                    <OfferCard
+                        key={index}
+                        offer={offer}
+                        redirectTo={"/validate-offer"}
+                    />
+                ))}
         </div>
     );
 };
