@@ -56,7 +56,7 @@ public class CompanyControllerTest {
     void getOfferHappyDay() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
+        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream()),true,"WOW") ;
         doReturn(offerDtoResponse).when(offerService).getOffer(1L);
         when(companyService.companyExists(anyLong())).thenReturn(true);
         when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
@@ -83,7 +83,7 @@ public class CompanyControllerTest {
     void getOfferPdfHappyDay() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream())) ;
+        OfferDtoResponse offerDtoResponse = new OfferDtoResponse(1L, "test", 1, "2002-12-12", "2002-12-14", new InputStreamResource(mockMultipartFile.getInputStream()),true,"WOW") ;
         doReturn(offerDtoResponse).when(offerService).getOffer(1L) ;
         doReturn(true).when(companyService).companyExists(anyLong()) ;
         doReturn(true).when(companyService).companyOwnsOffer(anyLong(), anyLong()) ;

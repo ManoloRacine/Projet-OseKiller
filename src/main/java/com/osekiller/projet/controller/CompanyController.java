@@ -101,7 +101,7 @@ public class CompanyController {
         OfferDtoResponse offerDtoResponse = offerService.getOffer(offerId) ;
         OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(),
                 offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(),
-                offerDtoResponse.endDate()) ;
+                offerDtoResponse.endDate(),offerDtoResponse.accepted(),offerDtoResponse.feedback()) ;
 
         return ResponseEntity.ok().body(offerDtoResponseNoPdf) ;
     }

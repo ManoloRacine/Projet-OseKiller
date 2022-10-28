@@ -50,7 +50,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         for (Offer offer: offerList) {
             offerDtoResponseList.add(new OfferDtoResponseNoPdf(offer.getId(), offer.getPosition(), offer.getSalary(),
-                    offer.getStartDate().toString(), offer.getEndDate().toString())) ;
+                    offer.getStartDate().toString(), offer.getEndDate().toString(), offer.isAccepted(), offer.getFeedback())) ;
         }
 
         return offerDtoResponseList ;
@@ -60,8 +60,7 @@ public class CompanyServiceImpl implements CompanyService {
     public void validateOffer(Long offerId, String feedback) {
         Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         offer.setAccepted(true);
-        if(!(feedback == null || feedback.isEmpty() || feedback.isBlank()))
-            offer.setFeedback(feedback);
+        offer.setFeedback(feedback);
 
         offerRepository.save(offer);
     }

@@ -34,16 +34,12 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public OfferDtoResponse getOffer(long offerId) {
 
-        Optional<Offer> offer = offerRepository.findById(offerId) ;
+        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (offer.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        Resource resource = new ByteArrayResource(offer.getPdf()) ;
 
-        Offer offer1 = offer.get() ;
-
-        Resource resource = new ByteArrayResource(offer1.getPdf()) ;
-
-        return new OfferDtoResponse(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(),
-                offer1.getEndDate().toString(), resource) ;
+        return new OfferDtoResponse(offer.getId(), offer.getPosition(), offer.getSalary(), offer.getStartDate().toString(),
+                offer.getEndDate().toString(), resource, offer.isAccepted(), offer.getFeedback()) ;
 
     }
     @Override
