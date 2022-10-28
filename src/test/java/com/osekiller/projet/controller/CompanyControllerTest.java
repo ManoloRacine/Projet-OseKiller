@@ -286,6 +286,41 @@ public class CompanyControllerTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isNotFound()) ;
     }
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void putOfferOfferNotFound() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(false);
+
+        //Act & Assert
+        mockMvc.perform(multipart(HttpMethod.PUT, "/companies/1/offers/2")
+                        .file(mockMultipartFile)
+                        .param("offerDto", asJsonString(offerDto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isNotFound()) ;
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void putOfferHappyDay() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
+
+        //Act & Assert
+        mockMvc.perform(multipart(HttpMethod.PUT, "/companies/1/offers/2")
+                        .file(mockMultipartFile)
+                        .param("offerDto", asJsonString(offerDto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk());
+
+        verify(offerService).modifyOffer(anyLong(),any(OfferDto.class),any(MultipartFile.class));
+    }
 
 
     static String asJsonString(final Object obj) {
