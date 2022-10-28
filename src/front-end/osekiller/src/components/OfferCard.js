@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import { getSessionFromDate } from "../services/StudentService";
 
 export const OfferCard = ({ offer, redirectTo }) => {
     return (
@@ -35,6 +36,10 @@ export const OfferCard = ({ offer, redirectTo }) => {
             <div>
                 <p className={"fs-4 text-decoration-underline"}>Date de fin</p>
                 <p>{offer.endDate}</p>
+            </div>
+            <div>
+                <p className={"fs-4 text-decoration-underline"}>Session</p>
+                <p>{getSessionFromDate(new Date(offer.startDate))}</p>
             </div>
 
             <Link
