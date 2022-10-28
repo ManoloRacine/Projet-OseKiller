@@ -72,6 +72,24 @@ public class CompanyController {
         return ResponseEntity.ok(offerService.getApplicants(offerId));
     }
 
+    @PutMapping("/{companyId}/offers/{offerId}")
+    public ResponseEntity<Void> updateOffer (@PathVariable(name = "companyId") Long companyId,
+                                             @PathVariable(name = "offerId") Long offerId,
+                                             @RequestParam(name = "offerDto") String offerDtoString,
+                                             @RequestParam(name = "file") MultipartFile file) throws JsonProcessingException {
+
+        if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        OfferDto offerDto = mapper.readValue(offerDtoString, OfferDto.class) ;
+
+        offerService.modifyOffer(offerId,offerDto,file);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{companyId}/offers/{offerId}")
     public ResponseEntity<OfferDtoResponseNoPdf> getOffer(@PathVariable(name = "companyId") Long companyId,
                                                                    @PathVariable(name = "offerId") Long offerId) {
