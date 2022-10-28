@@ -89,7 +89,7 @@ public class OfferServiceTest {
         offer.setPdf(mockMultipartFile.getBytes());
         when(offerRepository.findById(1L)).thenReturn(Optional.of(offer)) ;
 
-        assertEquals(offerService.getOffer(1L), new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new ByteArrayResource(mockMultipartFile.getBytes()),true,"WOW"));
+        assertEquals(offerService.getOffer(1L), new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new ByteArrayResource(mockMultipartFile.getBytes()),false,null));
     }
 
     @Test
