@@ -77,6 +77,7 @@ const CompanyDashboard = () => {
                             to={"/upload-internship"}
                             className={"btn btn-primary"}
                             state={{
+                                offerId: offer.offerId,
                                 position: offer.position,
                                 salary: offer.salary,
                                 startDate: offer.startDate,

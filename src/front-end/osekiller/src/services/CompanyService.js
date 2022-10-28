@@ -9,8 +9,8 @@ export const uploadInternshipOffer = async (data, companyId) => {
     });
 };
 
-export const updateInternshipOffer = async (data, companyId) => {
-    return axios.put(`/companies/${companyId}/offers`, data, {
+export const updateInternshipOffer = async (data, companyId, offerId) => {
+    return axios.put(`/companies/${companyId}/offers/${offerId}`, data, {
         headers: {
             "Content-Type": "multipart/form-data",
             Authorization: localStorage.getItem("accessToken"),
