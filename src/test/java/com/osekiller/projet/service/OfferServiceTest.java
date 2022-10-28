@@ -317,6 +317,29 @@ public class OfferServiceTest {
     }
 
     @Test
+    void modifyOfferOfferApproved() {
+        //Arrange
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14");
+        Offer offer = new Offer(
+                company,
+                "dev",
+                23.50,
+                LocalDate.of(2022,11,23),
+                LocalDate.of(2023,1,23)
+        );
+        offer.setAccepted(true);
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.modifyOffer(1, offerDto, mockMultipartFile))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
     void modifyOfferHappyDay() throws IOException {
         //Arrange
 

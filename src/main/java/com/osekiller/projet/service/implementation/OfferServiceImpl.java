@@ -75,6 +75,9 @@ public class OfferServiceImpl implements OfferService {
         Offer offer = offerRepository.findById(offerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+        if(offer.isAccepted())
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+
         if(file != null && !file.isEmpty()){
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             offer.setPdfName(fileName);
