@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -268,6 +269,22 @@ public class CompanyControllerTest {
         String actual = result.getResponse().getContentAsString();
 
         assertThat(actual).isNotBlank().isEqualTo(expected);
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void putOfferCompanyNotFound() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
+        when(companyService.companyExists(anyLong())).thenReturn(false);
+
+        //Act & Assert
+        mockMvc.perform(multipart(HttpMethod.PUT, "/companies/1/offers/2")
+                        .file(mockMultipartFile)
+                        .param("offerDto", asJsonString(offerDto))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isNotFound()) ;
     }
 
 
