@@ -21,12 +21,23 @@ public class OfferController {
     AuthService authService;
 
     @GetMapping
-    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam String accepted) {
+    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam String accepted,
+                                                                   @RequestParam(required = false) Integer session) {
 
         if (accepted.equals("true")) {
-            return ResponseEntity.ok().body(offerService.getAllValidOffers()) ;
+            if (session == null) {
+                return ResponseEntity.ok().body(offerService.getAllValidOffers()) ;
+            }
+            else {
+                return ResponseEntity.ok().body(offerService.getAllValidOffersBySession(session)) ;
+            }
         } else if (accepted.equals("false")) {
-            return ResponseEntity.ok().body(offerService.getAllInvalidOffers()) ;
+            if (session == null) {
+                return ResponseEntity.ok().body(offerService.getAllInvalidOffers()) ;
+            }
+            else {
+                return ResponseEntity.ok().body(offerService.getAllInvalidOffersBySession(session)) ;
+            }
         }
 
         return ResponseEntity.badRequest().build() ;

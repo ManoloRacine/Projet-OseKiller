@@ -130,4 +130,82 @@ public class OfferControllerTest {
         mockMvc.perform(post("/offers/1/apply").header(HttpHeaders.AUTHORIZATION,"student-jwt"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser
+    void getAllValidOffersBySessionHappyDay() throws Exception {
+        //Arrange
+        GeneralOfferDto generalOfferDto1 = new GeneralOfferDto(1L, 1L, "google", "dev",
+                20.50, "2022-10-22", "2022-10-23") ;
+        GeneralOfferDto generalOfferDto2 = new GeneralOfferDto(2L, 2L, "google", "dev",
+                20.50, "2022-10-22", "2022-10-23") ;
+        GeneralOfferDto generalOfferDto3 = new GeneralOfferDto(3L, 3L, "google", "dev",
+                20.50, "2022-10-22", "2022-10-23") ;
+        List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
+        generalOfferDtos.add(generalOfferDto1);
+        generalOfferDtos.add(generalOfferDto2);
+        generalOfferDtos.add(generalOfferDto3);
+        when(offerService.getAllValidOffersBySession(2023)).thenReturn(generalOfferDtos) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/offers?accepted=true&session=2023"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].offerId", is(1)))
+                .andExpect(jsonPath("$[1].offerId", is(2)))
+                .andExpect(jsonPath("$[2].offerId", is(3))) ;
+    }
+
+    @Test
+    @WithMockUser
+    void getAllValidOffersBySessionEmpty() throws Exception {
+        //Arrange
+        List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
+        when(offerService.getAllValidOffersBySession(2023)).thenReturn(generalOfferDtos) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/offers?accepted=true&session=2023"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("[]")) ;
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void getAllInvalidOffersBySessionHappyDay() throws Exception {
+        //Arrange
+        GeneralOfferDto generalOfferDto1 = new GeneralOfferDto(1L, 1L, "google", "dev",
+                20.50, "2022-10-22", "2022-10-23") ;
+        GeneralOfferDto generalOfferDto2 = new GeneralOfferDto(2L, 2L, "google", "dev",
+                20.50, "2022-10-22", "2022-10-23") ;
+        GeneralOfferDto generalOfferDto3 = new GeneralOfferDto(3L, 3L, "google", "dev",
+                20.50, "2022-10-22", "2022-10-23") ;
+        List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
+        generalOfferDtos.add(generalOfferDto1);
+        generalOfferDtos.add(generalOfferDto2);
+        generalOfferDtos.add(generalOfferDto3);
+        when(offerService.getAllInvalidOffersBySession(2023)).thenReturn(generalOfferDtos) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/offers?accepted=false&session=2023"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].offerId", is(1)))
+                .andExpect(jsonPath("$[1].offerId", is(2)))
+                .andExpect(jsonPath("$[2].offerId", is(3))) ;
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void getAllInvalidOffersBySessionEmpty() throws Exception {
+        //Arrange
+        List<GeneralOfferDto> generalOfferDtos = new ArrayList<>()  ;
+        when(offerService.getAllInvalidOffersBySession(2023)).thenReturn(generalOfferDtos) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/offers?accepted=false&session=2023"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("[]")) ;
+    }
 }
