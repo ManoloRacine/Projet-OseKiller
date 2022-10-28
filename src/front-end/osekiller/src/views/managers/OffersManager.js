@@ -9,6 +9,7 @@ const OffersManager = () => {
     const [offers, setOffers] = useState([]);
     const [sessions, setSessions] = useState([]);
     const [sessionFilter, setSessionFilter] = useState("");
+    const [validatedFilter, setValidatedFilter] = useState(false);
 
     useEffect(() => {
         getOffers(false)
@@ -36,8 +37,30 @@ const OffersManager = () => {
         setSessionFilter("");
     };
 
+    const changeValidationFilter = () => {
+        getOffers(!validatedFilter).then(({ data }) => {
+            setOffers(data);
+            console.log(data);
+            let sessionSet = new Set();
+            data.forEach((offer) => {
+                let startDate = new Date(offer.startDate);
+                sessionSet.add(getSessionFromDate(startDate));
+            });
+            setSessions(Array.from(sessionSet));
+        });
+        setValidatedFilter(!validatedFilter);
+    };
+
     return (
         <div>
+            <button
+                onClick={changeValidationFilter}
+                className="btn btn-primary"
+            >
+                {validatedFilter
+                    ? "Voir offres non-validées"
+                    : "Voir offres validées"}
+            </button>
             <div className="dropdown mt-3">
                 <button
                     aria-expanded="false"
@@ -89,7 +112,11 @@ const OffersManager = () => {
                     <OfferCard
                         key={index}
                         offer={offer}
-                        redirectTo={"/validate-offer"}
+                        redirectTo={
+                            validatedFilter
+                                ? "/offer-details"
+                                : "/validate-offer"
+                        }
                     />
                 ))}
         </div>

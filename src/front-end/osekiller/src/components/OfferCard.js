@@ -40,7 +40,11 @@ export const OfferCard = ({ offer, redirectTo }) => {
             <Link
                 to={redirectTo}
                 className={"btn btn-primary"}
-                state={{ companyId: offer.companyId, offerId: offer.offerId }}
+                state={{
+                    companyId: offer.companyId,
+                    offerId: offer.offerId,
+                    startDate: offer.startDate,
+                }}
             >
                 Détail
             </Link>
