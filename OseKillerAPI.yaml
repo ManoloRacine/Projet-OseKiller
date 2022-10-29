@@ -273,13 +273,13 @@ paths:
   /students/{id}/applications:
     get:
       tags:
-      - Student
+        - Student
       parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       summary: Obtenir les offres de stage auxquelles l'étudiant a appliqué
       description: Obtenir les offres de stage auxquelles l'étudiant a appliqué
       operationId: getApplications
@@ -301,13 +301,13 @@ paths:
   /students/{id}/interviews:
     post:
       tags:
-      - Student
+        - Student
       parameters:
-          - in: path
-            name: id
-            schema:
-              type: integer
-            required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       summary: Convoquer un étudiant à une entrevue
       description: Convoquer un étudiant à une entrevue
       operationId: inviteToInterview
@@ -334,8 +334,8 @@ paths:
           description: étudiant non trouvé
       security:
         - bearerAuth: []
-  
-  
+
+
   /companies/{id}/offers:
     post:
       tags:
@@ -533,7 +533,7 @@ paths:
           description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
-           
+
   /companies/{companyId}/offers/{offerId}/validate:
     post:
       tags:
@@ -617,6 +617,62 @@ paths:
       security:
         - bearerAuth: []
 
+  /contracts/{offerId}/generate:
+    post:
+      tags:
+        - Contracts
+      summary: Générer l'entente de stage
+      description: Générer l'entente de stage
+      operationId: generateContract
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              example:
+                - ecrire du code
+                - tester du code
+                - deployer builds
+
+      parameters:
+        - in: path
+          name : offerId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '201' :
+          description : Le pdf de l'entente de stage a été généré
+        '403':
+          description: Requête non autorisée
+        '409':
+          description: le pdf a déjà été généré
+
+      security:
+        - bearerAuth: []
+  /applications/accepted:
+    get:
+      tags:
+        - Applications
+      summary: Recevoir les applications acceptés par les compagnies
+      description:  Recevoir les applications acceptés par les compagnies
+      operationId: getAcceptedApplications
+      responses:
+        '200':
+          description: Les offres ont étés envoyés
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+
+      security:
+        - bearerAuth: []
+
+
 components:
   securitySchemes:
     bearerAuth:
@@ -651,7 +707,7 @@ components:
       properties:
         name:
           type: string
-          example: Hugo Lantier 
+          example: Hugo Lantier
         email:
           type: string
           format: email
@@ -775,3 +831,23 @@ components:
           example: 2022-12-20
       xml:
         name: offerNoPdf
+    Application:
+      type: object
+      properties:
+        studentName :
+          type: string
+          example : etudiant
+        companyName :
+          type: string
+          example : compagnie
+        companyId :
+          type: integer
+          example : 1
+        offerId :
+          type : integer
+          example : 2
+        position :
+          type : string
+          example : java dev
+      xml :
+        name : Application
