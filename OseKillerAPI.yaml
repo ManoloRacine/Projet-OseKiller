@@ -334,7 +334,6 @@ paths:
           description: étudiant non trouvé
       security:
         - bearerAuth: []
-  /students/{id}/convocations:
     get:
       tags:
         - Student
@@ -364,24 +363,55 @@ paths:
                     position:
                       type: string
                       example: Junior Web Developer
-                    date1:
+                    dates:
                       type: string
-                      format: date
-                      example: 2022-11-04
-                    date2:
-                      type: string
-                      format: date
-                      example: 2022-11-07
-                    date3:
-                      type: string
-                      format: date
-                      example: 2022-11-15
-
+                      example:
+                        - 2022-11-04
+                        - 2022-11-07
+                        - 2022-11-15
 
         '403':
           description: Requête non autorisée
         '404':
           description: Étudiant non trouvé
+      security:
+        - bearerAuth: [ ]
+  /students/{studentId}/interviews/{interviewId}/confirm:
+    post:
+      tags:
+        - Student
+      summary: Confirmation d'une date d'entrevue
+      description: Confirmation d'une date d'entrevue de la part d'un étudiant
+      operationId: confirmInterviewDate
+      parameters:
+        - in: path
+          name: studentId
+          description: studentId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: interviewId
+          description: interviewId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChosenInterviewDate'
+      responses:
+        '202':
+          description: La date de l'interview a été confirmée
+        '400':
+          description: La date de l'interview n'est pas dans les choix proposés
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Interview non trouvé
+        '409':
+          description: La date de l'interview a déjà été confirmée
       security:
         - bearerAuth: [ ]
   
@@ -632,35 +662,6 @@ paths:
           description: Offre non trouvé
       security:
         - bearerAuth: []
-  /interview/{id}/confirm:
-    post:
-      tags:
-        - Interviews
-      summary: Confirmation d'une date d'entrevue
-      description: Confirmation d'une date d'entrevue de la part d'un étudiant
-      operationId: confirmInterviewDate
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChosenInterviewDate'
-      responses:
-        '202':
-          description: La date de l'interview a été confirmée
-        '409':
-          description: La date de l'interview a déjà été confirmée
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: Interview non trouvé
-      security:
-        - bearerAuth: [ ]
 components:
   securitySchemes:
     bearerAuth:
