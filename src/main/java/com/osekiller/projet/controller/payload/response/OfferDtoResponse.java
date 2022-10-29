@@ -1,5 +1,6 @@
 package com.osekiller.projet.controller.payload.response;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
 import javax.validation.constraints.NotBlank;
@@ -11,6 +12,9 @@ public record OfferDtoResponse(
         @NotNull double salary,
         @NotBlank String startDate,
         @NotBlank String endDate,
-        @NotBlank Resource offer
+        @NotBlank Resource offer,
+        @NotNull Boolean accepted,
+        String feedback
         ) {
+
 }
