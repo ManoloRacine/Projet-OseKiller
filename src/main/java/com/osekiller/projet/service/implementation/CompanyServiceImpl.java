@@ -40,25 +40,6 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void addOffer(Long companyId, OfferDto offerDto, MultipartFile file) {
-        Optional<Company> companyOptional = companyRepository.findById(companyId) ;
-
-        if (companyOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
-
-        Offer offer = new Offer(companyOptional.get(), offerDto.position(), offerDto.salary(), LocalDate.parse(offerDto.startDate()), LocalDate.parse(offerDto.endDate())) ;
-
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        offer.setPdfName(fileName);
-
-        try {
-            offer.setPdf(file.getBytes());
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        offerRepository.save(offer) ;
-    }
-    @Override
     public List<OfferDtoResponseNoPdf> getOffersByCompany(Long companyId) {
         Optional<Company> company = companyRepository.findById(companyId) ;
         if (company.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
@@ -69,7 +50,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         for (Offer offer: offerList) {
             offerDtoResponseList.add(new OfferDtoResponseNoPdf(offer.getId(), offer.getPosition(), offer.getSalary(),
-                    offer.getStartDate().toString(), offer.getEndDate().toString())) ;
+                    offer.getStartDate().toString(), offer.getEndDate().toString(), offer.isAccepted(), offer.getFeedback())) ;
         }
 
         return offerDtoResponseList ;
@@ -79,8 +60,7 @@ public class CompanyServiceImpl implements CompanyService {
     public void validateOffer(Long offerId, String feedback) {
         Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         offer.setAccepted(true);
-        if(!(feedback == null || feedback.isEmpty() || feedback.isBlank()))
-            offer.setFeedback(feedback);
+        offer.setFeedback(feedback);
 
         offerRepository.save(offer);
     }
