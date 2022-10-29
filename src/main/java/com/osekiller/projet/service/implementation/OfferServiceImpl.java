@@ -59,6 +59,12 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public void acceptApplicantForOffer(long studentId, long offerId) {
+        Offer offer = offerRepository.findByIdAndFetchApplicants(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Override
     public List<UserInfoDto> getApplicants(long offerId) {
         List<Student> students = offerRepository.findByIdAndFetchApplicants(offerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
