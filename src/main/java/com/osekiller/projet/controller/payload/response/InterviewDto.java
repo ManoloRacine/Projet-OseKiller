@@ -8,6 +8,7 @@ import java.util.List;
 public record InterviewDto(
         @NotNull Long interviewId,
         @NotNull Long offerId,
+        @NotNull String position,
         @NotNull List<String> proposedDates,
         String interviewDate
         ) {
@@ -16,6 +17,7 @@ public record InterviewDto(
             return new InterviewDto(
                     interview.getId(),
                     interview.getOffer().getId(),
+                    interview.getOffer().getPosition(),
                     interview.getProposedInterviewDates().stream().map(date -> date.toString()).toList(),
                     (interview.getChosenInterviewDate() != null ? interview.getChosenInterviewDate().toString() : null)
             );
