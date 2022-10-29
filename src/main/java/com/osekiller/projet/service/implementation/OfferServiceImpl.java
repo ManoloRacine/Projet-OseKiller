@@ -16,10 +16,12 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,6 +33,9 @@ public class OfferServiceImpl implements OfferService {
     private OfferRepository offerRepository ;
     private CompanyRepository companyRepository ;
     private StudentRepository studentRepository;
+
+    private final int LAST_MONTH = 5 ;
+    private final int LAST_DAY = 31 ;
     @Override
     public OfferDtoResponse getOffer(long offerId) {
 
@@ -99,6 +104,14 @@ public class OfferServiceImpl implements OfferService {
         return offerList.stream().map(GeneralOfferDto::from).toList();
     }
 
+    public List<GeneralOfferDto> getAllValidOffersBySession(int session) {
+        List<Offer> offerList = offerRepository.findAllByAcceptedIsTrue() ;
+        return offerList.stream().filter(
+                offer -> offer.getStartDate().isAfter(LocalDate.of(session - 1, LAST_MONTH, LAST_DAY))
+                        && offer.getStartDate().isBefore(LocalDate.of(session, LAST_MONTH, LAST_DAY)))
+                .map(GeneralOfferDto::from).toList();
+    }
+
     @Override
     public List<GeneralOfferDto> getAllInvalidOffers() {
         List<Offer> offerList = offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull();
@@ -123,5 +136,12 @@ public class OfferServiceImpl implements OfferService {
         }
 
         offerRepository.save(offer);
+    }
+
+    public List<GeneralOfferDto> getAllInvalidOffersBySession(int session) {
+        List<Offer> offerList = offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull() ;
+        return offerList.stream().filter(offer -> offer.getStartDate().isAfter(LocalDate.of(session - 1, LAST_MONTH, LAST_DAY))
+                        && offer.getStartDate().isBefore(LocalDate.of(session, LAST_MONTH, LAST_DAY)))
+                .map(GeneralOfferDto::from).toList();
     }
 }

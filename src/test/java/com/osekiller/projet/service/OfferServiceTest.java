@@ -382,4 +382,112 @@ public class OfferServiceTest {
         assertThat(offer).isEqualTo(offerExpected);
         verify(offerRepository).save(offer);
     }
+
+    @Test
+    void getValidOffersBySessionHappyDay() {
+        Company company = mock(Company.class);
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2003, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        offer1.setId(1L);
+        offer2.setId(2L);
+        offer3.setId(3L);
+        when(company.getName()).thenReturn("google");
+        when(company.getId()).thenReturn(1L) ;
+        GeneralOfferDto offerDto1 = new GeneralOfferDto(offer1.getId(), 1L, "google", offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString()) ;
+        GeneralOfferDto offerDto2 = new GeneralOfferDto(offer2.getId(),1L, "google", offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString()) ;
+        GeneralOfferDto offerDto3 = new GeneralOfferDto(offer3.getId(),1L, "google", offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString()) ;
+        List<Offer> mockList = new ArrayList<>() ;
+        mockList.add(offer1) ;
+        mockList.add(offer2) ;
+        mockList.add(offer3) ;
+        List<GeneralOfferDto> mockDtoList = new ArrayList<>() ;
+        mockDtoList.add(offerDto1) ;
+        mockDtoList.add(offerDto2) ;
+        when(offerRepository.findAllByAcceptedIsTrue()).thenReturn(mockList) ;
+
+        List<GeneralOfferDto> list = offerService.getAllValidOffersBySession(2003) ;
+
+        assertNotNull(list);
+        assertSame(2, list.size());
+        assertEquals(list, mockDtoList);
+    }
+
+    @Test
+    void getValidOffersBySessionEmpty() {
+        Company company = mock(Company.class);
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2003, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        offer1.setId(1L);
+        offer2.setId(2L);
+        offer3.setId(3L);
+        GeneralOfferDto offerDto1 = new GeneralOfferDto(offer1.getId(), 1L, "google", offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString()) ;
+        GeneralOfferDto offerDto2 = new GeneralOfferDto(offer2.getId(),1L, "google", offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString()) ;
+        GeneralOfferDto offerDto3 = new GeneralOfferDto(offer3.getId(),1L, "google", offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString()) ;
+        List<Offer> mockList = new ArrayList<>() ;
+        mockList.add(offer1) ;
+        mockList.add(offer2) ;
+        mockList.add(offer3) ;
+        when(offerRepository.findAllByAcceptedIsTrue()).thenReturn(mockList) ;
+
+        List<GeneralOfferDto> list = offerService.getAllValidOffersBySession(1) ;
+
+        assertNotNull(list);
+        assertSame(list.size(), 0);
+    }
+
+    @Test
+    void getInvalidOffersBySessionHappyDay() {
+        Company company = mock(Company.class);
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2003, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        offer1.setId(1L);
+        offer2.setId(2L);
+        offer3.setId(3L);
+        when(company.getName()).thenReturn("google");
+        when(company.getId()).thenReturn(1L) ;
+        GeneralOfferDto offerDto1 = new GeneralOfferDto(offer1.getId(), 1L, "google", offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString()) ;
+        GeneralOfferDto offerDto2 = new GeneralOfferDto(offer2.getId(),1L, "google", offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString()) ;
+        GeneralOfferDto offerDto3 = new GeneralOfferDto(offer3.getId(),1L, "google", offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString()) ;
+        List<Offer> mockList = new ArrayList<>() ;
+        mockList.add(offer1) ;
+        mockList.add(offer2) ;
+        mockList.add(offer3) ;
+        List<GeneralOfferDto> mockDtoList = new ArrayList<>() ;
+        mockDtoList.add(offerDto1) ;
+        mockDtoList.add(offerDto2) ;
+        when(offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull()).thenReturn(mockList) ;
+
+        List<GeneralOfferDto> list = offerService.getAllInvalidOffersBySession(2003) ;
+
+        assertNotNull(list);
+        assertSame(2, list.size());
+        assertEquals(list, mockDtoList);
+    }
+
+    @Test
+    void getInvalidOffersBySessionEmpty() {
+        Company company = mock(Company.class);
+        Offer offer1 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer2 = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        Offer offer3 = new Offer(company, "test", 1., LocalDate.of(2003, 12, 14), LocalDate.of(2002, 12, 16)) ;
+        offer1.setId(1L);
+        offer2.setId(2L);
+        offer3.setId(3L);
+        GeneralOfferDto offerDto1 = new GeneralOfferDto(offer1.getId(), 1L, "google", offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString()) ;
+        GeneralOfferDto offerDto2 = new GeneralOfferDto(offer2.getId(),1L, "google", offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString()) ;
+        GeneralOfferDto offerDto3 = new GeneralOfferDto(offer3.getId(),1L, "google", offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString()) ;
+        List<Offer> mockList = new ArrayList<>() ;
+        mockList.add(offer1) ;
+        mockList.add(offer2) ;
+        mockList.add(offer3) ;
+        when(offerRepository.findAllByAcceptedIsFalseAndFeedbackIsNull()).thenReturn(mockList) ;
+
+        List<GeneralOfferDto> list = offerService.getAllInvalidOffersBySession(1) ;
+
+        assertNotNull(list);
+        assertSame(list.size(), 0);
+    }
 }
