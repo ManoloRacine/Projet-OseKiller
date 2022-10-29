@@ -1,5 +1,6 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
@@ -9,12 +10,14 @@ import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.OfferRepository;
+import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.OfferServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.util.StringUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -45,6 +48,9 @@ public class OfferServiceTest {
 
     @Mock
     StudentRepository studentRepository;
+
+    @Mock
+    CompanyRepository companyRepository;
 
     @InjectMocks
     OfferServiceImpl offerService;
@@ -83,7 +89,7 @@ public class OfferServiceTest {
         offer.setPdf(mockMultipartFile.getBytes());
         when(offerRepository.findById(1L)).thenReturn(Optional.of(offer)) ;
 
-        assertEquals(offerService.getOffer(1L), new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new ByteArrayResource(mockMultipartFile.getBytes())));
+        assertEquals(offerService.getOffer(1L), new OfferDtoResponse(1L, "test", 1, "2002-12-14", "2002-12-16", new ByteArrayResource(mockMultipartFile.getBytes()),false,null));
     }
 
     @Test
@@ -262,6 +268,119 @@ public class OfferServiceTest {
         assertThat(actual)
                 .isNotNull()
                 .isEqualTo(expected);
+    }
+
+    @Test
+    void addOfferHappyDay() {
+
+        //Arrange
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
+        Company company = mock(Company.class) ;
+        when(companyRepository.findById(any())).thenReturn(Optional.of(company)) ;
+
+        offerService.addOffer(1L, offerDto, mockMultipartFile);
+
+        verify(offerRepository).save(any()) ;
+    }
+
+    @Test
+    void addOfferCompanyNonExistent() {
+
+        //Arrange
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
+
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.addOffer(1L, offerDto, mockMultipartFile))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void modifyOfferOfferNonExistant() {
+        //Arrange
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14");
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.modifyOffer(1, offerDto, mockMultipartFile))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void modifyOfferOfferApproved() {
+        //Arrange
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14");
+        Offer offer = new Offer(
+                company,
+                "dev",
+                23.50,
+                LocalDate.of(2022,11,23),
+                LocalDate.of(2023,1,23)
+        );
+        offer.setAccepted(true);
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> offerService.modifyOffer(1, offerDto, mockMultipartFile))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    void modifyOfferHappyDay() throws IOException {
+        //Arrange
+
+        Offer offer = new Offer(
+                company,
+                "dev",
+                23.50,
+                LocalDate.of(2022,11,23),
+                LocalDate.of(2023,1,23)
+        );
+
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(
+                "file",
+                "test.pdf",
+                "application/pdf",
+                "test".getBytes()
+        );
+
+        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14");
+
+        Offer offerExpected = new Offer(
+                company,
+                offerDto.position(),
+                offerDto.salary(),
+                LocalDate.parse(offerDto.startDate()),
+                LocalDate.parse(offerDto.endDate())
+        );
+
+        offerExpected.setPdf(mockMultipartFile.getBytes());
+        offerExpected.setPdfName(StringUtils.cleanPath(mockMultipartFile.getOriginalFilename()));
+
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+
+        //Act
+
+        offerService.modifyOffer(1, offerDto, mockMultipartFile);
+
+        //Assert
+
+        assertThat(offer).isEqualTo(offerExpected);
+        verify(offerRepository).save(offer);
     }
 
     @Test
