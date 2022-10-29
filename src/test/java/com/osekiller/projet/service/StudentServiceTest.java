@@ -1,14 +1,17 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.InterviewDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.model.Cv;
+import com.osekiller.projet.model.Interview;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
+import com.osekiller.projet.repository.InterviewRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.StudentServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -45,6 +48,9 @@ public class StudentServiceTest {
 
     @Mock
     CvRepository cvRepository;
+
+    @Mock
+    InterviewRepository interviewRepository;
 
     @InjectMocks
     private StudentServiceImpl studentService ;
@@ -340,5 +346,112 @@ public class StudentServiceTest {
         //Assert
         verify(student).setSessionYear(2024);
         verify(studentRepository).save(student) ;
+    }
+
+    @Test
+    void getInterviewsStudentNotFound(){
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.getInterviews(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getInterviewsHappyDay(){
+        //Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+        student.setId(1L);
+        Company company = mock(Company.class);
+        Offer offer = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        offer.setId(2L);
+
+        Interview interview1 = new Interview(offer, student, List.of(LocalDate.now().plusDays(4),LocalDate.now().plusDays(7),LocalDate.now().plusDays(15)));
+        interview1.setId(3L);
+        Interview interview2 = new Interview(offer, student, List.of(LocalDate.now().plusDays(4),LocalDate.now().plusDays(7),LocalDate.now().plusDays(15)));
+        interview2.setId(4L);
+        Interview interview3 = new Interview(offer, student, List.of(LocalDate.now().plusDays(4),LocalDate.now().plusDays(7),LocalDate.now().plusDays(15)));
+        interview3.setId(5L);
+
+        List<InterviewDto> expected = List.of(interview1, interview2, interview3).stream().map(InterviewDto::from).toList();
+
+        when(studentRepository.existsById(anyLong())).thenReturn(true);
+        when(interviewRepository.findAllByInterviewee_Id(anyLong())).thenReturn(List.of(interview1, interview2, interview3));
+
+        //Act
+
+        List<InterviewDto> actual = studentService.getInterviews(1L);
+
+        //Assert
+
+        assertThat(actual).isNotNull().isEqualTo(expected);
+    }
+
+    @Test
+    void confirmInterviewHappyDay(){
+        //Arrange
+
+        Student student = mock(Student.class);
+        Offer offer = mock(Offer.class);
+
+        Interview interview = new Interview(
+                offer,
+                student,
+                List.of(
+                        LocalDate.of(2022,10,24),
+                        LocalDate.of(2022,10,26),
+                        LocalDate.of(2022,10,30)
+                )
+        );
+
+        Interview interviewAfter = new Interview(
+                offer,
+                student,
+                List.of(
+                        LocalDate.of(2022,10,24),
+                        LocalDate.of(2022,10,26),
+                        LocalDate.of(2022,10,30)
+                )
+        );
+
+        interviewAfter.setChosenInterviewDate( LocalDate.of(2022,10,24));
+
+        when(interviewRepository.findById(anyLong())).thenReturn(Optional.of(interview));
+
+        //Act
+
+        studentService.confirmInterview(1L,"2022-10-24");
+
+        //Assert
+
+        assertThat(interview).isEqualTo(interviewAfter);
+        verify(interviewRepository).save(interview);
+    }
+
+    @Test
+    void confirmInterviewDateNotProposed(){
+        //Arrange
+
+        Student student = mock(Student.class);
+        Offer offer = mock(Offer.class);
+
+        Interview interview = new Interview(
+                offer,
+                student,
+                List.of(
+                        LocalDate.of(2022,10,25),
+                        LocalDate.of(2022,10,26),
+                        LocalDate.of(2022,10,30)
+                )
+        );
+
+        when(interviewRepository.findById(anyLong())).thenReturn(Optional.of(interview));
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> studentService.confirmInterview(1L,"2022-10-24"))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.CONFLICT);
     }
 }

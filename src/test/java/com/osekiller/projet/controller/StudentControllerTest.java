@@ -1,9 +1,12 @@
 package com.osekiller.projet.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.osekiller.projet.controller.payload.request.InterviewConfirmationDto;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.InterviewDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
+import com.osekiller.projet.model.Interview;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
@@ -129,6 +132,43 @@ public class StudentControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = {"STUDENT"})
+    void getInterviewsHappyDay() throws Exception {
+        //Arrange
+
+        Student student = new Student("Joe", "jbiden@osk.com", "password");
+        student.setId(1L);
+        Company company = mock(Company.class);
+        Offer offer = new Offer(company, "test", 1., LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16));
+        offer.setId(2L);
+
+        Interview interview1 = new Interview(offer, student, List.of(LocalDate.now().plusDays(4),LocalDate.now().plusDays(7),LocalDate.now().plusDays(15)));
+        interview1.setId(3L);
+        Interview interview2 = new Interview(offer, student, List.of(LocalDate.now().plusDays(4),LocalDate.now().plusDays(7),LocalDate.now().plusDays(15)));
+        interview2.setId(4L);
+        Interview interview3 = new Interview(offer, student, List.of(LocalDate.now().plusDays(4),LocalDate.now().plusDays(7),LocalDate.now().plusDays(15)));
+        interview3.setId(5L);
+
+        List<InterviewDto> interviews = List.of(interview1, interview2, interview3).stream().map(InterviewDto::from).toList();
+
+        String expected = asJsonString(interviews);
+
+        when(studentService.getInterviews(anyLong())).thenReturn(interviews);
+
+        //Act & Assert
+
+        MvcResult result = mockMvc.perform(get("/students/1/interviews"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String actual = result.getResponse().getContentAsString();
+
+        assertThat(actual)
+                .isNotBlank()
+                .isEqualTo(expected);
+    }
+
+    @Test
     @WithMockUser(authorities = {"COMPANY"})
     void inviteToInterviewOfferNotFound() throws Exception {
         //Arrange
@@ -207,7 +247,74 @@ public class StudentControllerTest {
                 .andExpect(jsonPath("$.sessionYear", is(2023))) ;
     }
 
+    @Test
+    @WithMockUser(authorities = {"STUDENT"})
+    void confirmInterviewForbiddenToken() throws Exception {
+        //Arrange
 
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,2L,"STUDENT"));
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews/3/confirm")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(new InterviewConfirmationDto("2022-10-28")))
+                .header(HttpHeaders.AUTHORIZATION,"student-token"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"STUDENT"})
+    void confirmInterviewStudentNotFound() throws Exception {
+        //Arrange
+
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,1L,"STUDENT"));
+        when(studentService.studentExists(anyLong())).thenReturn(false);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews/3/confirm")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(new InterviewConfirmationDto("2022-10-28")))
+                        .header(HttpHeaders.AUTHORIZATION,"student-token"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"STUDENT"})
+    void confirmInterviewOfferNotFound() throws Exception {
+        //Arrange
+
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,1L,"STUDENT"));
+        when(studentService.studentExists(anyLong())).thenReturn(true);
+        when(studentService.studentOwnsInterview(anyLong(),anyLong())).thenReturn(false);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews/3/confirm")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(new InterviewConfirmationDto("2022-10-28")))
+                        .header(HttpHeaders.AUTHORIZATION,"student-token"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"STUDENT"})
+    void confirmInterviewHappyDay() throws Exception {
+        //Arrange
+
+        when(authService.getUserFromToken(anyString())).thenReturn(new UserDto("email","name",true,1L,"STUDENT"));
+        when(studentService.studentExists(anyLong())).thenReturn(true);
+        when(studentService.studentOwnsInterview(anyLong(),anyLong())).thenReturn(true);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/students/1/interviews/3/confirm")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(new InterviewConfirmationDto("2022-10-28")))
+                        .header(HttpHeaders.AUTHORIZATION,"student-token"))
+                .andExpect(status().isOk());
+    }
 
     static String asJsonString(final Object obj) {
         try {
