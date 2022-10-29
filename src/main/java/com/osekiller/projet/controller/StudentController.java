@@ -1,7 +1,9 @@
 package com.osekiller.projet.controller;
 
+import com.osekiller.projet.controller.payload.request.InterviewConfirmationDto;
 import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.InterviewDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.service.AuthService;
 import com.osekiller.projet.service.CompanyService;
@@ -59,7 +61,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getApplications(id));
     }
 
-    @RequestMapping("/{id}/interviews")
+    @PostMapping("/{id}/interviews")
     public ResponseEntity<Void> inviteToInterview(@RequestHeader(HttpHeaders.AUTHORIZATION) String header,
                                                   @PathVariable(name = "id") Long studentId,
                                                   @RequestParam Long offerId,
@@ -84,6 +86,11 @@ public class StudentController {
 
     }
 
+    @GetMapping("/{id}/interviews")
+    public ResponseEntity<List<InterviewDto>> getInterviews(@PathVariable(name = "id") Long studentId){
+        return ResponseEntity.ok(studentService.getInterviews(studentId));
+    }
+
     @PostMapping("/{id}/cv/validate")
     public ResponseEntity<Void> validateStudentCv(@Valid @RequestBody ValidationDto dto,
             @PathVariable(name = "id") Long id) {
@@ -92,6 +99,33 @@ public class StudentController {
         } else {
             studentService.invalidateCV(id, dto.feedBack());
         }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/updateSession")
+    public ResponseEntity<StudentWithCvStateDto> updateStudentSession(@PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(studentService.updateSession(id)) ;
+    }
+
+    @PostMapping("/{studentId}/interviews/{interviewId}/confirm")
+    public ResponseEntity<Void> confirmInterviewDate(@Valid @RequestBody InterviewConfirmationDto dto,
+                                                     @PathVariable(name = "studentId") Long studentId,
+                                                     @PathVariable(name = "interviewId") Long interviewId,
+                                                     @RequestHeader(HttpHeaders.AUTHORIZATION) String header){
+
+        String jwt = header.substring(7);
+        Long tokenStudentId = authService.getUserFromToken(jwt).id();
+
+        if(!tokenStudentId.equals(studentId)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        if(!studentService.studentExists(studentId) || !studentService.studentOwnsInterview(studentId,interviewId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        studentService.confirmInterview(interviewId, dto.chosenDate());
+
         return ResponseEntity.ok().build();
     }
 }

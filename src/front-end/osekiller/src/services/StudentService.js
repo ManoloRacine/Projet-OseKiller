@@ -50,13 +50,23 @@ export const getStudent = async (studentId) => {
 };
 
 export const getOffersStudent = async (studentId) => {
-    return axios.get(
-        `/students/${studentId}/applications`, {
-            headers : {
-                "Content-Type" : "application/json",
-                Authorization: localStorage.getItem("accessToken")
-            }
-        }
-    ) ;
-}
+    return axios.get(`/students/${studentId}/applications`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
 
+export const updateStudentSession = async (studentId) => {
+    return axios.post(
+        `/students/${studentId}/updateSession`,
+        {},
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+            },
+        }
+    );
+};

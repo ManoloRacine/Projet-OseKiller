@@ -417,7 +417,7 @@ paths:
   
   
   /companies/{id}/offers:
-    put:
+    post:
       tags:
         - Company
       parameters:
@@ -426,8 +426,8 @@ paths:
           schema:
             type: integer
           required: true
-      summary: Poster/Updater l'offre de stage d'une entreprise
-      description: Poster/Updater l'offre de stage d'une entreprise
+      summary: Poster l'offre de stage d'une entreprise
+      description: Poster l'offre de stage d'une entreprise
       operationId: uploadOffer
       requestBody:
         description: Postulé une offre de stage
@@ -498,6 +498,40 @@ paths:
       security:
         - bearerAuth: []
   /companies/{companyId}/offers/{offerId}:
+    put:
+      tags:
+        - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
+          schema:
+            type: integer
+          required: true
+      summary: Modifier l'offre de stage d'une entreprise
+      description: Modifier l'offre de stage d'une entreprise
+      operationId: updateOffer
+      requestBody:
+        description: Modifier une offre de stage
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              $ref: '#/components/schemas/InternshipOffer'
+        required: true
+      responses:
+        '202':
+          description: L'offre à été resoumise et est en attente de validation
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: entreprise ou offre de stage non trouvé
+      security:
+        - bearerAuth: []
     get:
       tags:
         - Company

@@ -62,12 +62,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Optional<Company> company = companyRepository.findByEmail("testcompany@osk.com") ;
         if (company.isPresent()) {
             Offer offer1 = new Offer(company.get(), "test1", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
-            Offer offer2 = new Offer(company.get(), "test2", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            Offer offer2 = new Offer(company.get(), "test2", 1.0, LocalDate.of(2022, 12, 14), LocalDate.of(2023, 12, 16)) ;
             offer2.setAccepted(true);
-            Offer offer3 = new Offer(company.get(), "test3", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            Offer offer3 = new Offer(company.get(), "test3", 1.0, LocalDate.of(2019, 12, 14), LocalDate.of(2020, 12, 16)) ;
             offer3.setAccepted(true);
-            Offer offer4 = new Offer(company.get(), "test4", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
-            Offer offer5 = new Offer(company.get(), "test5", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
+            Offer offer4 = new Offer(company.get(), "test4", 1.0, LocalDate.of(2022, 12, 14), LocalDate.of(2023, 12, 16)) ;
+            Offer offer5 = new Offer(company.get(), "test5", 1.0, LocalDate.of(2019, 12, 14), LocalDate.of(2020, 12, 16)) ;
             offer5.setAccepted(true);
             offerRepository.save(offer1) ;
             offerRepository.save(offer2) ;
@@ -114,6 +114,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         if(studentRepository.findByEmail(student.getEmail()).isPresent()) return;
         Role studentRole = roleRepository.findByName(ERole.STUDENT.name()).orElseThrow(EntityNotFoundException::new);
         student.setRole(studentRole);
+        student.setSessionYear(2020);
         studentRepository.save(student);
     }
 

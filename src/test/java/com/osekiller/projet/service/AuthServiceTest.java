@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.ManyToOne;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,6 +55,9 @@ public class AuthServiceTest {
     StudentRepository studentRepository ;
     @Mock
     CompanyRepository companyRepository ;
+
+    @Mock
+    StudentService studentService ;
     @Mock
     JwtUtils jwtUtils ;
     @InjectMocks

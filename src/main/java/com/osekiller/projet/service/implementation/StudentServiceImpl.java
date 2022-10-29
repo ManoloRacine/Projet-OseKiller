@@ -1,7 +1,11 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
+import com.osekiller.projet.controller.payload.response.InterviewDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
+import com.osekiller.projet.model.Interview;
+import com.osekiller.projet.repository.InterviewRepository;
+import com.osekiller.projet.service.CurrentDateFactory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -16,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +31,13 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     private CvRepository cvRepository;
+
+    private CurrentDateFactory currentDateFactory;
+
+    private InterviewRepository interviewRepository;
+
+    private final int LAST_MONTH = 5 ;
+    private final int LAST_DAY = 31 ;
 
     @Override
     public void validateCV(long studentId, String feedback) {
@@ -97,6 +109,52 @@ public class StudentServiceImpl implements StudentService {
     public StudentWithCvStateDto getStudent(long id) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return StudentWithCvStateDto.from(student);
+    }
+
+    @Override
+    public List<InterviewDto> getInterviews(long studentId) {
+        if(!studentRepository.existsById(studentId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return interviewRepository.findAllByInterviewee_Id(studentId).stream().map(InterviewDto::from).toList();
+    }
+
+    public StudentWithCvStateDto updateSession(long id) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        student.setSessionYear(getCurrentSession());
+        studentRepository.save(student) ;
+        return StudentWithCvStateDto.from(student) ;
+    }
+
+    public int getCurrentSession() {
+        LocalDate currentDate = currentDateFactory.getCurrentDate() ;
+        if (currentDate.isBefore(LocalDate.of(currentDate.getYear(), LAST_MONTH, LAST_DAY))) {
+            return currentDate.getYear();
+        }
+        else {
+            return currentDate.getYear() + 1;
+        }
+    }
+
+    @Override
+    public Boolean studentExists(long id) {
+        return studentRepository.existsById(id);
+    }
+
+    @Override
+    public Boolean studentOwnsInterview(long studentId, long interviewId) {
+        Interview interview = interviewRepository.findById(interviewId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return interview.getInterviewee().getId().equals(studentId);
+    }
+
+    @Override
+    public void confirmInterview(long id, String chosenDate) {
+        Interview interview = interviewRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if(!interview.getProposedInterviewDates().contains(LocalDate.parse(chosenDate))){
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+        interview.setChosenInterviewDate(LocalDate.parse(chosenDate));
+        interviewRepository.save(interview);
     }
 
 }
