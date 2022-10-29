@@ -533,6 +533,34 @@ paths:
           description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
+  /companies/{companyId}/offers/{offerId}/applicants/{applicantId}/accept:
+    post:
+      tags:
+       - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
+          schema:
+            type: integer
+          required: true
+      summary: Accepter l'application d'un étudiant
+      description: Accepter l'application d'un étudiant
+      operationId: acceptApplicant
+      responses:
+        '200':
+          description: l'application à été accepté
+        '403':
+          description: requête non autorisé
+        '404':
+          description: entreprise, offre, ou étudiant non trouvé
+      security:
+        - bearerAuth: []
+      
            
   /companies/{companyId}/offers/{offerId}/validate:
     post:
