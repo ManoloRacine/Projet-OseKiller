@@ -116,7 +116,7 @@ public class StudentServiceImpl implements StudentService {
         if(!studentRepository.existsById(studentId)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return interviewRepository.findAllByInterviewee_Id(studentId).stream().map(InterviewDto::from).toList();
+        return interviewRepository.findAllByInterviewee_IdAndChosenInterviewDateIsNull(studentId).stream().map(InterviewDto::from).toList();
     }
 
     public StudentWithCvStateDto updateSession(long id) {
