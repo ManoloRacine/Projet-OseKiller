@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-const StudentCard = ({ student, redirectTo, offerId }) => {
-    console.log(student) ;
+const StudentCard = ({ student, redirectTo, offerId, confirmStudent }) => {
+    console.log(student);
     return (
         <div
             className={
@@ -26,10 +26,21 @@ const StudentCard = ({ student, redirectTo, offerId }) => {
             <Link
                 to={redirectTo}
                 className={"btn btn-primary"}
-                state={{ studentEmail: student.email, studentId : student.id, offerId : offerId }}
+                state={{
+                    studentEmail: student.email,
+                    studentId: student.id,
+                    offerId: offerId,
+                }}
             >
                 Convoquer
             </Link>
+            <button
+                className={"btn"}
+                style={{ backgroundColor: "#ee7600" }}
+                onClick={confirmStudent}
+            >
+                Choisir
+            </button>
         </div>
     );
 };
@@ -37,7 +48,8 @@ const StudentCard = ({ student, redirectTo, offerId }) => {
 StudentCard.propTypes = {
     student: PropTypes.object.isRequired,
     redirectTo: PropTypes.string.isRequired,
-    offerId: PropTypes.number.isRequired
+    offerId: PropTypes.number.isRequired,
+    confirmStudent: PropTypes.func.isRequired,
 };
 
 export default StudentCard;

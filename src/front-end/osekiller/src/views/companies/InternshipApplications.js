@@ -15,14 +15,27 @@ const InternshipApplications = () => {
 
     useEffect(() => {
         getApplicantsByOffer(authenticatedUser?.id, offerId)
-            .then((response) => setApplicants(response.data))
+            .then((response) => {
+                console.log(response);
+                setApplicants(response.data);
+            })
             .catch((err) => console.log(err));
     }, [authenticatedUser?.id, offerId]);
+
+    const handleConfirm = () => {
+        console.log("Confirm");
+    };
 
     return (
         <main>
             {applicants.map((student, index) => (
-                <StudentCard key={index} offerId={offerId} student={student} redirectTo={"/invite-student"} />
+                <StudentCard
+                    key={index}
+                    offerId={offerId}
+                    student={student}
+                    redirectTo={"/invite-student"}
+                    confirmStudent={handleConfirm}
+                />
             ))}
         </main>
     );
