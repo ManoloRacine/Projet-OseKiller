@@ -377,7 +377,7 @@ public class StudentServiceTest {
         List<InterviewDto> expected = List.of(interview1, interview2, interview3).stream().map(InterviewDto::from).toList();
 
         when(studentRepository.existsById(anyLong())).thenReturn(true);
-        when(interviewRepository.findAllByInterviewee_IdAndChosenInterviewDateIsNull(anyLong())).thenReturn(List.of(interview1, interview2, interview3));
+        when(interviewRepository.findAllByInterviewee_Id(anyLong())).thenReturn(List.of(interview1, interview2, interview3));
 
         //Act
 

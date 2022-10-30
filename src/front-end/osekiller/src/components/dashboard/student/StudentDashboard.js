@@ -17,23 +17,17 @@ const StudentDashboard = () => {
     useEffect(() => {
         getStudentConvocations(studentId)
             .then((response) => {
-                console.log(response);
                 setConvocation(response.data);
             })
             .catch((err) => {
                 console.log(err);
             });
-    }, []);
+    }, [convocations]);
 
     const handleConfirmInterviewDate = (interviewId, confirmDate) => {
         confirmInterviewDate(interviewId, studentId, confirmDate)
-            .then((response) => {
-                console.log(response);
-                setConvocation(
-                    convocations.filter(
-                        (convocation) => convocation.interviewId !== interviewId
-                    )
-                );
+            .then(() => {
+                setConvocation(convocations);
                 setMessage("Date de l'entrevue confirmée avec succès!");
             })
             .catch((err) => {
