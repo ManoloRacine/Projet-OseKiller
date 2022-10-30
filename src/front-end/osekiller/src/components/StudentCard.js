@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const StudentCard = ({ student, redirectTo, offerId, confirmStudent }) => {
-    console.log(student);
     return (
         <div
             className={
@@ -37,7 +36,7 @@ const StudentCard = ({ student, redirectTo, offerId, confirmStudent }) => {
             <button
                 className={"btn"}
                 style={{ backgroundColor: "#ee7600" }}
-                onClick={confirmStudent}
+                onClick={() => confirmStudent(student.id)}
             >
                 Choisir
             </button>

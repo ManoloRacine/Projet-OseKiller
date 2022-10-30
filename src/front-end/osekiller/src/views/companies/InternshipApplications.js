@@ -1,14 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getApplicantsByOffer } from "../../services/CompanyService";
+import {
+    acceptStudentApplication,
+    getApplicantsByOffer,
+} from "../../services/CompanyService";
 import { useLocation } from "react-router-dom";
 import { AuthenticatedUserContext } from "../../App";
 import StudentCard from "../../components/StudentCard";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const InternshipApplications = () => {
     const authenticatedUser = useContext(
         AuthenticatedUserContext
     )?.authenticatedUser;
     const [applicants, setApplicants] = useState([]);
+    const [message, setMessage] = useState("");
+    const [severity, setSeverity] = useState("");
     const location = useLocation();
     const { state } = location;
     const offerId = state?.offerId;
@@ -16,14 +22,22 @@ const InternshipApplications = () => {
     useEffect(() => {
         getApplicantsByOffer(authenticatedUser?.id, offerId)
             .then((response) => {
-                console.log(response);
                 setApplicants(response.data);
             })
             .catch((err) => console.log(err));
     }, [authenticatedUser?.id, offerId]);
 
-    const handleConfirm = () => {
-        console.log("Confirm");
+    const handleConfirm = (applicantId) => {
+        acceptStudentApplication(authenticatedUser?.id, offerId, applicantId)
+            .then(() => {
+                setMessage("Étudiant choisi avec succès!");
+                setSeverity("success");
+            })
+            .catch((err) => {
+                console.log(err);
+                setMessage("Une erreur s'est produite...");
+                setSeverity("error");
+            });
     };
 
     return (
@@ -37,6 +51,7 @@ const InternshipApplications = () => {
                     confirmStudent={handleConfirm}
                 />
             ))}
+            {message && <ErrorMessage message={message} severity={severity} />}
         </main>
     );
 };
