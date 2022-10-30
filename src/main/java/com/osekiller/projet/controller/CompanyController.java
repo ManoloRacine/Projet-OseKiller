@@ -72,6 +72,20 @@ public class CompanyController {
         return ResponseEntity.ok(offerService.getApplicants(offerId));
     }
 
+    @PostMapping("/{companyId}/offers/{offerId}/applicants/{applicantId}/accept")
+    public ResponseEntity<Void> acceptApplicant(@PathVariable(name = "companyId") Long companyId,
+                                                @PathVariable(name = "offerId") Long offerId,
+                                                @PathVariable(name = "applicantId") Long applicantId){
+
+        if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        offerService.acceptApplicantForOffer(applicantId, offerId);
+
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{companyId}/offers/{offerId}")
     public ResponseEntity<Void> updateOffer (@PathVariable(name = "companyId") Long companyId,
                                              @PathVariable(name = "offerId") Long offerId,
