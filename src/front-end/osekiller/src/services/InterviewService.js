@@ -1,8 +1,12 @@
 import axios from "../api/axios";
 
-export const confirmInterviewDate = async (interviewId, confirmDate) => {
+export const confirmInterviewDate = async (
+    interviewId,
+    studentId,
+    confirmDate
+) => {
     return axios.post(
-        `/interview/${interviewId}/confirm`,
+        `/students/${studentId}/interviews/${interviewId}/confirm`,
         { chosenDate: confirmDate },
         {
             headers: {

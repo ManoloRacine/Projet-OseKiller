@@ -6,11 +6,13 @@ import { getStudentConvocations } from "../../../services/StudentService";
 import { AuthenticatedUserContext } from "../../../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDay } from "@fortawesome/free-solid-svg-icons";
+import ErrorMessage from "../../ErrorMessage";
 
 const StudentDashboard = () => {
     const studentId = useContext(AuthenticatedUserContext)?.authenticatedUser
         ?.id;
     const [convocations, setConvocation] = useState([]);
+    const [message, setMessage] = useState("");
 
     useEffect(() => {
         getStudentConvocations(studentId)
@@ -21,13 +23,18 @@ const StudentDashboard = () => {
             .catch((err) => {
                 console.log(err);
             });
-    });
+    }, []);
 
     const handleConfirmInterviewDate = (interviewId, confirmDate) => {
-        confirmInterviewDate(interviewId, confirmDate)
+        confirmInterviewDate(interviewId, studentId, confirmDate)
             .then((response) => {
                 console.log(response);
-                setConvocation(response.data);
+                setConvocation(
+                    convocations.filter(
+                        (convocation) => convocation.interviewId !== interviewId
+                    )
+                );
+                setMessage("Date de l'entrevue confirmée avec succès!");
             })
             .catch((err) => {
                 console.log(err);
@@ -56,13 +63,18 @@ const StudentDashboard = () => {
                         <p>Aucune convocation pour l'instant</p>
                     </div>
                 ) : (
-                    convocations.map((convocation) => (
+                    convocations.map((convocation, index) => (
                         <StudentConvocation
-                            key={convocation.id}
+                            key={index}
                             convocation={convocation}
                             confirmInterviewDate={handleConfirmInterviewDate}
                         />
                     ))
+                )}
+            </div>
+            <div>
+                {message && (
+                    <ErrorMessage message={message} severity={"success"} />
                 )}
             </div>
         </div>

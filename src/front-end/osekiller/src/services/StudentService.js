@@ -59,7 +59,7 @@ export const getOffersStudent = async (studentId) => {
 };
 
 export const getStudentConvocations = async (studentId) => {
-    return axios.get(`/students/${studentId}/convocations`, {
+    return axios.get(`/students/${studentId}/interviews`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: localStorage.getItem("accessToken"),
