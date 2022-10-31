@@ -84,8 +84,11 @@ public class OfferServiceImpl implements OfferService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
                 .getApplicants();
 
+        Offer offer =  offerRepository.findByIdAndFetchApplicants(offerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return students.stream().map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail())).toList();
+
+        return students.stream().map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail(), applicant.getAcceptedApplications().contains(offer))).toList();
     }
 
     @Override

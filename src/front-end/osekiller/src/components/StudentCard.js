@@ -22,24 +22,30 @@ const StudentCard = ({ student, redirectTo, offerId, confirmStudent }) => {
                 <p>{student.email}$</p>
             </div>
 
-            <Link
-                to={redirectTo}
-                className={"btn btn-primary"}
-                state={{
-                    studentEmail: student.email,
-                    studentId: student.id,
-                    offerId: offerId,
-                }}
-            >
-                Convoquer
-            </Link>
-            <button
-                className={"btn"}
-                style={{ backgroundColor: "#ee7600" }}
-                onClick={() => confirmStudent(student.id)}
-            >
-                Choisir
-            </button>
+            {student.isChosen ? (
+                <div>Sélectionné pour le stage</div>
+            ) : (
+                <>
+                    <Link
+                        to={redirectTo}
+                        className={"btn btn-primary"}
+                        state={{
+                            studentEmail: student.email,
+                            studentId: student.id,
+                            offerId: offerId,
+                        }}
+                    >
+                        Convoquer
+                    </Link>
+                    <button
+                        className={"btn"}
+                        style={{ backgroundColor: "#ee7600" }}
+                        onClick={() => confirmStudent(student.id)}
+                    >
+                        Choisir
+                    </button>
+                </>
+            )}
         </div>
     );
 };

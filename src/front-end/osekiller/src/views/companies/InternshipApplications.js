@@ -25,7 +25,7 @@ const InternshipApplications = () => {
                 setApplicants(response.data);
             })
             .catch((err) => console.log(err));
-    }, [authenticatedUser?.id, offerId]);
+    }, [authenticatedUser?.id, offerId, message]);
 
     const handleConfirm = (applicantId) => {
         acceptStudentApplication(authenticatedUser?.id, offerId, applicantId)
