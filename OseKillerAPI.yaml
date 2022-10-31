@@ -1,853 +1,939 @@
 openapi: 3.0.3
 info:
-  title: OSE Killer API
-  version: 1.0.0
+    title: OSE Killer API
+    version: 1.0.0
 servers:
-  - url: http://localhost:8080
+    - url: http://localhost:8080
 paths:
-  /sign-up:
-    post:
-      tags:
-        - Authentication
-      summary: Envoyer une demande d'inscription
-      description: Envoyer une demande d'inscription
-      operationId: signUp
-      requestBody:
-        description: Demande d'inscription
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SignUpRequest'
-        required: true
-      responses:
-        '202':
-          description: Demande en attente d'acceptation
-        '400':
-          description: Format invalide / Attribut(s) manquant(s)
-        '409':
-          description: Email non disponible
-  /sign-in:
-    post:
-      tags:
-        - Authentication
-      summary: Envoyer une demande de connection
-      description: Envoyer une demande de connection
-      operationId: signIn
-      requestBody:
-        description: Demande de connection
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SignInRequest'
-        required: true
-      responses:
-        '200':
-          description: Demande de connection accepté
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JwtResponse'
-        '400':
-          description: Format invalide / Attribut(s) manquant(s)
-        '401':
-          description: Informations d'identification invalides
-  /sign-out:
-    post:
-      tags:
-        - Authentication
-      summary: Demande de révocation du refresh token
-      description: Demande de révocation du refresh token
-      operationId: signOut
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenRequest'
-        required: true
-      responses:
-        '200':
-          description: Demande de révocation accepté
-        '400':
-          description: Format invalide / Attribut(s) manquant(s)
-        '401':
-          description: Token Invalide
-        '403':
-          description: Le token n'appartient pas à l'utilisateur
-      security:
-        - bearerAuth: []
-  /refresh:
-    post:
-      tags:
-        - Authentication
-      summary: Demande d'un nouveau JWT Valide
-      description: Demande d'un nouveau JWT
-      operationId: refresh
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenRequest'
-        required: true
-      responses:
-        '200':
-          description: Demande d'un nouveau JWT Valide accepté
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JwtResponse'
-        '400':
-          description: Format invalide / Attribut(s) manquant(s)
-        '401':
-          description: Token Invalide ou Expiré
-        '403':
-          description: Le token n'appartient pas à l'utilisateur
-      security:
-        - bearerAuth: []
+    /sign-up:
+        post:
+            tags:
+                - Authentication
+            summary: Envoyer une demande d'inscription
+            description: Envoyer une demande d'inscription
+            operationId: signUp
+            requestBody:
+                description: Demande d'inscription
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SignUpRequest"
+                required: true
+            responses:
+                "202":
+                    description: Demande en attente d'acceptation
+                "400":
+                    description: Format invalide / Attribut(s) manquant(s)
+                "409":
+                    description: Email non disponible
+    /sign-in:
+        post:
+            tags:
+                - Authentication
+            summary: Envoyer une demande de connection
+            description: Envoyer une demande de connection
+            operationId: signIn
+            requestBody:
+                description: Demande de connection
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SignInRequest"
+                required: true
+            responses:
+                "200":
+                    description: Demande de connection accepté
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/JwtResponse"
+                "400":
+                    description: Format invalide / Attribut(s) manquant(s)
+                "401":
+                    description: Informations d'identification invalides
+    /sign-out:
+        post:
+            tags:
+                - Authentication
+            summary: Demande de révocation du refresh token
+            description: Demande de révocation du refresh token
+            operationId: signOut
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/TokenRequest"
+                required: true
+            responses:
+                "200":
+                    description: Demande de révocation accepté
+                "400":
+                    description: Format invalide / Attribut(s) manquant(s)
+                "401":
+                    description: Token Invalide
+                "403":
+                    description: Le token n'appartient pas à l'utilisateur
+            security:
+                - bearerAuth: []
+    /refresh:
+        post:
+            tags:
+                - Authentication
+            summary: Demande d'un nouveau JWT Valide
+            description: Demande d'un nouveau JWT
+            operationId: refresh
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/TokenRequest"
+                required: true
+            responses:
+                "200":
+                    description: Demande d'un nouveau JWT Valide accepté
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/JwtResponse"
+                "400":
+                    description: Format invalide / Attribut(s) manquant(s)
+                "401":
+                    description: Token Invalide ou Expiré
+                "403":
+                    description: Le token n'appartient pas à l'utilisateur
+            security:
+                - bearerAuth: []
 
-  /users/{id}/validate:
-    post:
-      tags:
-        - User
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Valider une inscription utilisateur
-      description: Valider une inscription utilisateur
-      operationId: validateUser
-      requestBody:
-        description: Valider l'inscription d'un nouveau user
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserValidationRequest'
-        required: true
-      responses:
-        '200':
-          description: Validation a été complété
-        '400':
-          description: Format invalide / Attribut(s) manquant(s)
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: utilisateur non trouvé
-      security:
-        - bearerAuth: []
-  /users:
-    get:
-      tags:
-        - User
-      summary: Retourne tous les utilisateurs
-      description: Retourne tous les utilisateurs
-      operationId: getUsers
-      responses:
-        '200':
-          description: Les utilisateurs ont été envoyés
-        '400':
-          description: Format invalide / Attribut(s) manquant(s)
-        '403':
-          description: Requête non autorisée
-      security:
-        - bearerAuth: []
-  /ping:
-    get:
-      tags:
-        - Ping
-      summary: Demande de ping
-      description: Demande de ping
-      operationId: ping
-      responses:
-        '200':
-          description: Demande de ping reçu
-  /ping/token:
-    get:
-      tags:
-        - Ping
-      summary: Demande de ping par un l'utilisateur autentifié
-      description: Demande de ping par un l'utilisateur autentifié
-      operationId: pingToken
-      responses:
-        '200':
-          description: Demande de ping reçu
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '403':
-          description: Requête non autorisée
-      security:
-        - bearerAuth: []
-  /students/{id}/cv:
-    put:
-      tags:
-        - Student
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Téléverser le cv de format pdf d'un étudiant
-      description: Téléverser le cv de format pdf d'un étudiant
-      operationId: uploadCV
-      requestBody:
-        description: Téléverser un cv
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-        required: true
-      responses:
-        '204':
-          description: Le fichier a été Téléversé et est en attente de validation
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: étudiant non trouvé
-      security:
-        - bearerAuth: []
-    get:
-      tags:
-        - Student
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Télécharger le cv de format pdf d'un étudiant
-      description: Télécharger le cv de format pdf d'un étudiant
-      operationId: downloadCV
-      responses:
-        '200':
-          description: Le fichier a été Télécharger
-          content:
-            multipart/form-data:
-              schema:
-                type: object
-                properties:
-                  file:
+    /users/{id}/validate:
+        post:
+            tags:
+                - User
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Valider une inscription utilisateur
+            description: Valider une inscription utilisateur
+            operationId: validateUser
+            requestBody:
+                description: Valider l'inscription d'un nouveau user
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/UserValidationRequest"
+                required: true
+            responses:
+                "200":
+                    description: Validation a été complété
+                "400":
+                    description: Format invalide / Attribut(s) manquant(s)
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: utilisateur non trouvé
+            security:
+                - bearerAuth: []
+    /users:
+        get:
+            tags:
+                - User
+            summary: Retourne tous les utilisateurs
+            description: Retourne tous les utilisateurs
+            operationId: getUsers
+            responses:
+                "200":
+                    description: Les utilisateurs ont été envoyés
+                "400":
+                    description: Format invalide / Attribut(s) manquant(s)
+                "403":
+                    description: Requête non autorisée
+            security:
+                - bearerAuth: []
+    /ping:
+        get:
+            tags:
+                - Ping
+            summary: Demande de ping
+            description: Demande de ping
+            operationId: ping
+            responses:
+                "200":
+                    description: Demande de ping reçu
+    /ping/token:
+        get:
+            tags:
+                - Ping
+            summary: Demande de ping par un l'utilisateur autentifié
+            description: Demande de ping par un l'utilisateur autentifié
+            operationId: pingToken
+            responses:
+                "200":
+                    description: Demande de ping reçu
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+                "403":
+                    description: Requête non autorisée
+            security:
+                - bearerAuth: []
+    /students/{id}/cv:
+        put:
+            tags:
+                - Student
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Téléverser le cv de format pdf d'un étudiant
+            description: Téléverser le cv de format pdf d'un étudiant
+            operationId: uploadCV
+            requestBody:
+                description: Téléverser un cv
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                file:
+                                    type: string
+                                    format: binary
+                required: true
+            responses:
+                "204":
+                    description: Le fichier a été Téléversé et est en attente de validation
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: étudiant non trouvé
+            security:
+                - bearerAuth: []
+        get:
+            tags:
+                - Student
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Télécharger le cv de format pdf d'un étudiant
+            description: Télécharger le cv de format pdf d'un étudiant
+            operationId: downloadCV
+            responses:
+                "200":
+                    description: Le fichier a été Télécharger
+                    content:
+                        multipart/form-data:
+                            schema:
+                                type: object
+                                properties:
+                                    file:
+                                        type: string
+                                        format: binary
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: étudiant non trouvé
+            security:
+                - bearerAuth: []
+    /students/{id}/cv/validate:
+        post:
+            tags:
+                - Student
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Valider le CV d'un étudiant
+            description: Valider le cv de format pdf d'un étudiant
+            operationId: validateCV
+            requestBody:
+                description: Valider le CV d'un étudiant
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ValidationRequest"
+                required: true
+            responses:
+                "200":
+                    description: Le CV à été valider
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: étudiant non trouvé
+            security:
+                - bearerAuth: []
+    /students/{id}/applications:
+        get:
+            tags:
+                - Student
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Obtenir les offres de stage auxquelles l'étudiant a appliqué
+            description: Obtenir les offres de stage auxquelles l'étudiant a appliqué
+            operationId: getApplications
+            responses:
+                "200":
+                    description: Les offres ont été reçu
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/OfferNoPdf"
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: étudiant non trouvé
+            security:
+                - bearerAuth: []
+    /students/{id}/interviews:
+        post:
+            tags:
+                - Student
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Convoquer un étudiant à une entrevue
+            description: Convoquer un étudiant à une entrevue
+            operationId: inviteToInterview
+            requestBody:
+                description: dates d'interviews
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                type: string
+                                format: date
+                            example:
+                                - 2023-01-30
+                                - 2023-02-02
+                                - 2023-02-09
+
+            responses:
+                "202":
+                    description: La convocation à été envoyé et est en attente de validation.
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: étudiant non trouvé
+            security:
+                - bearerAuth: []
+        get:
+            tags:
+                - Student
+            parameters:
+                - in: path
+                  name: id
+                  description: studentId
+                  schema:
+                      type: integer
+                  required: true
+            summary: Obtenir les convocations d'un étudiant
+            description: Obtenir les convocations d'un étudiant
+            operationId: getConvocations
+            responses:
+                "200":
+                    description: Les convocations ont été envoyées
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        id:
+                                            type: number
+                                            example: 1
+                                        position:
+                                            type: string
+                                            example: Junior Web Developer
+                                        dates:
+                                            type: string
+                                            example:
+                                                - 2022-11-04
+                                                - 2022-11-07
+                                                - 2022-11-15
+
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Étudiant non trouvé
+            security:
+                - bearerAuth: []
+    /students/{studentId}/interviews/{interviewId}/confirm:
+        post:
+            tags:
+                - Student
+            summary: Confirmation d'une date d'entrevue
+            description: Confirmation d'une date d'entrevue de la part d'un étudiant
+            operationId: confirmInterviewDate
+            parameters:
+                - in: path
+                  name: studentId
+                  description: studentId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: interviewId
+                  description: interviewId
+                  schema:
+                      type: integer
+                  required: true
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ChosenInterviewDate"
+            responses:
+                "202":
+                    description: La date de l'interview a été confirmée
+                "400":
+                    description: La date de l'interview n'est pas dans les choix proposés
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Interview non trouvé
+                "409":
+                    description: La date de l'interview a déjà été confirmée
+            security:
+                - bearerAuth: []
+
+    /companies/{id}/offers:
+        post:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Poster l'offre de stage d'une entreprise
+            description: Poster l'offre de stage d'une entreprise
+            operationId: uploadOffer
+            requestBody:
+                description: Postulé une offre de stage
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            $ref: "#/components/schemas/InternshipOffer"
+                required: true
+            responses:
+                "202":
+                    description: L'offre à été soumise et est en attente de validation
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: entreprise non trouvé
+            security:
+                - bearerAuth: []
+        get:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            summary: Obtenir les offres de stage d'une entreprise
+            description: Obtenir les offres de stage d'une entreprise
+            operationId: getOffers
+            responses:
+                "200":
+                    description: Les offres ont été reçu
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        id:
+                                            type: number
+                                            example: 1
+                                        position:
+                                            type: string
+                                            example: Junior Web Developer
+                                        salary:
+                                            type: number
+                                            example: 25
+                                        startDate:
+                                            type: string
+                                            format: date
+                                            example: 2022-10-30
+                                        endDate:
+                                            type: string
+                                            format: date
+                                            example: 2023-01-30
+                                        isValidated:
+                                            type: boolean
+                                            example: true
+                                        isAccepted:
+                                            type: boolean
+                                            example: true
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: entreprise non trouvé
+            security:
+                - bearerAuth: []
+    /companies/{companyId}/offers/{offerId}:
+        put:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: companyId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: offerId
+                  schema:
+                      type: integer
+                  required: true
+            summary: Modifier l'offre de stage d'une entreprise
+            description: Modifier l'offre de stage d'une entreprise
+            operationId: updateOffer
+            requestBody:
+                description: Modifier une offre de stage
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            $ref: "#/components/schemas/InternshipOffer"
+                required: true
+            responses:
+                "202":
+                    description: L'offre à été resoumise et est en attente de validation
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: entreprise ou offre de stage non trouvé
+            security:
+                - bearerAuth: []
+        get:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: companyId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: offerId
+                  schema:
+                      type: integer
+                  required: true
+            summary: Obtenir une offre de stage
+            description: Obtenir une offre de stage
+            operationId: getOffer
+            responses:
+                "200":
+                    description: L'offre a été reçu
+                    content:
+                        multipart/form-data:
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                        type: number
+                                        example: 1
+                                    position:
+                                        type: string
+                                        example: Junior Web Developer
+                                    salary:
+                                        type: number
+                                        example: 25
+                                    startDate:
+                                        type: string
+                                        format: date
+                                        example: 2022-10-30
+                                    endDate:
+                                        type: string
+                                        format: date
+                                        example: 2023-01-30
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: entreprise ou offre non trouvé
+            security:
+                - bearerAuth: []
+    /companies/{companyId}/offers/{offerId}/applicants:
+        get:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: companyId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: offerId
+                  schema:
+                      type: integer
+                  required: true
+            summary: Obtenir les étudiants ayant appliqué à une offre de stage
+            description: Obtenir les étudiants ayant appliqué à une offre de stage
+            operationId: getApplicants
+            responses:
+                "200":
+                    description: La liste d'applicant à été reçu
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Student"
+                "403":
+                    description: requête non autorisé
+                "404":
+                    description: entreprise ou offre non trouvé
+            security:
+                - bearerAuth: []
+
+    /companies/{companyId}/offers/{offerId}/validate:
+        post:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: companyId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: offerId
+                  schema:
+                      type: integer
+                  required: true
+            summary: Valider une offre de stage
+            description: Valider une offre de stage
+            operationId: validateOffer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ValidationRequest"
+            responses:
+                "200":
+                    description: L'offre a été validé
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: entreprise ou offre non trouvé
+            security:
+                - bearerAuth: []
+    /offers:
+        get:
+            tags:
+                - Offers
+            parameters:
+                - in: query
+                  name: accepted
+                  schema:
+                      type: boolean
+            summary: Retourne toutes les offres selon la query
+            description: Retourne toutes les offres selon la query
+            operationId: validOffers
+            responses:
+                "200":
+                    description: Les offres ont étés envoyés
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/OfferNoPdf"
+                "403":
+                    description: Requête non autorisée
+            security:
+                - bearerAuth: []
+
+    /offers/{id}/apply:
+        post:
+            tags:
+                - Offers
+            summary: Appliquer à une offre de stage
+            description: Appliquer à une offre de stage
+            operationId: applyToOffer
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            responses:
+                "202":
+                    description: Application à l'offre de stage à été envoyé
+                "409":
+                    description: L'étudiant a déjà appliqué
+                "403":
+                    description: Requête non autorisée ou l'offre de stage est en attente de validation
+                "404":
+                    description: Offre non trouvé
+            security:
+                - bearerAuth: []
+
+    /contracts/{offerId}/generate:
+        post:
+            tags:
+                - Contracts
+            summary: Générer l'entente de stage
+            description: Générer l'entente de stage
+            operationId: generateContract
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                type: string
+                            example:
+                                - ecrire du code
+                                - tester du code
+                                - deployer builds
+
+            parameters:
+                - in: path
+                  name: offerId
+                  schema:
+                      type: integer
+                  required: true
+            responses:
+                "201":
+                    description: Le pdf de l'entente de stage a été généré
+                "403":
+                    description: Requête non autorisée
+                "409":
+                    description: le pdf a déjà été généré
+
+            security:
+                - bearerAuth: []
+    /applications/accepted:
+        get:
+            tags:
+                - Applications
+            summary: Recevoir les applications acceptés par les compagnies
+            description: Recevoir les applications acceptés par les compagnies
+            operationId: getAcceptedApplications
+            responses:
+                "200":
+                    description: Les offres ont étés envoyés
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Application"
+
+            security:
+                - bearerAuth: []
+
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+    schemas:
+        JwtResponse:
+            type: object
+            properties:
+                accessToken:
                     type: string
-                    format: binary
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: étudiant non trouvé
-      security:
-        - bearerAuth: []
-  /students/{id}/cv/validate:
-    post:
-      tags:
-        - Student
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Valider le CV d'un étudiant
-      description: Valider le cv de format pdf d'un étudiant
-      operationId: validateCV
-      requestBody:
-        description: Valider le CV d'un étudiant
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ValidationRequest'
-        required: true
-      responses:
-        '200':
-          description: Le CV à été valider
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: étudiant non trouvé
-      security:
-        - bearerAuth: []
-  /students/{id}/applications:
-    get:
-      tags:
-        - Student
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Obtenir les offres de stage auxquelles l'étudiant a appliqué
-      description: Obtenir les offres de stage auxquelles l'étudiant a appliqué
-      operationId: getApplications
-      responses:
-        '200':
-          description: Les offres ont été reçu
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OfferNoPdf'
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: étudiant non trouvé
-      security:
-        - bearerAuth: []
-  /students/{id}/interviews:
-    post:
-      tags:
-        - Student
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Convoquer un étudiant à une entrevue
-      description: Convoquer un étudiant à une entrevue
-      operationId: inviteToInterview
-      requestBody:
-        description: dates d'interviews
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: string
-                format: date
-              example:
-                - 2023-01-30
-                - 2023-02-02
-                - 2023-02-09
-
-      responses:
-        '202':
-          description: La convocation à été envoyé et est en attente de validation.
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: étudiant non trouvé
-      security:
-        - bearerAuth: []
-
-
-  /companies/{id}/offers:
-    post:
-      tags:
-        - Company
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Poster l'offre de stage d'une entreprise
-      description: Poster l'offre de stage d'une entreprise
-      operationId: uploadOffer
-      requestBody:
-        description: Postulé une offre de stage
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              $ref: '#/components/schemas/InternshipOffer'
-        required: true
-      responses:
-        '202':
-          description: L'offre à été soumise et est en attente de validation
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: entreprise non trouvé
-      security:
-        - bearerAuth: []
-    get:
-      tags:
-        - Company
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      summary: Obtenir les offres de stage d'une entreprise
-      description: Obtenir les offres de stage d'une entreprise
-      operationId: getOffers
-      responses:
-        '200':
-          description: Les offres ont été reçu
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type : object
-                  properties:
-                    id:
-                      type: number
-                      example: 1
-                    position:
-                      type: string
-                      example: Junior Web Developer
-                    salary:
-                      type: number
-                      example: 25
-                    startDate:
-                      type: string
-                      format: date
-                      example: 2022-10-30
-                    endDate:
-                      type: string
-                      format: date
-                      example: 2023-01-30
-                    isValidated:
-                      type: boolean
-                      example: true
-                    isAccepted:
-                      type: boolean
-                      example: true
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: entreprise non trouvé
-      security:
-        - bearerAuth: []
-  /companies/{companyId}/offers/{offerId}:
-    put:
-      tags:
-        - Company
-      parameters:
-        - in: path
-          name: companyId
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: offerId
-          schema:
-            type: integer
-          required: true
-      summary: Modifier l'offre de stage d'une entreprise
-      description: Modifier l'offre de stage d'une entreprise
-      operationId: updateOffer
-      requestBody:
-        description: Modifier une offre de stage
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              $ref: '#/components/schemas/InternshipOffer'
-        required: true
-      responses:
-        '202':
-          description: L'offre à été resoumise et est en attente de validation
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: entreprise ou offre de stage non trouvé
-      security:
-        - bearerAuth: []
-    get:
-      tags:
-        - Company
-      parameters:
-        - in: path
-          name: companyId
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: offerId
-          schema:
-            type: integer
-          required: true
-      summary: Obtenir une offre de stage
-      description: Obtenir une offre de stage
-      operationId: getOffer
-      responses:
-        '200':
-          description: L'offre a été reçu
-          content:
-            multipart/form-data:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: number
-                    example: 1
-                  position:
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                refreshToken:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                tokenType:
+                    type: string
+                    example: Bearer
+        User:
+            type: object
+            properties:
+                email:
+                    type: string
+                    format: email
+                    example: hugol@example.com
+                role:
+                    type: string
+                    example: STUDENT
+        Student:
+            type: object
+            properties:
+                name:
+                    type: string
+                    example: Hugo Lantier
+                email:
+                    type: string
+                    format: email
+                    example: hugol@example.com
+        ValidationRequest:
+            type: object
+            required:
+                - valid
+            properties:
+                valid:
+                    type: boolean
+                    example: false
+                feedBack:
+                    type: string
+                    example: trop long
+        ChosenInterviewDate:
+            type: object
+            required:
+                - chosenDate
+            properties:
+                chosenDate:
+                    type: string
+                    example: 2022-11-07
+        SignUpRequest:
+            type: object
+            required:
+                - name
+                - email
+                - password
+                - role
+            properties:
+                name:
+                    type: string
+                    example: Hugo Lantier
+                email:
+                    type: string
+                    format: email
+                    example: hugol@example.com
+                password:
+                    type: string
+                    example: vant8L52ANAp7U
+                role:
+                    type: string
+                    example: STUDENT
+                    enum:
+                        - STUDENT
+                        - MANAGER
+                        - COMPANY
+            xml:
+                name: signUpRequest
+        InternshipOffer:
+            type: object
+            properties:
+                position:
                     type: string
                     example: Junior Web Developer
-                  salary:
+                salary:
                     type: number
                     example: 25
-                  startDate:
+                startDate:
                     type: string
                     format: date
                     example: 2022-10-30
-                  endDate:
+                endDate:
                     type: string
                     format: date
                     example: 2023-01-30
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: entreprise ou offre non trouvé
-      security:
-        - bearerAuth: []
-  /companies/{companyId}/offers/{offerId}/applicants:
-    get:
-      tags:
-        - Company
-      parameters:
-        - in: path
-          name: companyId
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: offerId
-          schema:
-            type: integer
-          required: true
-      summary: Obtenir les étudiants ayant appliqué à une offre de stage
-      description: Obtenir les étudiants ayant appliqué à une offre de stage
-      operationId: getApplicants
-      responses:
-        '200':
-          description: La liste d'applicant à été reçu
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Student'
-        '403':
-          description: requête non autorisé
-        '404':
-          description: entreprise ou offre non trouvé
-      security:
-        - bearerAuth: []
-
-  /companies/{companyId}/offers/{offerId}/validate:
-    post:
-      tags:
-        - Company
-      parameters:
-        - in: path
-          name: companyId
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: offerId
-          schema:
-            type: integer
-          required: true
-      summary: Valider une offre de stage
-      description: Valider une offre de stage
-      operationId: validateOffer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ValidationRequest'
-      responses:
-        '200':
-          description: L'offre a été validé
-        '403':
-          description: Requête non autorisée
-        '404':
-          description: entreprise ou offre non trouvé
-      security:
-        - bearerAuth: []
-  /offers:
-    get:
-      tags:
-        - Offers
-      parameters:
-        - in: query
-          name: accepted
-          schema:
-            type: boolean
-      summary: Retourne toutes les offres selon la query
-      description: Retourne toutes les offres selon la query
-      operationId: validOffers
-      responses:
-        '200':
-          description: Les offres ont étés envoyés
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OfferNoPdf'
-        '403':
-          description: Requête non autorisée
-      security:
-        - bearerAuth: []
-
-  /offers/{id}/apply:
-    post:
-      tags:
-        - Offers
-      summary: Appliquer à une offre de stage
-      description: Appliquer à une offre de stage
-      operationId: applyToOffer
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        '202':
-          description: Application à l'offre de stage à été envoyé
-        '409':
-          description: L'étudiant a déjà appliqué
-        '403':
-          description: Requête non autorisée ou l'offre de stage est en attente de validation
-        '404':
-          description: Offre non trouvé
-      security:
-        - bearerAuth: []
-
-  /contracts/{offerId}/generate:
-    post:
-      tags:
-        - Contracts
-      summary: Générer l'entente de stage
-      description: Générer l'entente de stage
-      operationId: generateContract
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: string
-              example:
-                - ecrire du code
-                - tester du code
-                - deployer builds
-
-      parameters:
-        - in: path
-          name : offerId
-          schema:
-            type: integer
-          required: true
-      responses:
-        '201' :
-          description : Le pdf de l'entente de stage a été généré
-        '403':
-          description: Requête non autorisée
-        '409':
-          description: le pdf a déjà été généré
-
-      security:
-        - bearerAuth: []
-  /applications/accepted:
-    get:
-      tags:
-        - Applications
-      summary: Recevoir les applications acceptés par les compagnies
-      description:  Recevoir les applications acceptés par les compagnies
-      operationId: getAcceptedApplications
-      responses:
-        '200':
-          description: Les offres ont étés envoyés
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Application'
-
-      security:
-        - bearerAuth: []
-
-
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-  schemas:
-    JwtResponse:
-      type: object
-      properties:
-        accessToken:
-          type: string
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-        refreshToken:
-          type: string
-          example: 123e4567-e89b-12d3-a456-426614174000
-        tokenType:
-          type: string
-          example: Bearer
-    User:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-          example: hugol@example.com
-        role:
-          type: string
-          example: STUDENT
-    Student:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Hugo Lantier
-        email:
-          type: string
-          format: email
-          example: hugol@example.com
-    ValidationRequest:
-      type: object
-      required:
-        - valid
-      properties:
-        valid:
-          type: boolean
-          example: false
-        feedBack:
-          type: string
-          example: trop long
-    SignUpRequest:
-      type: object
-      required:
-        - name
-        - email
-        - password
-        - role
-      properties:
-        name:
-          type: string
-          example: Hugo Lantier
-        email:
-          type: string
-          format: email
-          example: hugol@example.com
-        password:
-          type: string
-          example: vant8L52ANAp7U
-        role:
-          type: string
-          example: STUDENT
-          enum:
-            - STUDENT
-            - MANAGER
-            - COMPANY
-      xml:
-        name: signUpRequest
-    InternshipOffer:
-      type: object
-      properties:
-        position:
-          type: string
-          example: Junior Web Developer
-        salary:
-          type: number
-          example: 25
-        startDate:
-          type: string
-          format: date
-          example: 2022-10-30
-        endDate:
-          type: string
-          format: date
-          example: 2023-01-30
-        file:
-          type: string
-          format: binary
-    SignInRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          type: string
-          format: email
-          example: tesla.internship@example.com
-        password:
-          type: string
-          example: vant8L52ANAp7U
-      xml:
-        name: signInRequest
-    TokenRequest:
-      type: object
-      required:
-        - refreshToken
-      properties:
-        refreshToken:
-          type: string
-          example: 123e4567-e89b-12d3-a456-426614174000
-      xml:
-        name: signInRequest
-    UserValidationRequest:
-      type: object
-      required:
-        - valid
-      properties:
-        valid:
-          type: boolean
-          example: true
-      xml:
-        name: userValidationRequest
-    OfferNoPdf:
-      type: object
-      properties:
-        offerId:
-          type: integer
-          example: 1
-        companyId:
-          type: integer
-          example: 2
-        companyName:
-          type: string
-          example : google
-        position:
-          type: string
-          example: dev
-        salary:
-          type: number
-          example: 20.50
-        startDate:
-          type: string
-          example: 2022-10-20
-        endDate:
-          type: string
-          example: 2022-12-20
-      xml:
-        name: offerNoPdf
-    Application:
-      type: object
-      properties:
-        studentName :
-          type: string
-          example : etudiant
-        companyName :
-          type: string
-          example : compagnie
-        companyId :
-          type: integer
-          example : 1
-        offerId :
-          type : integer
-          example : 2
-        position :
-          type : string
-          example : java dev
-      xml :
-        name : Application
+                file:
+                    type: string
+                    format: binary
+        SignInRequest:
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                    format: email
+                    example: tesla.internship@example.com
+                password:
+                    type: string
+                    example: vant8L52ANAp7U
+            xml:
+                name: signInRequest
+        TokenRequest:
+            type: object
+            required:
+                - refreshToken
+            properties:
+                refreshToken:
+                    type: string
+                    example: 123e4567-e89b-12d3-a456-426614174000
+            xml:
+                name: signInRequest
+        UserValidationRequest:
+            type: object
+            required:
+                - valid
+            properties:
+                valid:
+                    type: boolean
+                    example: true
+            xml:
+                name: userValidationRequest
+        OfferNoPdf:
+            type: object
+            properties:
+                offerId:
+                    type: integer
+                    example: 1
+                companyId:
+                    type: integer
+                    example: 2
+                companyName:
+                    type: string
+                    example: google
+                position:
+                    type: string
+                    example: dev
+                salary:
+                    type: number
+                    example: 20.50
+                startDate:
+                    type: string
+                    example: 2022-10-20
+                endDate:
+                    type: string
+                    example: 2022-12-20
+            xml:
+                name: offerNoPdf
+        Application:
+            type: object
+            properties:
+                studentName:
+                    type: string
+                    example: etudiant
+                companyName:
+                    type: string
+                    example: compagnie
+                companyId:
+                    type: integer
+                    example: 1
+                offerId:
+                    type: integer
+                    example: 2
+                position:
+                    type: string
+                    example: java dev
+            xml:
+                name: Application
