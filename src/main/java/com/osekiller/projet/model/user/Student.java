@@ -30,6 +30,9 @@ public class Student extends User {
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Offer> applications = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private List<Offer> acceptedApplications = new ArrayList<>();
+
     public Student(@NonNull String name, @NonNull String email, @NonNull String password) {
         super(name, email, password);
     }
