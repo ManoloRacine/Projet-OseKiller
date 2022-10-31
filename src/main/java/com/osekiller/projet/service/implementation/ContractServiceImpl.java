@@ -11,10 +11,15 @@ import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -67,6 +72,32 @@ public class ContractServiceImpl implements ContractService {
 
         PDField fieldEtudiantSign = acroForm.getField( "nom_etudiant_sign" );
         fieldEtudiantSign.setValue(student.getName());
+
+        PDPage pdPage = new PDPage() ;
+
+        pdfDocument.addPage(pdPage);
+
+        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
+
+        contentStream.beginText();
+
+        contentStream.newLineAtOffset(25, 700);
+
+        contentStream.setFont(PDType1Font.TIMES_ROMAN, 24);
+
+        contentStream.setLeading(14.5f);
+
+        contentStream.showText("TACHES ET RESPONSABILITES DU STAGIAIRE");
+
+        for (String task : contractTasks) {
+            contentStream.newLine() ;
+            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+            contentStream.showText("-" + task);
+        }
+
+        contentStream.endText();
+
+        contentStream.close();
 
         acroForm.flatten();
         pdfDocument.save(new File("final.pdf"));

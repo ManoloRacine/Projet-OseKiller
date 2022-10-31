@@ -15,6 +15,6 @@ public class ApplicationController {
 
     @GetMapping
     public ResponseEntity<List<ApplicationDto>> getApplications(@RequestParam boolean accepted) {
-        return
+        return null ;
     }
 }

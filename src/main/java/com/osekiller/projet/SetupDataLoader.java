@@ -22,6 +22,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -52,7 +53,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         initializeStudents();
 
         try {
-            contractService.generateContract(new ArrayList<>(), 5, 11, 10) ;
+            contractService.generateContract(List.of("DKALSDSAJ", "AHSDSAJDKLSA", "DJSALHFJKDAH"), 5, 11, 10) ;
         } catch (IOException e) {
             e.printStackTrace();
         }
