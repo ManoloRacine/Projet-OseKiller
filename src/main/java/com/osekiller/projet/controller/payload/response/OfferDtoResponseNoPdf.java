@@ -8,6 +8,8 @@ public record OfferDtoResponseNoPdf(
         @NotBlank String position,
         @NotNull Double salary,
         @NotBlank String startDate,
-        @NotBlank String endDate
+        @NotBlank String endDate,
+        @NotNull Boolean accepted,
+        String feedback
         ) {
 }

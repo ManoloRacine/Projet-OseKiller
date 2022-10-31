@@ -22,6 +22,7 @@ public class Interview {
     @NonNull private Student interviewee;
     @ElementCollection(fetch = FetchType.EAGER)
     @NonNull private List<LocalDate> proposedInterviewDates;
+    private LocalDate chosenInterviewDate;
 
     public Interview(@NonNull Offer offer, @NonNull Student interviewee, @NonNull List<LocalDate> proposedInterviewDates) {
         if(proposedInterviewDates.size() != 3)
