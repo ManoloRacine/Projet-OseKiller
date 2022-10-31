@@ -729,6 +729,40 @@ paths:
           description: Offre non trouvé
       security:
         - bearerAuth: []
+  /contracts/{id}/sign:
+    post:
+      tags:
+        - Contract
+      summary: Signer une entente de stage
+      description: Signer une entente de stage
+      operationId: signContract
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: l'entente à été signé
+        '400':
+          description: signature manquante
+        '409':
+          description: L'entente à déjà été signé
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Entente non trouvé
+      security:
+        - bearerAuth: []
+
+      
 components:
   securitySchemes:
     bearerAuth:
