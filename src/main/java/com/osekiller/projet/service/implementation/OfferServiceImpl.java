@@ -62,13 +62,33 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public void acceptApplicantForOffer(long studentId, long offerId) {
+        Offer offer = offerRepository.findByIdAndFetchApplicants(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if(!offer.getApplicants().contains(student))
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+
+        if(offer.getAcceptedApplicants().contains(student))
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+
+        offer.getAcceptedApplicants().add(student);
+        student.getAcceptedApplications().add(offer);
+
+        offerRepository.save(offer);
+    }
+
+    @Override
     public List<UserInfoDto> getApplicants(long offerId) {
         List<Student> students = offerRepository.findByIdAndFetchApplicants(offerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
                 .getApplicants();
 
+        Offer offer =  offerRepository.findByIdAndFetchApplicants(offerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return students.stream().map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail())).toList();
+
+        return students.stream().map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail(), applicant.getAcceptedApplications().contains(offer))).toList();
     }
 
     @Override

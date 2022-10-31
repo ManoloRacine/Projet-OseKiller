@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 public record UserInfoDto(
         @NotNull Long id,
         @NotBlank String name,
-        @NotBlank String email
+        @NotBlank String email,
+        @NotNull Boolean isChosen
 ) {
 }

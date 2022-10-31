@@ -48,3 +48,20 @@ export const sendConvocation = async (data, studentId) => {
         }
     );
 };
+
+export const acceptStudentApplication = async (
+    companyId,
+    offerId,
+    applicantId
+) => {
+    return axios.post(
+        `/companies/${companyId}/offers/${offerId}/applicants/${applicantId}/accept`,
+        {},
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: localStorage.getItem("accessToken"),
+            },
+        }
+    );
+};

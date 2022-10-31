@@ -15,8 +15,8 @@ public interface OfferService {
     List<GeneralOfferDto> getAllInvalidOffers();
     OfferDtoResponse getOffer(long offerId);
     void addApplicantToOffer(long studentId, long offerId);
+    void acceptApplicantForOffer(long studentId, long offerId);
     List<UserInfoDto> getApplicants(long offerId);
-
     List<GeneralOfferDto> getAllValidOffersBySession(int session);
     List<GeneralOfferDto> getAllInvalidOffersBySession(int session);
 }

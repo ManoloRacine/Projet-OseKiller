@@ -14,11 +14,11 @@ const InviteStudent = () => {
     const [hasOpenError, setHasOpenError] = useState(false);
     const location = useLocation();
     const studentEmail = location?.state?.studentEmail;
-    const studentId = location?.state?.studentEmail;
+    const studentId = location?.state?.studentId;
     const offerId = location?.state?.offerId;
-    //const { studentEmail, studentId, offerId } = location.state ;
 
     useEffect(() => {
+        console.log(location?.state);
         getCv(studentId).then((response) => {
             const blob1 = new Blob([response.data], {
                 type: "application/pdf",
