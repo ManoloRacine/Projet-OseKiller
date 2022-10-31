@@ -50,8 +50,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         bootStrapOffers();
         initializeManagers();
         initializeStudents();
+
         try {
-            contractService.generateContract(new ArrayList<>(), 10, 5) ;
+            contractService.generateContract(new ArrayList<>(), 5, 11, 10) ;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,6 +111,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createStudentIfNotFound(testStudent1);
         createStudentIfNotFound(testStudent2);
         createStudentIfNotFound(testStudent3);
+        System.out.println(testStudent1.getId());
     }
 
     void createCompanyIfNotFound(Company company){

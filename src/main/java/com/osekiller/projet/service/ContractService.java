@@ -6,5 +6,5 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ContractService {
-    Resource generateContract(List<String> contractTasks, long managerId, long offerId) throws IOException;
+    Resource generateContract(List<String> contractTasks, long offerId, long studentId, long managerId) throws IOException;
 }

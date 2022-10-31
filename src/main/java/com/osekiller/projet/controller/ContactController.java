@@ -23,14 +23,5 @@ public class ContactController {
 
     AuthService authService ;
 
-    @PostMapping("/{offerId}/generate")
-    public ResponseEntity<Resource> generateContract(@RequestHeader(HttpHeaders.AUTHORIZATION) String header,
-                                                     @RequestParam Long offerId,
-                                                     @RequestBody List<String> contractTasks) throws IOException {
-        String jwt = header.substring(7);
-        Long managerId = authService.getUserFromToken(jwt).id();
-        Resource contract = contractService.generateContract(contractTasks, managerId, offerId);
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + contract.getFilename() + "\"").body(contract);
-    }
+
 }
