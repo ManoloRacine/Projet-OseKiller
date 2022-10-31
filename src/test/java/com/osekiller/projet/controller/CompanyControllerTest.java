@@ -322,6 +322,18 @@ public class CompanyControllerTest {
         verify(offerService).modifyOffer(anyLong(),any(OfferDto.class),any(MultipartFile.class));
     }
 
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void acceptApplicantHappyDay() throws Exception {
+        when(companyService.companyExists(anyLong())).thenReturn(true);
+        when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);
+
+        //Act & Assert
+
+        mockMvc.perform(post("/companies/1/offers/2/applicants/3/accept"))
+                .andExpect(status().isOk());
+    }
+
 
     static String asJsonString(final Object obj) {
         try {

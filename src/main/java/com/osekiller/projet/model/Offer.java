@@ -36,5 +36,8 @@ public class Offer {
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<Student> applicants = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private List<Student> acceptedApplicants = new ArrayList<>();
+
     private boolean accepted = false;
 }

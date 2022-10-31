@@ -79,6 +79,7 @@ public class OfferServiceTest {
     @BeforeEach
     void setupEach(){
         offer.setApplicants(new ArrayList<>());
+        mockStudent1.setApplications(new ArrayList<>());
     }
 
     @Test
@@ -489,5 +490,71 @@ public class OfferServiceTest {
 
         assertNotNull(list);
         assertSame(list.size(), 0);
+    }
+
+
+    @Test
+    void acceptApplicantOfferNotFound(){
+
+        //Act & Assert
+        assertThatThrownBy(() -> offerService.acceptApplicantForOffer(1,2))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void acceptApplicantStudentNotFound(){
+        //Arrange
+        when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(mock(Offer.class)));
+
+        //Act & Assert
+        assertThatThrownBy(() -> offerService.acceptApplicantForOffer(1,2))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void acceptApplicantStudentDidNotApply(){
+        //Arrange
+        when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(mock(Offer.class)));
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
+
+        //Act & Assert
+        assertThatThrownBy(() -> offerService.acceptApplicantForOffer(1,2))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    void acceptApplicantStudentAlreadyAccepted(){
+        //Arrange
+        offer.getApplicants().add(mockStudent1);
+        offer.getAcceptedApplicants().add(mockStudent1);
+
+        when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent1));
+
+        //Act & Assert
+        assertThatThrownBy(() -> offerService.acceptApplicantForOffer(1,2))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    void acceptApplicantHappyDay(){
+        //Arrange
+        offer.getApplicants().add(mockStudent1);
+
+
+        when(offerRepository.findByIdAndFetchApplicants(anyLong())).thenReturn(Optional.of(offer));
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mockStudent1));
+
+        //Act
+        offerService.acceptApplicantForOffer(1,2);
+
+        //Assert
+        assertThat(offer.getAcceptedApplicants()).contains(mockStudent1);
+        assertThat(mockStudent1.getAcceptedApplications()).contains(offer);
+
     }
 }
