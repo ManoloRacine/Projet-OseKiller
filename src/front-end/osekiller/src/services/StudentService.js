@@ -70,3 +70,11 @@ export const updateStudentSession = async (studentId) => {
         }
     );
 };
+
+export const getSessionFromDate = (date) => {
+    if (date < new Date(date.getFullYear() + "-05-31")) {
+        return date.getFullYear();
+    } else {
+        return date.getFullYear() + 1;
+    }
+};

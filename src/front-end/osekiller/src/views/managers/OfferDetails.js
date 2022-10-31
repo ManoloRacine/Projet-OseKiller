@@ -2,24 +2,13 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getOfferPdf, validateOffer } from "../../services/OfferService";
 import Validate from "../../components/Validate";
+import OfferDetailsNoValidate from "../../components/OfferDetailsNoValidate";
 
-const ValidateOffer = () => {
+const OfferDetails = () => {
     const [pdf, setPdf] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
     const { companyId, offerId, startDate } = location.state;
-    const [feedBack, setFeedback] = useState("");
-
-    const handleValidate = (isValid) => {
-        const dto = {
-            validation: isValid,
-            feedBack: feedBack,
-        };
-
-        validateOffer(companyId, offerId, dto)
-            .then(() => navigate("/dashboard"))
-            .catch((err) => console.log(err));
-    };
 
     useEffect(() => {
         getOfferPdf(companyId, offerId)
@@ -33,15 +22,7 @@ const ValidateOffer = () => {
             .catch((err) => console.log(err));
     }, [companyId, offerId]);
 
-    return (
-        <Validate
-            feedBack={feedBack}
-            pdf={pdf}
-            startDate={startDate}
-            setFeedBack={({ target }) => setFeedback(target.value)}
-            validate={handleValidate}
-        />
-    );
+    return <OfferDetailsNoValidate pdf={pdf} />;
 };
 
-export default ValidateOffer;
+export default OfferDetails;
