@@ -548,6 +548,11 @@ paths:
           schema:
             type: integer
           required: true
+        - in: path
+          name: applicantId
+          schema:
+            type: integer
+          required: true
       summary: Accepter l'application d'un étudiant
       description: Accepter l'application d'un étudiant
       operationId: acceptApplicant
