@@ -617,7 +617,7 @@ paths:
       security:
         - bearerAuth: []
 
-  /students/{studentId}/applications/{applicationId}/generate-contract :
+  /students/{studentId}/applications/{offerId}/generate-contract :
     post:
       tags:
         - Contracts
@@ -642,7 +642,7 @@ paths:
             type: integer
           required: true
         - in: path
-          name: applicationId
+          name: offerId
           schema:
             type: integer
           required: true
