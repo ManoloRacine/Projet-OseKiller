@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import LoadPdf from "../../components/LoadPdf"
+import LoadPdf from "../../components/LoadPdf";
 import { sendConvocation } from "../../services/CompanyService";
-import { getCv } from "../../services/StudentService"
+import { getCv } from "../../services/StudentService";
 import ErrorMessage from "../../components/ErrorMessage";
 
 const InviteStudent = () => {
-    const [firstDate, setFirstDate] = useState("")
-    const [secondDate, setSecondDate] = useState("")
-    const [thirdDate, setThirdDate] = useState("")
-    const [pdf, setPdf] = useState("")
+    const [firstDate, setFirstDate] = useState("");
+    const [secondDate, setSecondDate] = useState("");
+    const [thirdDate, setThirdDate] = useState("");
+    const [pdf, setPdf] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [hasOpenError, setHasOpenError] = useState(false);
     const location = useLocation();
-    const { studentEmail, studentId, offerId } = location.state ;
+    const studentEmail = location?.state?.studentEmail;
+    const studentId = location?.state?.studentEmail;
+    const offerId = location?.state?.offerId;
+    //const { studentEmail, studentId, offerId } = location.state ;
 
     useEffect(() => {
         getCv(studentId).then((response) => {
@@ -22,13 +25,18 @@ const InviteStudent = () => {
             });
             const data_url = window.URL.createObjectURL(blob1);
             setPdf(data_url);
-        }) ;
-    }, [])
+        });
+    }, []);
 
     const handleSubmit = (e) => {
-        e.preventDefault() ;
-        sendConvocation({offerId : offerId, dates : [firstDate, secondDate, thirdDate]}, studentId).then(() => setIsOpen(true)).catch(() => setHasOpenError(true));
-    }
+        e.preventDefault();
+        sendConvocation(
+            { offerId: offerId, dates: [firstDate, secondDate, thirdDate] },
+            studentId
+        )
+            .then(() => setIsOpen(true))
+            .catch(() => setHasOpenError(true));
+    };
 
     return (
         <div>
@@ -45,7 +53,7 @@ const InviteStudent = () => {
                 </div>
                 <div className="col-2"></div>
             </div>
-            
+
             <form className="row" onSubmit={handleSubmit}>
                 <div className="col-4">
                     <label htmlFor="firstDate" className={"form-label"}>
@@ -56,7 +64,7 @@ const InviteStudent = () => {
                         className={"form-control"}
                         id={"firstDate"}
                         value={firstDate}
-                        onChange={e => setFirstDate(e.target.value)}
+                        onChange={(e) => setFirstDate(e.target.value)}
                         required
                     />
                 </div>
@@ -69,7 +77,7 @@ const InviteStudent = () => {
                         className={"form-control"}
                         id={"secondDate"}
                         value={secondDate}
-                        onChange={e => setSecondDate(e.target.value)}
+                        onChange={(e) => setSecondDate(e.target.value)}
                         required
                     />
                 </div>
@@ -82,13 +90,18 @@ const InviteStudent = () => {
                         className={"form-control"}
                         id={"thirdDate"}
                         value={thirdDate}
-                        onChange={e => setThirdDate(e.target.value)}
+                        onChange={(e) => setThirdDate(e.target.value)}
                         required
                     />
                 </div>
-                <input type={"submit"}
+                <input
+                    type={"submit"}
                     className={"btn btn-primary"}
-                    disabled={firstDate === "" || secondDate === "" || thirdDate === ""}
+                    disabled={
+                        firstDate === "" ||
+                        secondDate === "" ||
+                        thirdDate === ""
+                    }
                 ></input>
             </form>
             {isOpen && (
@@ -104,7 +117,7 @@ const InviteStudent = () => {
                 />
             )}
         </div>
-    )
-}
+    );
+};
 
 export default InviteStudent;

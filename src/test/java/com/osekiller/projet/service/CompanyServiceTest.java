@@ -59,37 +59,7 @@ public class CompanyServiceTest {
         offer.setId(1L);
     }
 
-    @Test
-    void addOfferHappyDay() {
 
-        //Arrange
-
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
-        Company company = mock(Company.class) ;
-        when(companyRepository.findById(any())).thenReturn(Optional.of(company)) ;
-
-        companyService.addOffer(1L, offerDto, mockMultipartFile);
-
-        verify(offerRepository).save(any()) ;
-    }
-
-    @Test
-    void addOfferCompanyNonExistent() {
-
-        //Arrange
-
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
-        OfferDto offerDto = new OfferDto("test", 1, "2002-12-12", "2002-12-14") ;
-
-        when(companyRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
-
-        //Act & Assert
-
-        assertThatThrownBy(() -> companyService.addOffer(1L, offerDto, mockMultipartFile))
-                .isInstanceOf(ResponseStatusException.class)
-                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
-    }
 
     @Test
     void getOffersHappyDay() {
@@ -102,9 +72,9 @@ public class CompanyServiceTest {
         offer1.setId(1L);
         offer2.setId(2L);
         offer3.setId(3L);
-        OfferDtoResponseNoPdf offerDto1 = new OfferDtoResponseNoPdf(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString()) ;
-        OfferDtoResponseNoPdf offerDto2 = new OfferDtoResponseNoPdf(offer2.getId(), offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString()) ;
-        OfferDtoResponseNoPdf offerDto3 = new OfferDtoResponseNoPdf(offer3.getId(), offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString()) ;
+        OfferDtoResponseNoPdf offerDto1 = new OfferDtoResponseNoPdf(offer1.getId(), offer1.getPosition(), offer1.getSalary(), offer1.getStartDate().toString(), offer1.getEndDate().toString(), false, null) ;
+        OfferDtoResponseNoPdf offerDto2 = new OfferDtoResponseNoPdf(offer2.getId(), offer2.getPosition(), offer2.getSalary(), offer2.getStartDate().toString(), offer2.getEndDate().toString(), false, null) ;
+        OfferDtoResponseNoPdf offerDto3 = new OfferDtoResponseNoPdf(offer3.getId(), offer3.getPosition(), offer3.getSalary(), offer3.getStartDate().toString(), offer3.getEndDate().toString(),false, null) ;
         List<Offer> mockList = new ArrayList<>() ;
         mockList.add(offer1) ;
         mockList.add(offer2) ;

@@ -1,19 +1,31 @@
 import Upload from "../../components/Upload";
 import { useState } from "react";
-import { uploadInternshipOffer } from "../../services/CompanyService";
+import {
+    updateInternshipOffer,
+    uploadInternshipOffer,
+} from "../../services/CompanyService";
 import UploadInternshipForm from "../../components/forms/UploadInternshipForm";
 import ErrorMessage from "../../components/ErrorMessage";
+import { useLocation } from "react-router-dom";
 
 const UploadInternship = () => {
-    const [position, setPosition] = useState("");
-    const [salary, setSalary] = useState("");
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+    const location = useLocation();
+    const { state } = location;
+    const [position, setPosition] = useState(
+        state?.position ? state.position : ""
+    );
+    const [salary, setSalary] = useState(state?.salary ? String(state.salary) : "");
+    const [startDate, setStartDate] = useState(
+        state?.startDate ? String(state.startDate) : ""
+    );
+    const [endDate, setEndDate] = useState(state?.endDate ? String(state.endDate) : "");
     const [selectedFile, setSelectedFile] = useState({});
     const [isOfferSubmitted, setIsOfferSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = (userId) => {
+        console.log(position);
+        console.log(typeof salary)
         if (position.trim() === "") {
             setErrorMessage("La position ne doit pas être vide");
             return;
@@ -45,10 +57,15 @@ const UploadInternship = () => {
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("offerDto", JSON.stringify(dto));
-        uploadInternshipOffer(formData, userId)
-            .then(() => setIsOfferSubmitted(true))
+        state.offerId
+            ? updateInternshipOffer(formData, userId, state.offerId)
+                  .then(() => setIsOfferSubmitted(true))
 
-            .catch((err) => console.log("Error:", err));
+                  .catch((err) => console.log("Error:", err))
+            : uploadInternshipOffer(formData, userId)
+                  .then(() => setIsOfferSubmitted(true))
+
+                  .catch((err) => console.log("Error:", err));
     };
     return (
         <div>

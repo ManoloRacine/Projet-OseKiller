@@ -334,10 +334,90 @@ paths:
           description: étudiant non trouvé
       security:
         - bearerAuth: []
+    get:
+      tags:
+        - Student
+      parameters:
+        - in: path
+          name: id
+          description: studentId
+          schema:
+            type: integer
+          required: true
+      summary: Obtenir les convocations d'un étudiant
+      description: Obtenir les convocations d'un étudiant
+      operationId: getConvocations
+      responses:
+        '200':
+          description: Les convocations ont été envoyées
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    position:
+                      type: string
+                      example: Junior Web Developer
+                    dates:
+                      type: string
+                      example:
+                        - 2022-11-04
+                        - 2022-11-07
+                        - 2022-11-15
+
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Étudiant non trouvé
+      security:
+        - bearerAuth: [ ]
+  /students/{studentId}/interviews/{interviewId}/confirm:
+    post:
+      tags:
+        - Student
+      summary: Confirmation d'une date d'entrevue
+      description: Confirmation d'une date d'entrevue de la part d'un étudiant
+      operationId: confirmInterviewDate
+      parameters:
+        - in: path
+          name: studentId
+          description: studentId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: interviewId
+          description: interviewId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChosenInterviewDate'
+      responses:
+        '202':
+          description: La date de l'interview a été confirmée
+        '400':
+          description: La date de l'interview n'est pas dans les choix proposés
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Interview non trouvé
+        '409':
+          description: La date de l'interview a déjà été confirmée
+      security:
+        - bearerAuth: [ ]
   
   
   /companies/{id}/offers:
-    put:
+    post:
       tags:
         - Company
       parameters:
@@ -346,8 +426,8 @@ paths:
           schema:
             type: integer
           required: true
-      summary: Poster/Updater l'offre de stage d'une entreprise
-      description: Poster/Updater l'offre de stage d'une entreprise
+      summary: Poster l'offre de stage d'une entreprise
+      description: Poster l'offre de stage d'une entreprise
       operationId: uploadOffer
       requestBody:
         description: Postulé une offre de stage
@@ -418,6 +498,40 @@ paths:
       security:
         - bearerAuth: []
   /companies/{companyId}/offers/{offerId}:
+    put:
+      tags:
+        - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
+          schema:
+            type: integer
+          required: true
+      summary: Modifier l'offre de stage d'une entreprise
+      description: Modifier l'offre de stage d'une entreprise
+      operationId: updateOffer
+      requestBody:
+        description: Modifier une offre de stage
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              $ref: '#/components/schemas/InternshipOffer'
+        required: true
+      responses:
+        '202':
+          description: L'offre à été resoumise et est en attente de validation
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: entreprise ou offre de stage non trouvé
+      security:
+        - bearerAuth: []
     get:
       tags:
         - Company
@@ -582,7 +696,6 @@ paths:
           description: Offre non trouvé
       security:
         - bearerAuth: []
-
 components:
   securitySchemes:
     bearerAuth:
@@ -633,6 +746,14 @@ components:
         feedBack:
           type: string
           example: trop long
+    ChosenInterviewDate:
+      type: object
+      required:
+        - chosenDate
+      properties:
+        chosenDate:
+          type: string
+          example: 2022-11-07
     SignUpRequest:
       type: object
       required:
