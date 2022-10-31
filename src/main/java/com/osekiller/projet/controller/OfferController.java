@@ -21,17 +21,17 @@ public class OfferController {
     AuthService authService;
 
     @GetMapping
-    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam String accepted,
+    public ResponseEntity<List<GeneralOfferDto>> getAllValidOffers(@RequestParam boolean accepted,
                                                                    @RequestParam(required = false) Integer session) {
 
-        if (accepted.equals("true")) {
+        if (accepted) {
             if (session == null) {
                 return ResponseEntity.ok().body(offerService.getAllValidOffers()) ;
             }
             else {
                 return ResponseEntity.ok().body(offerService.getAllValidOffersBySession(session)) ;
             }
-        } else if (accepted.equals("false")) {
+        } else {
             if (session == null) {
                 return ResponseEntity.ok().body(offerService.getAllInvalidOffers()) ;
             }
@@ -39,8 +39,6 @@ public class OfferController {
                 return ResponseEntity.ok().body(offerService.getAllInvalidOffersBySession(session)) ;
             }
         }
-
-        return ResponseEntity.badRequest().build() ;
     }
 
     @PostMapping("/{id}/apply")

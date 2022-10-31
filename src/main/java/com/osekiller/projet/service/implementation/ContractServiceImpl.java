@@ -1,5 +1,6 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
@@ -55,7 +56,7 @@ public class ContractServiceImpl implements ContractService {
         fieldEnd.setValue(offer.getEndDate().toString());
 
         PDField fieldSalary = acroForm.getField( "offre_tauxHoraire" );
-        fieldSalary.setValue(offer.getSalary());
+        fieldSalary.setValue(String.valueOf(offer.getSalary()));
 
         PDField fieldCompanySign = acroForm.getField( "nom_employeur_sign" );
         fieldCompanySign.setValue(offer.getOwner().getName());
@@ -70,5 +71,9 @@ public class ContractServiceImpl implements ContractService {
         pdfDocument.save(new File("final.pdf"));
 
         return null ;
+    }
+
+    public List<ApplicationDto> getAcceptedApplications() {
+        
     }
 }
