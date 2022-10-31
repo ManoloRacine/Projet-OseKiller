@@ -10,10 +10,7 @@ import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -115,6 +112,11 @@ public class ContractServiceImpl implements ContractService {
         contentStream.close();
 
         acroForm.flatten() ;
+
+        PDDocumentInformation pdd = pdfDocument.getDocumentInformation() ;
+
+        pdd.setTitle(offer.getOwner().getName() + "-" + student.getName() + "-Contract");
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
         pdfDocument.save(byteArrayOutputStream);
 
