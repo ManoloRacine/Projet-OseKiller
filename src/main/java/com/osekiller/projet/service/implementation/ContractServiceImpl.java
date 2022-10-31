@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,6 +75,12 @@ public class ContractServiceImpl implements ContractService {
     }
 
     public List<ApplicationDto> getAcceptedApplications() {
-        
+        List<ApplicationDto> dtos = new ArrayList<>();
+        offerRepository.findAllByHasAcceptedApplicants().forEach(
+                offer -> offer.getAcceptedApplicants().forEach(
+                        student -> dtos.add(ApplicationDto.from(offer, student))
+                )
+        );
+        return dtos;
     }
 }
