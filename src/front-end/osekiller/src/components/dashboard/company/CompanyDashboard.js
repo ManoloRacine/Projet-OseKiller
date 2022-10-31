@@ -6,8 +6,8 @@ import {
     faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { AuthenticatedUserContext } from "../../App";
-import { getOffersByCompany } from "../../services/CompanyService";
+import { AuthenticatedUserContext } from "../../../App";
+import { getOffersByCompany } from "../../../services/CompanyService";
 
 const CompanyDashboard = () => {
     const companyId = useContext(AuthenticatedUserContext)?.authenticatedUser
@@ -45,7 +45,7 @@ const CompanyDashboard = () => {
 
                     <div className={"d-flex flex-column align-items-center"}>
                         <p className={"fs-4 text-decoration-underline"}>État</p>
-                        {offer.isValidated && offer.isAccepted ? (
+                        {offer.accepted ? (
                             <div className={"d-flex flex-column"}>
                                 <FontAwesomeIcon
                                     icon={faCircleCheck}
@@ -53,7 +53,7 @@ const CompanyDashboard = () => {
                                 />
                                 <p>Valide</p>
                             </div>
-                        ) : offer.isValidated && !offer.isAccepted ? (
+                        ) : offer.feedback && !offer.accepted ? (
                             <div className={"d-flex flex-column"}>
                                 <FontAwesomeIcon
                                     icon={faCircleXmark}
@@ -72,11 +72,12 @@ const CompanyDashboard = () => {
                         )}
                     </div>
 
-                    {!(offer.isValidated && offer.isAccepted) && (
+                    {!(offer.accepted) && (
                         <Link
                             to={"/upload-internship"}
                             className={"btn btn-primary"}
                             state={{
+                                offerId: offer.offerId,
                                 position: offer.position,
                                 salary: offer.salary,
                                 startDate: offer.startDate,

@@ -334,8 +334,88 @@ paths:
           description: étudiant non trouvé
       security:
         - bearerAuth: []
+    get:
+      tags:
+        - Student
+      parameters:
+        - in: path
+          name: id
+          description: studentId
+          schema:
+            type: integer
+          required: true
+      summary: Obtenir les convocations d'un étudiant
+      description: Obtenir les convocations d'un étudiant
+      operationId: getConvocations
+      responses:
+        '200':
+          description: Les convocations ont été envoyées
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    position:
+                      type: string
+                      example: Junior Web Developer
+                    dates:
+                      type: string
+                      example:
+                        - 2022-11-04
+                        - 2022-11-07
+                        - 2022-11-15
 
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Étudiant non trouvé
+      security:
+        - bearerAuth: [ ]
+  /students/{studentId}/interviews/{interviewId}/confirm:
+    post:
+      tags:
+        - Student
+      summary: Confirmation d'une date d'entrevue
+      description: Confirmation d'une date d'entrevue de la part d'un étudiant
+      operationId: confirmInterviewDate
+      parameters:
+        - in: path
+          name: studentId
+          description: studentId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: interviewId
+          description: interviewId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChosenInterviewDate'
+      responses:
+        '202':
+          description: La date de l'interview a été confirmée
+        '400':
+          description: La date de l'interview n'est pas dans les choix proposés
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Interview non trouvé
+        '409':
+          description: La date de l'interview a déjà été confirmée
+      security:
+        - bearerAuth: [ ]
 
+  
   /companies/{id}/offers:
     post:
       tags:
@@ -533,6 +613,39 @@ paths:
           description: entreprise ou offre non trouvé
       security:
         - bearerAuth: []
+  /companies/{companyId}/offers/{offerId}/applicants/{applicantId}/accept:
+    post:
+      tags:
+       - Company
+      parameters:
+        - in: path
+          name: companyId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: offerId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: applicantId
+          schema:
+            type: integer
+          required: true
+      summary: Accepter l'application d'un étudiant
+      description: Accepter l'application d'un étudiant
+      operationId: acceptApplicant
+      responses:
+        '200':
+          description: l'application à été accepté
+        '403':
+          description: requête non autorisé
+        '404':
+          description: entreprise, offre, ou étudiant non trouvé
+      security:
+        - bearerAuth: []
+
 
   /companies/{companyId}/offers/{offerId}/validate:
     post:
@@ -614,6 +727,38 @@ paths:
           description: Requête non autorisée ou l'offre de stage est en attente de validation
         '404':
           description: Offre non trouvé
+      security:
+        - bearerAuth: []
+  /contracts/{id}/sign:
+    post:
+      tags:
+        - Contract
+      summary: Signer une entente de stage
+      description: Signer une entente de stage
+      operationId: signContract
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: l'entente à été signé
+        '400':
+          description: signature manquante
+        '409':
+          description: L'entente à déjà été signé
+        '403':
+          description: Requête non autorisée
+        '404':
+          description: Entente non trouvé
       security:
         - bearerAuth: []
 
@@ -716,7 +861,7 @@ components:
       properties:
         name:
           type: string
-          example: Hugo Lantier
+          example: Hugo Lantier 
         email:
           type: string
           format: email
@@ -732,6 +877,14 @@ components:
         feedBack:
           type: string
           example: trop long
+    ChosenInterviewDate:
+      type: object
+      required:
+        - chosenDate
+      properties:
+        chosenDate:
+          type: string
+          example: 2022-11-07
     SignUpRequest:
       type: object
       required:

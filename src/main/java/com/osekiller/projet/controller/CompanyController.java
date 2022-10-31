@@ -37,7 +37,7 @@ public class CompanyController {
                                           @PathVariable(name = "id") Long id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         OfferDto offerDto1 = mapper.readValue(offerDto, OfferDto.class) ;
-        companyService.addOffer(id, offerDto1, file);
+        offerService.addOffer(id, offerDto1, file);
         return ResponseEntity.accepted().build() ;
     }
 
@@ -72,6 +72,38 @@ public class CompanyController {
         return ResponseEntity.ok(offerService.getApplicants(offerId));
     }
 
+    @PostMapping("/{companyId}/offers/{offerId}/applicants/{applicantId}/accept")
+    public ResponseEntity<Void> acceptApplicant(@PathVariable(name = "companyId") Long companyId,
+                                                @PathVariable(name = "offerId") Long offerId,
+                                                @PathVariable(name = "applicantId") Long applicantId){
+
+        if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        offerService.acceptApplicantForOffer(applicantId, offerId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{companyId}/offers/{offerId}")
+    public ResponseEntity<Void> updateOffer (@PathVariable(name = "companyId") Long companyId,
+                                             @PathVariable(name = "offerId") Long offerId,
+                                             @RequestParam(name = "offerDto") String offerDtoString,
+                                             @RequestParam(name = "file") MultipartFile file) throws JsonProcessingException {
+
+        if(!companyService.companyExists(companyId) || !companyService.companyOwnsOffer(companyId, offerId)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        OfferDto offerDto = mapper.readValue(offerDtoString, OfferDto.class) ;
+
+        offerService.modifyOffer(offerId,offerDto,file);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{companyId}/offers/{offerId}")
     public ResponseEntity<OfferDtoResponseNoPdf> getOffer(@PathVariable(name = "companyId") Long companyId,
                                                                    @PathVariable(name = "offerId") Long offerId) {
@@ -83,7 +115,7 @@ public class CompanyController {
         OfferDtoResponse offerDtoResponse = offerService.getOffer(offerId) ;
         OfferDtoResponseNoPdf offerDtoResponseNoPdf = new OfferDtoResponseNoPdf(offerDtoResponse.offerId(),
                 offerDtoResponse.position(), offerDtoResponse.salary(), offerDtoResponse.startDate(),
-                offerDtoResponse.endDate()) ;
+                offerDtoResponse.endDate(),offerDtoResponse.accepted(),offerDtoResponse.feedback()) ;
 
         return ResponseEntity.ok().body(offerDtoResponseNoPdf) ;
     }
