@@ -24,7 +24,7 @@ public class ApplicationController {
             return ResponseEntity.ok(contractService.getAcceptedApplications()) ;
         }
         else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST) ;
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED) ;
         }
     }
 }
