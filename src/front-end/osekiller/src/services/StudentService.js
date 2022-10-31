@@ -58,15 +58,19 @@ export const getOffersStudent = async (studentId) => {
     });
 };
 
-export const updateStudentSession = async (studentId) => {
-    return axios.post(
-        `/students/${studentId}/updateSession`,
-        {},
-        {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: localStorage.getItem("accessToken"),
-            },
-        }
-    );
+export const getStudentConvocations = async (studentId) => {
+    return axios.get(`/students/${studentId}/interviews`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
+
+export const getSessionFromDate = (date) => {
+    if (date < new Date(date.getFullYear() + "-05-31")) {
+        return date.getFullYear();
+    } else {
+        return date.getFullYear() + 1;
+    }
 };

@@ -612,6 +612,38 @@ paths:
                     description: entreprise ou offre non trouvé
             security:
                 - bearerAuth: []
+    /companies/{companyId}/offers/{offerId}/applicants/{applicantId}/accept:
+        post:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: companyId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: offerId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: applicantId
+                  schema:
+                      type: integer
+                  required: true
+            summary: Accepter l'application d'un étudiant
+            description: Accepter l'application d'un étudiant
+            operationId: acceptApplicant
+            responses:
+                "200":
+                    description: l'application à été accepté
+                "403":
+                    description: requête non autorisé
+                "404":
+                    description: entreprise, offre, ou étudiant non trouvé
+            security:
+                - bearerAuth: []
 
     /companies/{companyId}/offers/{offerId}/validate:
         post:
@@ -695,8 +727,40 @@ paths:
                     description: Offre non trouvé
             security:
                 - bearerAuth: []
+    /contracts/{id}/sign:
+        post:
+            tags:
+                - Contract
+            summary: Signer une entente de stage
+            description: Signer une entente de stage
+            operationId: signContract
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            requestBody:
+                content:
+                    image/png:
+                        schema:
+                            type: string
+                            format: binary
+            responses:
+                "200":
+                    description: l'entente à été signé
+                "400":
+                    description: signature manquante
+                "409":
+                    description: L'entente à déjà été signé
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Entente non trouvé
+            security:
+                - bearerAuth: []
 
-    /contracts/{offerId}/generate:
+    /students/{studentId}/applications/{offerId}/generate-contract:
         post:
             tags:
                 - Contracts
@@ -714,8 +778,12 @@ paths:
                                 - ecrire du code
                                 - tester du code
                                 - deployer builds
-
             parameters:
+                - in: path
+                  name: studentId
+                  schema:
+                      type: integer
+                  required: true
                 - in: path
                   name: offerId
                   schema:
@@ -727,12 +795,17 @@ paths:
                 "403":
                     description: Requête non autorisée
                 "409":
-                    description: le pdf a déjà été généré
+                    description: le pdf a déjà été généré ou l'application n'as pas été accepté
 
             security:
                 - bearerAuth: []
-    /applications/accepted:
+    /applications:
         get:
+            parameters:
+                - in: query
+                  name: accepted
+                  schema:
+                      type: boolean
             tags:
                 - Applications
             summary: Recevoir les applications acceptés par les compagnies
@@ -926,9 +999,6 @@ components:
                 companyName:
                     type: string
                     example: compagnie
-                companyId:
-                    type: integer
-                    example: 1
                 offerId:
                     type: integer
                     example: 2

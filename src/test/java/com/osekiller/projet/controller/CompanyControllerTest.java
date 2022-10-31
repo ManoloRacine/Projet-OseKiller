@@ -252,7 +252,7 @@ public class CompanyControllerTest {
         mockStudent3.setId(3L);
 
         List<UserInfoDto> dtoList = Stream.of(mockStudent1,mockStudent2,mockStudent3)
-                .map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail())).toList();
+                .map(applicant -> new UserInfoDto(applicant.getId(), applicant.getName(), applicant.getEmail(), false)).toList();
 
         when(companyService.companyExists(anyLong())).thenReturn(true);
         when(companyService.companyOwnsOffer(anyLong(),anyLong())).thenReturn(true);

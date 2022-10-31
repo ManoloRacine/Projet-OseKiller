@@ -257,7 +257,7 @@ public class OfferServiceTest {
 
         List<UserInfoDto> expected = offer.getApplicants().stream()
                 .map(applicant ->
-                        new UserInfoDto(applicant.getId(), applicant.getName(),applicant.getEmail())
+                        new UserInfoDto(applicant.getId(), applicant.getName(),applicant.getEmail(), false)
                 ).toList();
 
         //Act
