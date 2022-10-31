@@ -9,14 +9,19 @@ import com.osekiller.projet.repository.user.ManagerRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -30,17 +35,28 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ContractServiceImpl implements ContractService {
     OfferRepository offerRepository ;
     ManagerRepository managerRepository ;
     StudentRepository studentRepository ;
+
+    private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
+    private static final float FONT_SIZE = 12;
+    private static final float LEADING = -1.5f * FONT_SIZE;
+
     @Override
     public Resource generateContract(List<String> contractTasks, long offerId, long studentId, long managerId) throws IOException {
-        Offer offer = offerRepository.findById(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        Offer offer = offerRepository.findByIdAndFetchApplicants(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        log.info("offer loaded");
         Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        log.info("manager loaded");
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        log.info("student loaded");
 
-        //TODO lancer exception si application/offer pas dans le student
+        //if (!offer.getApplicants().contains(student)) {
+        //    throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        //}
 
         PDDocument pdfDocument = PDDocument.load(new File("Templates/contratTemplateNewPage.pdf"));
         PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
@@ -77,20 +93,21 @@ public class ContractServiceImpl implements ContractService {
 
         PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
 
+
+
+        PDRectangle mediaBox = pdPage.getMediaBox();
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
         contentStream.beginText();
-
-        contentStream.newLineAtOffset(25, 700);
-
-        contentStream.setFont(PDType1Font.TIMES_ROMAN, 24);
-
-        contentStream.setLeading(14.5f);
-
-        contentStream.showText("TACHES ET RESPONSABILITES DU STAGIAIRE");
+        addParagraph(contentStream, width, startX, startY, "TACHES ET RESPONSABILITES DU STAGIAIRE", true);
 
         for (String task : contractTasks) {
-            contentStream.newLine() ;
-            contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
-            contentStream.showText("-" + task);
+            System.out.println(task);
+            addParagraph(contentStream, width, 0, -FONT_SIZE, "-" + task, true);
         }
 
         contentStream.endText();
@@ -102,6 +119,57 @@ public class ContractServiceImpl implements ContractService {
         pdfDocument.save(byteArrayOutputStream);
 
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
+    }
+
+    //https://memorynotfound.com/apache-pdfbox-adding-multiline-paragraph/
+    private static void addParagraph(PDPageContentStream contentStream, float width, float sx,
+                                     float sy, String text, boolean justify) throws IOException {
+        List<String> lines = parseLines(text, width);
+        contentStream.setFont(FONT, FONT_SIZE);
+        contentStream.newLineAtOffset(sx, sy);
+        for (String line: lines) {
+            float charSpacing = 0;
+            if (justify){
+                if (line.length() > 1) {
+                    float size = FONT_SIZE * FONT.getStringWidth(line) / 1000;
+                    float free = width - size;
+                    if (free > 0 && !lines.get(lines.size() - 1).equals(line)) {
+                        charSpacing = free / (line.length() - 1);
+                    }
+                }
+            }
+            contentStream.setCharacterSpacing(charSpacing);
+            contentStream.showText(line);
+            contentStream.newLineAtOffset(0, LEADING);
+        }
+    }
+
+    //https://memorynotfound.com/apache-pdfbox-adding-multiline-paragraph/
+    private static List<String> parseLines(String text, float width) throws IOException {
+        List<String> lines = new ArrayList<String>();
+        int lastSpace = -1;
+        while (text.length() > 0) {
+            int spaceIndex = text.indexOf(' ', lastSpace + 1);
+            if (spaceIndex < 0)
+                spaceIndex = text.length();
+            String subString = text.substring(0, spaceIndex);
+            float size = FONT_SIZE * FONT.getStringWidth(subString) / 1000;
+            if (size > width) {
+                if (lastSpace < 0){
+                    lastSpace = spaceIndex;
+                }
+                subString = text.substring(0, lastSpace);
+                lines.add(subString);
+                text = text.substring(lastSpace).trim();
+                lastSpace = -1;
+            } else if (spaceIndex == text.length()) {
+                lines.add(text);
+                text = "";
+            } else {
+                lastSpace = spaceIndex;
+            }
+        }
+        return lines;
     }
 
     public List<ApplicationDto> getAcceptedApplications() {

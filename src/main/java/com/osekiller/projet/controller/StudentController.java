@@ -108,8 +108,8 @@ public class StudentController {
 
     @PostMapping("/{studentId}/applications/{offerId}/generate-contract")
     public ResponseEntity<Resource> generateContract(@RequestHeader(HttpHeaders.AUTHORIZATION) String header,
-                                                     @RequestParam Long studentId,
-                                                     @RequestParam Long offerId,
+                                                     @PathVariable(name = "studentId") Long studentId,
+                                                     @PathVariable(name = "offerId") Long offerId,
                                                      @RequestBody List<String> contractTasks) throws IOException {
         String jwt = header.substring(7);
         Long managerId = authService.getUserFromToken(jwt).id();

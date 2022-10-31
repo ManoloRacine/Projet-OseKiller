@@ -52,11 +52,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         initializeManagers();
         initializeStudents();
 
+        /*
         try {
             contractService.generateContract(List.of("DKALSDSAJ", "AHSDSAJDKLSA", "DJSALHFJKDAH"), 5, 11, 10) ;
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         alreadySetup = true;
     }
 
