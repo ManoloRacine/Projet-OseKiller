@@ -12,7 +12,9 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     List<Offer> findAllByOwner(Company company) ;
     @Query("SELECT o FROM Offer o LEFT JOIN FETCH o.applicants WHERE o.id = (:id)")
     Optional<Offer> findByIdAndFetchApplicants(long id);
-    List<Offer> findAllByAcceptedIsTrue() ;
-    List<Offer> findAllByAcceptedIsFalse() ;
+    @Query("SELECT o FROM Offer o LEFT JOIN FETCH o.acceptedApplicants WHERE o.acceptedApplicants.size > 0")
+    List<Offer> findAllByHasAcceptedApplicants();
+    List<Offer> findAllByAcceptedIsTrue();
+    List<Offer> findAllByAcceptedIsFalse();
     List<Offer> findAllByAcceptedIsFalseAndFeedbackIsNull();
 }
