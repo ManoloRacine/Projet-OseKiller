@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import ErrorMessage from "./ErrorMessage";
 import LoadPdf from "./LoadPdf";
+import { getSessionFromDate } from "../services/StudentService";
 
-const Validate = ({ pdf, feedBack, setFeedBack, validate }) => {
+const Validate = ({ pdf, feedBack, setFeedBack, validate, startDate }) => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleValidate = (isValid) => {
@@ -27,30 +28,37 @@ const Validate = ({ pdf, feedBack, setFeedBack, validate }) => {
                     height={"500px"}
                 />
             </div>
-            <div className="input-group py-3">
-                <span className="input-group-text">Feedback</span>
-                <textarea
-                    className="form-control"
-                    value={feedBack}
-                    onChange={setFeedBack}
-                ></textarea>
-            </div>
-            <button
-                className="btn btn-success float-left"
-                onClick={() => handleValidate(true)}
-            >
-                <FontAwesomeIcon icon={faCheck} className="me-2" />
-                Approuver
-            </button>
-            <button
-                className="btn btn-danger float-left"
-                onClick={() => handleValidate(false)}
-            >
-                <FontAwesomeIcon icon={faX} className="me-2" />
-                Désapprouver
-            </button>
-            {errorMessage && (
-                <ErrorMessage message={errorMessage} severity="error" />
+            {getSessionFromDate(new Date()) ===
+            getSessionFromDate(new Date(startDate)) ? (
+                <div>
+                    <div className="input-group py-3">
+                        <span className="input-group-text">Feedback</span>
+                        <textarea
+                            className="form-control"
+                            value={feedBack}
+                            onChange={setFeedBack}
+                        ></textarea>
+                    </div>
+                    <button
+                        className="btn btn-success float-left"
+                        onClick={() => handleValidate(true)}
+                    >
+                        <FontAwesomeIcon icon={faCheck} className="me-2" />
+                        Approuver
+                    </button>
+                    <button
+                        className="btn btn-danger float-left"
+                        onClick={() => handleValidate(false)}
+                    >
+                        <FontAwesomeIcon icon={faX} className="me-2" />
+                        Désapprouver
+                    </button>
+                    {errorMessage && (
+                        <ErrorMessage message={errorMessage} severity="error" />
+                    )}
+                </div>
+            ) : (
+                <div>La session est terminé, elle ne peut plus être validé</div>
             )}
         </>
     );

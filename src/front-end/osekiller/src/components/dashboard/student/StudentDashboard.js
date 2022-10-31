@@ -1,0 +1,78 @@
+import StudentCv from "./StudentCv";
+import StudentConvocation from "./StudentConvocation";
+import React, { useContext, useEffect, useState } from "react";
+import { confirmInterviewDate } from "../../../services/InterviewService";
+import { getStudentConvocations } from "../../../services/StudentService";
+import { AuthenticatedUserContext } from "../../../App";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarDay } from "@fortawesome/free-solid-svg-icons";
+import ErrorMessage from "../../ErrorMessage";
+
+const StudentDashboard = () => {
+    const studentId = useContext(AuthenticatedUserContext)?.authenticatedUser
+        ?.id;
+    const [convocations, setConvocation] = useState([]);
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        getStudentConvocations(studentId)
+            .then((response) => {
+                setConvocation(response.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [convocations]);
+
+    const handleConfirmInterviewDate = (interviewId, confirmDate) => {
+        confirmInterviewDate(interviewId, studentId, confirmDate)
+            .then(() => {
+                setConvocation(convocations);
+                setMessage("Date de l'entrevue confirmée avec succès!");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    return (
+        <div className={"mt-3 row"}>
+            <div className={"col-6"}>
+                <h2>Mon CV</h2>
+                <StudentCv />
+            </div>
+            <div className={"col-6"}>
+                <h2>Mes convocations</h2>
+                {convocations.length === 0 ? (
+                    <div
+                        className={
+                            "h-75 text-white d-flex flex-column align-items-center justify-content-center rounded"
+                        }
+                        style={{ backgroundColor: "#2C324C" }}
+                    >
+                        <FontAwesomeIcon
+                            icon={faCalendarDay}
+                            className="fa-4x mb-4"
+                        />
+                        <p>Aucune convocation pour l'instant</p>
+                    </div>
+                ) : (
+                    convocations.map((convocation, index) => (
+                        <StudentConvocation
+                            key={index}
+                            convocation={convocation}
+                            confirmInterviewDate={handleConfirmInterviewDate}
+                        />
+                    ))
+                )}
+            </div>
+            <div>
+                {message && (
+                    <ErrorMessage message={message} severity={"success"} />
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default StudentDashboard;

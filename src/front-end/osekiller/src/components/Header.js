@@ -24,12 +24,10 @@ export const Header = () => {
             >
                 <div className="header d-flex align-items-center text-white">
                     <Link to={"/dashboard"}>
-                        <img
-                            src={calLogo}
-                            alt="Logo du Cégep André-Laurendeau"
-                        />
+                        <button className="btn btn-primary align-middle">
+                            Dashboard
+                        </button>
                     </Link>
-
                     <h1 className="ps-4 display-4">Ose killer</h1>
                 </div>
                 <div className="links d-flex mx-auto">
@@ -86,10 +84,9 @@ export const Header = () => {
                     )}
                     {authenticatedUser.role === "STUDENT" && (
                         <Link
-                        
-                        to={"/offers-students"}
-                        state={{ userId: authenticatedUser.id }}
-                        className="m-4 fs-2 d-flex align-items-center"
+                            to={"/offers-students"}
+                            state={{ userId: authenticatedUser.id }}
+                            className="m-4 fs-2 d-flex align-items-center"
                         >
                             Voir les offres de stage
                         </Link>
