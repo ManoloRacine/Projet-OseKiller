@@ -70,7 +70,7 @@ const OffersManager = () => {
                     type="button"
                 >
                     {sessionFilter === ""
-                        ? "Toutes les sessions"
+                        ? Math.max(...sessions)
                         : sessionFilter}
                 </button>
                 <ul
