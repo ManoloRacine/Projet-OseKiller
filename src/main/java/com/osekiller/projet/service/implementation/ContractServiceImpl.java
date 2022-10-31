@@ -17,14 +17,14 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class ContractServiceImpl implements ContractService {
 
         //TODO lancer exception si application/offer pas dans le student
 
-        PDDocument pdfDocument = PDDocument.load(new File("Templates/contratTemplateFieldsFinal.pdf"));
+        PDDocument pdfDocument = PDDocument.load(new File("Templates/contratTemplateNewPage.pdf"));
         PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
         PDAcroForm acroForm = docCatalog.getAcroForm();
 
@@ -73,9 +73,7 @@ public class ContractServiceImpl implements ContractService {
         PDField fieldEtudiantSign = acroForm.getField( "nom_etudiant_sign" );
         fieldEtudiantSign.setValue(student.getName());
 
-        PDPage pdPage = new PDPage() ;
-
-        pdfDocument.addPage(pdPage);
+        PDPage pdPage = pdfDocument.getPage(2) ;
 
         PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
 
@@ -99,10 +97,11 @@ public class ContractServiceImpl implements ContractService {
 
         contentStream.close();
 
-        acroForm.flatten();
-        pdfDocument.save(new File("final.pdf"));
+        acroForm.flatten() ;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
+        pdfDocument.save(byteArrayOutputStream);
 
-        return null ;
+        return new ByteArrayResource(byteArrayOutputStream.toByteArray());
     }
 
     public List<ApplicationDto> getAcceptedApplications() {
