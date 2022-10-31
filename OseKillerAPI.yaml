@@ -617,7 +617,7 @@ paths:
       security:
         - bearerAuth: []
 
-  /contracts/{offerId}/generate:
+  /students/{studentId}/applications/{applicationId}/generate-contract :
     post:
       tags:
         - Contracts
@@ -635,10 +635,14 @@ paths:
                 - ecrire du code
                 - tester du code
                 - deployer builds
-
       parameters:
         - in: path
-          name : offerId
+          name : studentId
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: applicationId
           schema:
             type: integer
           required: true
@@ -648,12 +652,17 @@ paths:
         '403':
           description: Requête non autorisée
         '409':
-          description: le pdf a déjà été généré
+          description: le pdf a déjà été généré ou l'application n'as pas été accepté
 
       security:
         - bearerAuth: []
-  /applications/accepted:
+  /applications:
     get:
+      parameters:
+        - in: query
+          name: accepted
+          schema:
+            type: boolean
       tags:
         - Applications
       summary: Recevoir les applications acceptés par les compagnies
@@ -840,9 +849,6 @@ components:
         companyName :
           type: string
           example : compagnie
-        companyId :
-          type: integer
-          example : 1
         offerId :
           type : integer
           example : 2
