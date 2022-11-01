@@ -24,7 +24,7 @@ const StudentCv = ({ studentInfo, studentId }) => {
                 setUserPdf(data_url);
             }
         });
-    }, [studentId]);
+    }, []);
 
     return (
         <>

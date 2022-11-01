@@ -96,7 +96,7 @@ public class StudentServiceImpl implements StudentService {
     public Resource getCV(long studentId) {
         Optional<Student> student = studentRepository.findById(studentId) ;
         if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
-        if (cvRepository.findById(student.get().getCv().getId()).isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        if (cvRepository.findById(student.get().getCv().getId()).get().getPdf() == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
 
         return new ByteArrayResource(student.get().getCv().getPdf());
     }
