@@ -1,9 +1,11 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
+import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.ManagerRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -37,6 +39,7 @@ public class ContractServiceImpl implements ContractService {
     OfferRepository offerRepository ;
     ManagerRepository managerRepository ;
     StudentRepository studentRepository ;
+    ContractRepository contractRepository ;
 
     private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
     private static final float FONT_SIZE = 12;
@@ -119,6 +122,14 @@ public class ContractServiceImpl implements ContractService {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
         pdfDocument.save(byteArrayOutputStream);
+
+        pdfDocument.close();
+
+        Contract contract = new Contract(student, offer, manager) ;
+
+        contract.setPdf(byteArrayOutputStream.toByteArray());
+
+        contractRepository.save(contract) ;
 
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
     }
