@@ -53,6 +53,10 @@ public class ContractServiceImpl implements ContractService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
         }
 
+        if (contractRepository.findByStudent_IdAndOffer_Id(studentId, offerId).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT) ;
+        }
+
         PDDocument pdfDocument = PDDocument.load(new File("Templates/contratTemplateNewPage.pdf"));
 
         writeValuesInPdf(student, offer, manager, pdfDocument);
@@ -200,5 +204,10 @@ public class ContractServiceImpl implements ContractService {
                 contract -> dtos.add(ContractDto.from(contract))
         );
         return dtos ;
+    }
+
+    public Resource getContract(long contractId) {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        return new ByteArrayResource(contract.getPdf()) ;
     }
 }

@@ -12,4 +12,6 @@ public interface ContractService {
     List<ApplicationDto> getAcceptedApplications() ;
 
     List<ContractDto> getContracts() ;
+
+    Resource getContract(long contractId) ;
 }
