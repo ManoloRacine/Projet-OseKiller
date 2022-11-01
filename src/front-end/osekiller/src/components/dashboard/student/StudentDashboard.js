@@ -31,7 +31,7 @@ const StudentDashboard = () => {
             .catch((err) => {
                 console.log(err);
             });
-    }, [convocations]);
+    }, [message]);
 
     const handleConfirmInterviewDate = (interviewId, confirmDate) => {
         confirmInterviewDate(interviewId, studentId, confirmDate)
