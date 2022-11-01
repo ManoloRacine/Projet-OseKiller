@@ -1,6 +1,8 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.controller.ContractController;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
+import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
@@ -190,5 +192,13 @@ public class ContractServiceImpl implements ContractService {
                 )
         );
         return dtos;
+    }
+
+    public List<ContractDto> getContracts() {
+        List<ContractDto> dtos = new ArrayList<>() ;
+        contractRepository.findAll().forEach(
+                contract -> dtos.add(ContractDto.from(contract))
+        );
+        return dtos ;
     }
 }
