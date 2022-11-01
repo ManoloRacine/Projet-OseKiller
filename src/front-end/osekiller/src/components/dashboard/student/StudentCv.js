@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import { getCv, getStudent } from "../../../services/StudentService";
-import { AuthenticatedUserContext } from "../../../App";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { getCv } from "../../../services/StudentService";
 import LoadPdf from "../../LoadPdf";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,16 +11,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
-const StudentCv = () => {
-    const studentId = useContext(AuthenticatedUserContext)?.authenticatedUser
-        ?.id;
+const StudentCv = ({ studentInfo, studentId }) => {
     const [userPdf, setUserPdf] = useState("");
-    const [studentInfo, setStudentInfo] = useState({});
 
     useEffect(() => {
-        getStudent(studentId).then((response) => {
-            setStudentInfo(response.data);
-        });
         getCv(studentId).then((response) => {
             if (response.status !== 204) {
                 const blob1 = new Blob([response.data], {
@@ -30,7 +24,7 @@ const StudentCv = () => {
                 setUserPdf(data_url);
             }
         });
-    }, [studentId]);
+    }, []);
 
     return (
         <>
@@ -116,6 +110,11 @@ const StudentCv = () => {
             )}
         </>
     );
+};
+
+StudentCv.propTypes = {
+    studentInfo: PropTypes.object.isRequired,
+    studentId: PropTypes.object.isRequired,
 };
 
 export default StudentCv;
