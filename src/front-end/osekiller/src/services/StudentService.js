@@ -74,3 +74,16 @@ export const getSessionFromDate = (date) => {
         return date.getFullYear() + 1;
     }
 };
+
+export const updateStudentSession = async (studentId) => {
+    return axios.post(
+        `/students/${studentId}/updateSession`,
+        {},
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+            },
+        }
+    );
+};

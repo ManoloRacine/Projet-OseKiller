@@ -1,5 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getCv, getStudent } from "../../../services/StudentService";
+import {
+    getCv,
+    getStudent,
+    updateStudentSession,
+} from "../../../services/StudentService";
 import { AuthenticatedUserContext } from "../../../App";
 import LoadPdf from "../../LoadPdf";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,16 +15,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
-const StudentCv = () => {
-    const studentId = useContext(AuthenticatedUserContext)?.authenticatedUser
-        ?.id;
+const StudentCv = ({ studentInfo, studentId }) => {
     const [userPdf, setUserPdf] = useState("");
-    const [studentInfo, setStudentInfo] = useState({});
 
     useEffect(() => {
-        getStudent(studentId).then((response) => {
-            setStudentInfo(response.data);
-        });
         getCv(studentId).then((response) => {
             if (response.status !== 204) {
                 const blob1 = new Blob([response.data], {
