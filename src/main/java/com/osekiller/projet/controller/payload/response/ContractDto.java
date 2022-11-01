@@ -19,7 +19,7 @@ public record ContractDto(
         @NotBlank String companyName,
         @NotBlank String position
 ) {
-    public static ContractDto from (Contract contract){
+    public static ContractDto from(Contract contract){
         return new ContractDto(contract.getStudent().getId(), contract.getOffer().getId(), contract.getManager().getId(),
                 contract.getId(), contract.getStudent().getName(), contract.getManager().getName(), contract.getOffer().getOwner().getName(),
                 contract.getOffer().getPosition());
