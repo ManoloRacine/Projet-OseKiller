@@ -1,10 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-    getCv,
-    getStudent,
-    updateStudentSession,
-} from "../../../services/StudentService";
-import { AuthenticatedUserContext } from "../../../App";
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { getCv } from "../../../services/StudentService";
 import LoadPdf from "../../LoadPdf";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -114,6 +110,11 @@ const StudentCv = ({ studentInfo, studentId }) => {
             )}
         </>
     );
+};
+
+StudentCv.propTypes = {
+    studentInfo: PropTypes.object.isRequired,
+    studentId: PropTypes.object.isRequired,
 };
 
 export default StudentCv;
