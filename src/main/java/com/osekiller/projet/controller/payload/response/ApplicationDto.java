@@ -1,5 +1,6 @@
 package com.osekiller.projet.controller.payload.response;
 
+import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Student;
 
@@ -11,9 +12,10 @@ public record ApplicationDto(
         @NotNull Long studentId,
         @NotBlank String companyName,
         @NotNull Long offerId,
-        @NotBlank String position
+        @NotBlank String position,
+        Long contractId
 ) {
-    public static ApplicationDto from (Offer offer, Student student){
-        return new ApplicationDto(student.getName(), student.getId(), offer.getOwner().getName(), offer.getId(), offer.getPosition());
+    public static ApplicationDto from (Offer offer, Student student, Contract contract){
+        return new ApplicationDto(student.getName(), student.getId(), offer.getOwner().getName(), offer.getId(), offer.getPosition(), (contract == null ? null : contract.getId()));
     }
 }
