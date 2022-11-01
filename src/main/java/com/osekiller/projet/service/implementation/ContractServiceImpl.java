@@ -1,9 +1,11 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
+import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.ManagerRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
@@ -16,13 +18,9 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
-import org.hibernate.Hibernate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,6 +35,7 @@ public class ContractServiceImpl implements ContractService {
     OfferRepository offerRepository ;
     ManagerRepository managerRepository ;
     StudentRepository studentRepository ;
+    ContractRepository contractRepository ;
 
     private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
     private static final float FONT_SIZE = 12;
@@ -45,17 +44,36 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Resource generateContract(List<String> contractTasks, long offerId, long studentId, long managerId) throws IOException {
         Offer offer = offerRepository.findByIdAndFetchApplicants(offerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
-        log.info("offer loaded");
         Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
-        log.info("manager loaded");
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
-        log.info("student loaded");
 
-        //if (!offer.getApplicants().contains(student)) {
-        //    throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
-        //}
+        if (!offer.getApplicants().contains(student)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        }
 
         PDDocument pdfDocument = PDDocument.load(new File("Templates/contratTemplateNewPage.pdf"));
+
+        writeValuesInPdf(student, offer, manager, pdfDocument);
+
+        writeTasksInPdf(contractTasks, pdfDocument);
+
+        PDDocumentInformation pdd = pdfDocument.getDocumentInformation() ;
+        pdd.setTitle(offer.getOwner().getName() + "-" + student.getName() + "-Contract");
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
+        pdfDocument.save(byteArrayOutputStream);
+
+        pdfDocument.close();
+
+        Contract contract = new Contract(student, offer, manager) ;
+        contract.setPdf(byteArrayOutputStream.toByteArray());
+        contractRepository.save(contract) ;
+
+        return new ByteArrayResource(byteArrayOutputStream.toByteArray());
+    }
+
+    private void writeValuesInPdf(Student student, Offer offer, Manager manager, PDDocument pdfDocument) throws IOException {
+
         PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
         PDAcroForm acroForm = docCatalog.getAcroForm();
 
@@ -86,11 +104,12 @@ public class ContractServiceImpl implements ContractService {
         PDField fieldEtudiantSign = acroForm.getField( "nom_etudiant_sign" );
         fieldEtudiantSign.setValue(student.getName());
 
+        acroForm.flatten() ;
+    }
+
+    private void writeTasksInPdf(List<String> contractTasks, PDDocument pdfDocument) throws IOException {
         PDPage pdPage = pdfDocument.getPage(2) ;
-
         PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
-
-
 
         PDRectangle mediaBox = pdPage.getMediaBox();
         float marginY = 80;
@@ -110,17 +129,6 @@ public class ContractServiceImpl implements ContractService {
         contentStream.endText();
 
         contentStream.close();
-
-        acroForm.flatten() ;
-
-        PDDocumentInformation pdd = pdfDocument.getDocumentInformation() ;
-
-        pdd.setTitle(offer.getOwner().getName() + "-" + student.getName() + "-Contract");
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
-        pdfDocument.save(byteArrayOutputStream);
-
-        return new ByteArrayResource(byteArrayOutputStream.toByteArray());
     }
 
     //https://memorynotfound.com/apache-pdfbox-adding-multiline-paragraph/
