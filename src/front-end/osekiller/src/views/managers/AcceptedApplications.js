@@ -10,11 +10,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 import Button from 'react-bootstrap/Button';
 import ContractTask from "../../components/ContractTask";
+import LoadPdf from "../../components/LoadPdf";
 
 
 const AcceptedApplications = () => {
     const [acceptedApplications, setAcceptedApplications] = useState([]);
-    const [currentApplication, setCurrentApplication] = useState({})
+    const [currentApplication, setCurrentApplication] = useState({});
+    const [currentContractPdf, setCurrentContractPdf] = useState("");
+    const [modalTitle, setModalTitle] = useState("");
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
@@ -22,10 +25,18 @@ const AcceptedApplications = () => {
         setTasks([])
         setShowModal(false)
     };
-    const handleShowModal = (application) => {
+    const handleShowTasksModal = (application) => {
+        setModalTitle("Tâches et Responsabilités");
         setCurrentApplication(application)
+        setCurrentContractPdf(undefined)
         setShowModal(true)
     };
+    const handleShowContractModal = (contract) => {
+        setModalTitle("Entente de stage")
+        setCurrentContractPdf(contract)
+        setCurrentApplication(undefined)
+        setShowModal(true)
+    }
     const handleChangeTask = (index, newText) => {
         const newTaskState = [...tasks]
         newTaskState[index] = newText
@@ -44,7 +55,15 @@ const AcceptedApplications = () => {
     }
 
     const handleGenerateContract = (studentId, offerId, tasks) => {
-        generateContract(studentId, offerId, tasks).finally(() => {
+        generateContract(studentId, offerId, tasks)
+        .then((response) => {
+            const blob = new Blob([response.data], {
+                type: "application/pdf",
+            });
+            const data_url = window.URL.createObjectURL(blob);
+            handleShowContractModal(data_url);
+        })
+        .finally(() => {
                 getAllAcceptedApplications()
                     .then((response) => {
                         setAcceptedApplications(response.data);
@@ -76,7 +95,7 @@ const AcceptedApplications = () => {
                         <AcceptedApplicationCard 
                             setCurrentApplication={setCurrentApplication}
                             application={acceptedApplication} 
-                            showContractGenerationModal={handleShowModal}
+                            showContractGenerationModal={handleShowTasksModal}
                             tasks={tasks || []}
                             handleChangeTask={handleChangeTask}
                             handleAddNewTask={handleAddNewTask}
@@ -91,36 +110,57 @@ const AcceptedApplications = () => {
             </div>
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Tâches et Responsabilités</Modal.Title>
+                    <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
-                    <Modal.Body>
-                        {
-                            tasks.map(
-                                (task, key) => 
-                                <ContractTask 
-                                    key={key}
-                                    index={key} 
-                                    task={task} 
-                                    handleChangeTask={handleChangeTask}
-                                    handleDeleteTask={handleDeleteTask}
-                                />
-                            )
-                        }
-                    </Modal.Body>
-                    <div className="text-center" >
-                        <Button variant="info" className="mb-4 text-white" onClick={handleAddNewTask}>
-                            <FontAwesomeIcon icon={faSquarePlus} size="xl" />
-                        </Button>
-                    </div>
+                <Modal.Body>
+                    {
+                        currentApplication && 
+                        tasks.map(
+                            (task, key) => 
+                            <ContractTask 
+                                key={key}
+                                index={key} 
+                                task={task} 
+                                handleChangeTask={handleChangeTask}
+                                handleDeleteTask={handleDeleteTask}
+                            />
+                        )
+                    }
+                    {
+                        currentApplication && (
+                            <div className="text-center" >
+                                <Button variant="info" className="mb-4 text-white" onClick={handleAddNewTask}>
+                                    <FontAwesomeIcon icon={faSquarePlus} size="xl" />
+                                </Button>
+                            </div>
+                        )
+                    }
+                    {
+                        currentContractPdf && (
+                            <LoadPdf
+                                src={currentContractPdf}
+                                width={"100%"}
+                                title={"contract"}
+                                type={"application/json"}
+                                height={"900px"}
+                            />
+                        )
+                    }
+                </Modal.Body>
                 <Modal.Footer>
-                    <button className={"btn btn-primary"} disabled={
-                        tasks.filter(e => e.trim() !== "").length < tasks.length || tasks.length < 1} onClick={
-                        () => {
-                            
-                            handleGenerateContract(currentApplication.studentId,currentApplication.offerId,tasks)
-                        }}>
-                        Soumettre
-                    </button>
+                    {
+                        currentApplication && (
+                            <button className={"btn btn-primary"} disabled={
+                                tasks.filter(e => e.trim() !== "").length < tasks.length || tasks.length < 1} onClick={
+                                () => {
+                                    
+                                    handleGenerateContract(currentApplication.studentId,currentApplication.offerId,tasks)
+                                }}>
+                                Soumettre
+                            </button>
+                        )
+                    }
+                    
                 </Modal.Footer>
             </Modal>
         </>
