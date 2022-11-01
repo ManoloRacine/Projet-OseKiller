@@ -68,9 +68,12 @@ export const getStudentConvocations = async (studentId) => {
 };
 
 export const getSessionFromDate = (date) => {
+    console.log(typeof date);
     if (date < new Date(date.getFullYear() + "-05-31")) {
+        console.log(date.getFullYear());
         return date.getFullYear();
     } else {
+        console.log(date.getFullYear() + 1);
         return date.getFullYear() + 1;
     }
 };

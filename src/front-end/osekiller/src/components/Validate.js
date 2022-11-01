@@ -6,7 +6,14 @@ import ErrorMessage from "./ErrorMessage";
 import LoadPdf from "./LoadPdf";
 import { getSessionFromDate } from "../services/StudentService";
 
-const Validate = ({ pdf, feedBack, setFeedBack, validate, startDate }) => {
+const Validate = ({
+    pdf,
+    feedBack,
+    setFeedBack,
+    validate,
+    startDate,
+    session,
+}) => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleValidate = (isValid) => {
@@ -14,6 +21,30 @@ const Validate = ({ pdf, feedBack, setFeedBack, validate, startDate }) => {
             setErrorMessage("Le feedback ne doit pas être vide");
         } else {
             validate(isValid);
+        }
+    };
+
+    const validDate = () => {
+        console.log(startDate);
+        console.log(session);
+        if (startDate != undefined) {
+            if (
+                getSessionFromDate(new Date()) ===
+                getSessionFromDate(new Date(startDate))
+            ) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (session != undefined) {
+            console.log("session");
+            if (getSessionFromDate(new Date()) === session) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     };
 
@@ -28,8 +59,7 @@ const Validate = ({ pdf, feedBack, setFeedBack, validate, startDate }) => {
                     height={"500px"}
                 />
             </div>
-            {getSessionFromDate(new Date()) ===
-            getSessionFromDate(new Date(startDate)) ? (
+            {validDate() ? (
                 <div>
                     <div className="input-group py-3">
                         <span className="input-group-text">Feedback</span>

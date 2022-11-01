@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getCv, validateCv } from "../../services/StudentService";
+import { getCv, getStudent, validateCv } from "../../services/StudentService";
 import Validate from "../../components/Validate";
 
 const ValidateCv = () => {
@@ -9,6 +9,7 @@ const ValidateCv = () => {
     const location = useLocation();
     const { studentId } = location.state;
     const [feedBack, setFeedback] = useState("");
+    const [student, setStudent] = useState({});
 
     const handleValidate = (isValid) => {
         validateCv(studentId, isValid, feedBack)
@@ -26,7 +27,12 @@ const ValidateCv = () => {
                 setPdf(data_url);
             })
             .catch((err) => console.log(err));
+        getStudent(studentId).then((response) => {
+            setStudent(response.data);
+        });
     }, [studentId]);
+
+    console.log(student.sessionYear);
 
     return (
         <Validate
@@ -34,6 +40,7 @@ const ValidateCv = () => {
             pdf={pdf}
             setFeedBack={({ target }) => setFeedback(target.value)}
             validate={handleValidate}
+            session={student.sessionYear}
         />
     );
 };
