@@ -1,9 +1,15 @@
 import React, { useRef, useState } from "react";
 import SignaturePad from "react-signature-canvas";
+import PropTypes from "prop-types";
 
-const Signature = () => {
+const Signature = ({ saveData }) => {
     const sigPad = useRef({});
     const [data, setData] = useState("");
+
+    const handleSave = () => {
+        setData(sigPad.current.toDataURL());
+        saveData(data);
+    };
 
     return (
         <div>
@@ -19,15 +25,16 @@ const Signature = () => {
                 >
                     Effacer
                 </button>
-                <button
-                    className={"btn btn-primary"}
-                    onClick={() => setData(sigPad.current.toDataURL())}
-                >
+                <button className={"btn btn-primary"} onClick={handleSave}>
                     Sauvegarder
                 </button>
             </div>
         </div>
     );
+};
+
+Signature.propTypes = {
+    saveData: PropTypes.func.isRequired,
 };
 
 export default Signature;
