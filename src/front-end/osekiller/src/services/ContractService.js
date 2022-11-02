@@ -1,6 +1,6 @@
 import axios from "../api/axios"
 
-const generateContract = (studentId, offerId, tasks) => {
+export const generateContract = (studentId, offerId, tasks) => {
     return axios.post(`/students/${studentId}/applications/${offerId}/generate-contract`,tasks, {
         responseType: "arraybuffer",
         headers: {
@@ -10,4 +10,12 @@ const generateContract = (studentId, offerId, tasks) => {
     });
 };
 
- export default generateContract;
+export const getContract = (contractId) => {
+    return axios.get(`/contracts/${contractId}/pdf`, {
+        responseType: "arraybuffer",
+        headers: {
+            "Content-Type": "application/pdf",
+            Authorization: localStorage.getItem("accessToken"),
+        }
+    })
+}

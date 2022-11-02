@@ -1,6 +1,7 @@
+import { Button } from "react-bootstrap"
 
 
-const AcceptedApplicationCard = ({application, showContractGenerationModal, handleAddNewTask, handleCloseModal, showModal, tasks, handleChangeTask, handleDeleteTask, handleGenerateContract}) => {
+const AcceptedApplicationCard = ({application, showContractGenerationModal, handleShowContractModalById}) => {
     return (
         <>
             <div
@@ -23,7 +24,9 @@ const AcceptedApplicationCard = ({application, showContractGenerationModal, hand
                     <p>{application.studentName}</p>
                 </div>
                 {
-                    application.contractId ? <p>Entente Généré</p> :
+                    application.contractId ? <Button variant="info" onClick={() => handleShowContractModalById(application.contractId)}>
+                        Voir l'entente de Stage
+                    </Button> :
                     <button className={"btn btn-primary"} onClick={() => showContractGenerationModal(application)} >
                         Créer une entente de stage
                     </button> 

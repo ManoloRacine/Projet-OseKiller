@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import AcceptedApplicationCard from "../../components/AcceptedApplicationCard";
 import { getAllAcceptedApplications } from "../../services/ApplicationService";
 
-import generateContract from "../../services/ContractService";
+import {generateContract, getContract} from "../../services/ContractService";
 import Modal  from "react-bootstrap/Modal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -36,6 +36,16 @@ const AcceptedApplications = () => {
         setCurrentContractPdf(contract)
         setCurrentApplication(undefined)
         setShowModal(true)
+    }
+    const handleShowContractModalById = (contractId) => {
+        getContract(contractId)
+        .then((response) => {
+            const blob = new Blob([response.data], {
+                type: "application/pdf",
+            });
+            const data_url = window.URL.createObjectURL(blob);
+            handleShowContractModal(data_url);
+        })
     }
     const handleChangeTask = (index, newText) => {
         const newTaskState = [...tasks]
@@ -93,16 +103,9 @@ const AcceptedApplications = () => {
                 {acceptedApplications.map(
                         (acceptedApplication, key) => 
                         <AcceptedApplicationCard 
-                            setCurrentApplication={setCurrentApplication}
                             application={acceptedApplication} 
                             showContractGenerationModal={handleShowTasksModal}
-                            tasks={tasks || []}
-                            handleChangeTask={handleChangeTask}
-                            handleAddNewTask={handleAddNewTask}
-                            handleDeleteTask={handleDeleteTask}
-                            handleGenerateContract={handleGenerateContract}
-                            handleCloseModal={handleCloseModal} 
-                            showModal={showModal}
+                            handleShowContractModalById={handleShowContractModalById}
                             key={key}
                         />
                     )
