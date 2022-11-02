@@ -70,7 +70,7 @@ const OffersManager = () => {
                     type="button"
                 >
                     {sessionFilter === ""
-                        ? Math.max(...sessions)
+                        ? "Toutes les sessions"
                         : sessionFilter}
                 </button>
                 <ul
@@ -78,7 +78,13 @@ const OffersManager = () => {
                     aria-labelledby="session-dropdown"
                 >
                     <li>
-                        <a className="dropdown-item" onClick={resetSession}>
+                        <a
+                            className={
+                                "dropdown-item " +
+                                (sessionFilter === "" ? "active" : "")
+                            }
+                            onClick={resetSession}
+                        >
                             Toutes les sessions
                         </a>
                     </li>

@@ -1,6 +1,8 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.controller.ContractController;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
+import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
@@ -50,6 +52,10 @@ public class ContractServiceImpl implements ContractService {
 
         if (!offer.getApplicants().contains(student)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        }
+
+        if (contractRepository.findByStudent_IdAndOffer_Id(studentId, offerId).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT) ;
         }
 
         PDDocument pdfDocument = PDDocument.load(new File("Templates/contratTemplateNewPage.pdf"));
@@ -198,5 +204,18 @@ public class ContractServiceImpl implements ContractService {
                         })
                 );
         return dtos;
+    }
+
+    public List<ContractDto> getContracts() {
+        List<ContractDto> dtos = new ArrayList<>() ;
+        contractRepository.findAll().forEach(
+                contract -> dtos.add(ContractDto.from(contract))
+        );
+        return dtos ;
+    }
+
+    public Resource getContract(long contractId) {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        return new ByteArrayResource(contract.getPdf()) ;
     }
 }
