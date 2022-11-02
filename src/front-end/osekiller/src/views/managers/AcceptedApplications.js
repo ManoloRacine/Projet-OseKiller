@@ -108,7 +108,7 @@ const AcceptedApplications = () => {
                     )
                 }
             </div>
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal show={showModal} onHide={handleCloseModal} size="xl">
                 <Modal.Header closeButton>
                     <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
@@ -142,7 +142,7 @@ const AcceptedApplications = () => {
                                 width={"100%"}
                                 title={"contract"}
                                 type={"application/json"}
-                                height={"900px"}
+                                height={"700rem"}
                             />
                         )
                     }
