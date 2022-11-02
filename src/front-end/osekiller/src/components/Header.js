@@ -55,6 +55,14 @@ export const Header = () => {
                             Valider des offres de stages
                         </Link>
                     )}
+                    {authenticatedUser.role === "MANAGER" && (
+                        <Link
+                            to={"/accepted-applications"}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Applications Acceptées
+                        </Link>
+                    )}
                     {authenticatedUser.role === "COMPANY" && (
                         <Link
                             to={"/offers-company"}

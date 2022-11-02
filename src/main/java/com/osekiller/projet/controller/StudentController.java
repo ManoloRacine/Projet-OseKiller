@@ -111,6 +111,7 @@ public class StudentController {
                                                      @PathVariable(name = "studentId") Long studentId,
                                                      @PathVariable(name = "offerId") Long offerId,
                                                      @RequestBody List<String> contractTasks) throws IOException {
+
         String jwt = header.substring(7);
         Long managerId = authService.getUserFromToken(jwt).id();
         Resource contract = contractService.generateContract(contractTasks, offerId, studentId, managerId);

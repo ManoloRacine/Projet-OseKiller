@@ -29,6 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -192,9 +193,16 @@ public class ContractServiceImpl implements ContractService {
         List<ApplicationDto> dtos = new ArrayList<>();
         offerRepository.findAllByHasAcceptedApplicants().forEach(
                 offer -> offer.getAcceptedApplicants().forEach(
-                        student -> dtos.add(ApplicationDto.from(offer, student))
-                )
-        );
+                        student -> {
+                            Optional<Contract> contract = contractRepository.findByStudent_IdAndOffer_Id(student.getId(), offer.getId());
+                            dtos.add(ApplicationDto.from(
+                                    offer,
+                                    student,
+                                    contract.orElse(null)
+                            )
+                            );
+                        })
+                );
         return dtos;
     }
 
