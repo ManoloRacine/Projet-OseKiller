@@ -13,7 +13,7 @@ action points sprint 1 :
 - faire du peer avec les personnes bloquées
 - pratique de démo
 
-action points sprint 1 :
+action points sprint 3 :
 - rencontre plus formel au milieu du sprint
 - faire du peer avec les personnes bloquées
 - pratique de démo
