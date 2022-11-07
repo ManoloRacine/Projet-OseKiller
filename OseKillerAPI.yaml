@@ -823,6 +823,29 @@ paths:
 
             security:
                 - bearerAuth: []
+    /{id}/evaluateInternship:
+        post:
+            tags :
+                - Teacher
+            summary : Évaluer le milieu du stage
+            description : Évaluer le milieu du stage
+            operationId : evaluateInternship
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type : object
+                            $ref: "#/components/schemas/EvaluationInternship"
+            responses :
+                "200":
+                    description : L'évaluation du milieu de stage a été envoyé
+
 
 components:
     securitySchemes:
@@ -990,6 +1013,63 @@ components:
                     example: 2022-12-20
             xml:
                 name: offerNoPdf
+        EvaluationInternship:
+            type: object
+            properties:
+                contractId :
+                    type : number
+                    example : 23
+                companyContact:
+                    type : string
+                    example : Obama
+                adress :
+                    type : string
+                    example: 105 dummy street
+                city:
+                    type : string
+                    example : Montreal
+                postalCode:
+                    type : string
+                    example : D6F3X9
+                phoneNumber :
+                    type : string
+                    example : 5143859365
+                fax :
+                    type : string
+                    example : 1236532654
+                internshipNo:
+                    type : number
+                    example : 1
+                evaluation:
+                    type : array
+                    items :
+                        type : number
+                comment :
+                    type : string
+                    example : shit, that guy was so bad ahahahahhaha lmao banu code
+                preferredInternship :
+                    type : number
+                    example : 2
+                internNo :
+                    type : number
+                    example : 3
+                keepIntern :
+                    type : boolean
+                    example : true
+                workShifts :
+                    type : array
+                    items :
+                        type : array
+                        items :
+                            type : number
+                variableWorkShifts :
+                    type : boolean
+                    example : true
+                date :
+                    type : string
+                    example : 2022-12-20
+            xml:
+                name: EvaluationInternship
         Application:
             type: object
             properties:
