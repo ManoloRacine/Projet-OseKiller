@@ -522,6 +522,9 @@ paths:
                                         studentName:
                                             type: string
                                             example: Chuck Norris
+                                        position:
+                                            type: string
+                                            example: Développeur Java
                                         companyName:
                                             type: string
                                             example: Netflix
