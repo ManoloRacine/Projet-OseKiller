@@ -1,36 +1,50 @@
-const AccordDesaccord = ({ position, setFormData, formData }) => {
+const AccordDesaccord = ({
+    position,
+    setFormData,
+    formData,
+    evaluationQuestions,
+}) => {
     return (
-        <select
-            onChange={(e) => {
-                let updatedEvaluation = [...formData.evaluation];
-                if (e.target.value === "null") {
-                    updatedEvaluation[position] = null;
-                } else {
-                    updatedEvaluation[position] = e.target.value;
-                }
+        <div>
+            <label
+                htmlFor={"evaluation-" + position}
+                className="form-label mt-3"
+            >
+                {evaluationQuestions[position]}
+            </label>
+            <select
+                onChange={(e) => {
+                    let updatedEvaluation = [...formData.evaluation];
+                    if (e.target.value === "null") {
+                        updatedEvaluation[position] = null;
+                    } else {
+                        updatedEvaluation[position] = e.target.value;
+                    }
 
-                setFormData({ ...formData, evaluation: updatedEvaluation });
-            }}
-            className="form-select"
-        >
-            <option selected value={"null"}>
-                Choix
-            </option>
-            <option value={0}>Impossible de se prononcer</option>
-            <option value={1}>Totalement en désaccord</option>
-            <option value={2}>Plutôt en désaccord</option>
-            <option value={3}>Plutôt en accord</option>
-            <option value={4}>Totalement en accord</option>
-        </select>
+                    setFormData({ ...formData, evaluation: updatedEvaluation });
+                }}
+                className="form-select"
+                id={"evaluation-" + position}
+            >
+                <option selected value={"null"}>
+                    Choix
+                </option>
+                <option value={0}>Impossible de se prononcer</option>
+                <option value={1}>Totalement en désaccord</option>
+                <option value={2}>Plutôt en désaccord</option>
+                <option value={3}>Plutôt en accord</option>
+                <option value={4}>Totalement en accord</option>
+            </select>
+        </div>
     );
 };
 
-const EvaluationForm = ({ formData, setFormData }) => {
+const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
     const nbEvaluations = [...formData.evaluation];
 
     return (
         <form>
-            <label htmlFor="companyContact" className="form-label">
+            <label htmlFor="companyContact" className="form-label mt-3">
                 Personne contact
             </label>
             <input
@@ -42,7 +56,7 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     setFormData({ ...formData, companyContact: e.target.value })
                 }
             />
-            <label htmlFor="adress" className="form-label">
+            <label htmlFor="adress" className="form-label mt-3">
                 Adresse
             </label>
             <input
@@ -54,7 +68,7 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     setFormData({ ...formData, adress: e.target.value })
                 }
             />
-            <label htmlFor="city" className="form-label">
+            <label htmlFor="city" className="form-label mt-3">
                 Ville
             </label>
             <input
@@ -66,7 +80,7 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     setFormData({ ...formData, city: e.target.value })
                 }
             />
-            <label htmlFor="postalCode" className="form-label">
+            <label htmlFor="postalCode" className="form-label mt-3">
                 Code postal
             </label>
             <input
@@ -78,7 +92,7 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     setFormData({ ...formData, postalCode: e.target.value })
                 }
             />
-            <label htmlFor="phoneNumber" className="form-label">
+            <label htmlFor="phoneNumber" className="form-label mt-3">
                 Téléphone
             </label>
             <input
@@ -90,7 +104,7 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     setFormData({ ...formData, phoneNumber: e.target.value })
                 }
             />
-            <label htmlFor="fax" className="form-label">
+            <label htmlFor="fax" className="form-label mt-3">
                 Télécopieur
             </label>
             <input
@@ -102,6 +116,9 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     setFormData({ ...formData, fax: e.target.value })
                 }
             />
+            <label htmlFor="internshipNo" className="form-label mt-3">
+                Le stagiaire est à quel stage ?
+            </label>
             <select
                 onChange={(e) =>
                     setFormData({ ...formData, internshipNo: e.target.value })
@@ -117,10 +134,11 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     position={index}
                     formData={formData}
                     setFormData={setFormData}
+                    evaluationQuestions={evaluationQuestions}
                 />
             ))}
-            <label htmlFor="comment" className="form-label">
-                Commentaire
+            <label htmlFor="comment" className="form-label mt-3">
+                Commentaires
             </label>
             <textarea
                 id="comment"
@@ -131,14 +149,9 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     setFormData({ ...formData, comment: e.target.value })
                 }
             />
-            <button
-                onClick={(e) => {
-                    e.preventDefault();
-                    console.log(formData);
-                }}
-            >
-                test
-            </button>
+            <label htmlFor="preferredInternship" className="form-label mt-3">
+                Ce milieu est à privilégier pour le
+            </label>
             <select
                 onChange={(e) =>
                     setFormData({
@@ -147,23 +160,36 @@ const EvaluationForm = ({ formData, setFormData }) => {
                     })
                 }
                 className="form-select"
+                id="preferredInternship"
             >
                 <option selected>Stage ?</option>
                 <option value={1}>Premier Stage</option>
                 <option value={2}>Deuxième Stage</option>
             </select>
-            <label htmlFor="internNb" className="form-label">
-                Ville
+            <label htmlFor="internNbs" className="form-label mt-3">
+                le nombre de stagiaires que la compagnie est ouverte à
+                accueillir
             </label>
             <input
-                id="city"
+                id="internNbs"
                 className="form-control"
                 type="number"
-                value={formData.city}
+                value={formData.internNbs}
                 onChange={(e) =>
                     setFormData({ ...formData, city: e.target.value })
                 }
             />
+            <div class="form-check mt-3">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="keepIntern"
+                />
+                <label class="form-check-label" for="keepIntern">
+                    La compagnie veut-elle garder le stagiaire ?
+                </label>
+            </div>
         </form>
     );
 };
