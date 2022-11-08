@@ -1050,7 +1050,7 @@ components:
                 preferredInternship :
                     type : number
                     example : 2
-                internNo :
+                internNbs :
                     type : number
                     example : 3
                 keepIntern :
