@@ -879,12 +879,49 @@ paths:
             description: Évaluation d'un étudiant
             responses:
                 "201":
-                    description: Le pdf de l'entente de stage a été généré
+                    description: Le pdf de l'évaluation du stagiaire a été généré
                 "403":
                     description: Requête non autorisée
                 "409":
-                    description: le pdf a déjà été généré ou l'application n'as pas été accepté
+                    description: le pdf a déjà été généré ou l'évaluation n'a pas été acceptée
 
+            security:
+                - bearerAuth: [ ]
+    /companies/{companyId}/student/{studentId}/sign:
+        post:
+            tags:
+                - Company
+            summary: Signer l'évaluation de l'étudiant
+            description: Signer l'évaluation de l'étudiant
+            operationId: signEvaluation
+            parameters:
+                - in: path
+                  name: companyId
+                  schema:
+                      type: integer
+                  required: true
+                - in: path
+                  name: studentId
+                  schema:
+                      type: integer
+                  required: true
+            requestBody:
+                content:
+                    image/png:
+                        schema:
+                            type: string
+                            format: binary
+            responses:
+                "200":
+                    description: L'évaluation à été signée
+                "400":
+                    description: Signature manquante
+                "409":
+                    description: L'évaluation à déjà été signée
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Évaluation non trouvée
             security:
                 - bearerAuth: [ ]
     /offers:
