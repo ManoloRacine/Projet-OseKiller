@@ -519,15 +519,12 @@ paths:
                                 items:
                                     type: object
                                     properties:
-                                        studentId:
-                                            type: number
-                                            example: 1
                                         studentName:
                                             type: string
                                             example: Chuck Norris
-                                        position:
+                                        companyName:
                                             type: string
-                                            example: Développeur Java
+                                            example: Netflix
                 "403":
                     description: Requête non autorisée
                 "404":
