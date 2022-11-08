@@ -496,6 +496,44 @@ paths:
                     description: entreprise non trouvé
             security:
                 - bearerAuth: []
+    /companies/{companyId}/interns:
+        get:
+            tags:
+                - Company
+            parameters:
+                - in: path
+                  name: companyId
+                  schema:
+                      type: integer
+                      required: true
+            summary: Obtenir les stagiaires d'une entreprise
+            description: Obtenir les stagiaires d'une entreprise
+            operationId: getInterns
+            responses:
+                "200":
+                    description: Les stagiaires ont été reçus
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        studentId:
+                                            type: number
+                                            example: 1
+                                        studentName:
+                                            type: string
+                                            example: Chuck Norris
+                                        position:
+                                            type: string
+                                            example: Développeur Java
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Entreprise non trouvée
+            security:
+                - bearerAuth: [ ]
     /companies/{companyId}/offers/{offerId}:
         put:
             tags:
