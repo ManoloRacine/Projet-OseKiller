@@ -1,23 +1,32 @@
-const EvaluationForm = ({ formData, setFormData }) => {
-    const AccordDesaccord = ({ position }) => {
-        return (
-            <select
-                onChange={(e) => {
-                    updatedEvaluation = [...formData.evaluation];
+const AccordDesaccord = ({ position, setFormData, formData }) => {
+    return (
+        <select
+            onChange={(e) => {
+                let updatedEvaluation = [...formData.evaluation];
+                if (e.target.value === "null") {
+                    updatedEvaluation[position] = null;
+                } else {
                     updatedEvaluation[position] = e.target.value;
-                    setFormData({ ...formData, evaluation: updatedEvaluation });
-                }}
-                className="form-select"
-            >
-                <option selected>Choix</option>
-                <option value={0}>Impossible de se prononcer</option>
-                <option value={1}>Totalement en désaccord</option>
-                <option value={2}>Plutôt en désaccord</option>
-                <option value={3}>Plutôt en accord</option>
-                <option value={4}>Totalement en accord</option>
-            </select>
-        );
-    };
+                }
+
+                setFormData({ ...formData, evaluation: updatedEvaluation });
+            }}
+            className="form-select"
+        >
+            <option selected value={"null"}>
+                Choix
+            </option>
+            <option value={0}>Impossible de se prononcer</option>
+            <option value={1}>Totalement en désaccord</option>
+            <option value={2}>Plutôt en désaccord</option>
+            <option value={3}>Plutôt en accord</option>
+            <option value={4}>Totalement en accord</option>
+        </select>
+    );
+};
+
+const EvaluationForm = ({ formData, setFormData }) => {
+    const nbEvaluations = [...formData.evaluation];
 
     return (
         <form>
@@ -103,8 +112,12 @@ const EvaluationForm = ({ formData, setFormData }) => {
                 <option value={1}>Premier Stage</option>
                 <option value={2}>Deuxième Stage</option>
             </select>
-            {formData.evaluation.map((value, index) => (
-                <AccordDesaccord />
+            {nbEvaluations.map((value, index) => (
+                <AccordDesaccord
+                    position={index}
+                    formData={formData}
+                    setFormData={setFormData}
+                />
             ))}
             <label htmlFor="comment" className="form-label">
                 Commentaire
@@ -116,6 +129,39 @@ const EvaluationForm = ({ formData, setFormData }) => {
                 value={formData.comment}
                 onChange={(e) =>
                     setFormData({ ...formData, comment: e.target.value })
+                }
+            />
+            <button
+                onClick={(e) => {
+                    e.preventDefault();
+                    console.log(formData);
+                }}
+            >
+                test
+            </button>
+            <select
+                onChange={(e) =>
+                    setFormData({
+                        ...formData,
+                        preferredInternship: e.target.value,
+                    })
+                }
+                className="form-select"
+            >
+                <option selected>Stage ?</option>
+                <option value={1}>Premier Stage</option>
+                <option value={2}>Deuxième Stage</option>
+            </select>
+            <label htmlFor="internNb" className="form-label">
+                Ville
+            </label>
+            <input
+                id="city"
+                className="form-control"
+                type="number"
+                value={formData.city}
+                onChange={(e) =>
+                    setFormData({ ...formData, city: e.target.value })
                 }
             />
         </form>
