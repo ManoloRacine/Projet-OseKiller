@@ -852,6 +852,28 @@ paths:
 
             security:
                 - bearerAuth: []
+    /teacher/contracts-to-evaluate:
+        get:
+            tags :
+                - Teacher
+            summary : Recevoir tous les contrats
+            description : Recevoir tous les contrats
+            operationId : getContractsToEvaluate
+            responses :
+                "200":
+                    description : L'évaluation du milieu de stage a été envoyé
+                    content :
+                        application/json:
+                            schema:
+                                type : array
+                                items:
+                                    $ref : "#/components/schemas/ContractToEvaluate"
+
+                "403":
+                    description: Requête non autorisée
+
+            security:
+                - bearerAuth: []
 
 
 components:
@@ -1103,3 +1125,20 @@ components:
                     example : 4
             xml:
                 name: Question
+        ContractToEvaluate:
+            type: object
+            properties:
+                contractId:
+                    type: number
+                    example: 10
+                companyName:
+                    type : string
+                    example : Google
+                studentName :
+                    type : string
+                    example : Obama
+                position :
+                    type : string
+                    example: dev
+            xml:
+                name: contractToEvaluate
