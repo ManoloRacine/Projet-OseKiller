@@ -17,7 +17,7 @@ const AccordDesaccord = ({
             <select
                 onChange={(e) => {
                     let updatedEvaluation = [...formData.evaluation];
-                    if (e.target.value === "null") {
+                    if (e.target.value === "") {
                         updatedEvaluation[position] = null;
                     } else {
                         updatedEvaluation[position] = e.target.value;
@@ -27,8 +27,9 @@ const AccordDesaccord = ({
                 }}
                 className="form-select"
                 id={"evaluation-" + position}
+                required
             >
-                <option selected value={"null"}>
+                <option selected value={""}>
                     Choix
                 </option>
                 <option value={0}>Impossible de se prononcer</option>
@@ -77,8 +78,13 @@ const WorkShiftsPicker = ({ setFormData, formData, position }) => {
 const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
     const nbEvaluations = [...formData.evaluation];
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+    };
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <label htmlFor="companyContact" className="form-label mt-3">
                 Personne contact
             </label>
@@ -90,6 +96,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 onChange={(e) =>
                     setFormData({ ...formData, companyContact: e.target.value })
                 }
+                required
             />
             <label htmlFor="address" className="form-label mt-3">
                 Adresse
@@ -102,6 +109,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 onChange={(e) =>
                     setFormData({ ...formData, address: e.target.value })
                 }
+                required
             />
             <label htmlFor="city" className="form-label mt-3">
                 Ville
@@ -114,6 +122,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 onChange={(e) =>
                     setFormData({ ...formData, city: e.target.value })
                 }
+                required
             />
             <label htmlFor="postalCode" className="form-label mt-3">
                 Code postal
@@ -126,6 +135,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 onChange={(e) =>
                     setFormData({ ...formData, postalCode: e.target.value })
                 }
+                required
             />
             <label htmlFor="phoneNumber" className="form-label mt-3">
                 Téléphone
@@ -138,6 +148,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 onChange={(e) =>
                     setFormData({ ...formData, phoneNumber: e.target.value })
                 }
+                required
             />
             <label htmlFor="fax" className="form-label mt-3">
                 Télécopieur
@@ -150,6 +161,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 onChange={(e) =>
                     setFormData({ ...formData, fax: e.target.value })
                 }
+                required
             />
             <label htmlFor="internshipNo" className="form-label mt-3">
                 Le stagiaire est à quel stage ?
@@ -159,6 +171,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                     setFormData({ ...formData, internshipNo: e.target.value })
                 }
                 className="form-select"
+                required
             >
                 <option selected>Stage ?</option>
                 <option value={1}>Premier Stage</option>
@@ -183,6 +196,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 onChange={(e) =>
                     setFormData({ ...formData, comment: e.target.value })
                 }
+                required
             />
             <label htmlFor="preferredInternship" className="form-label mt-3">
                 Ce milieu est à privilégier pour le
@@ -196,23 +210,25 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 }
                 className="form-select"
                 id="preferredInternship"
+                required
             >
                 <option selected>Stage ?</option>
                 <option value={1}>Premier Stage</option>
                 <option value={2}>Deuxième Stage</option>
             </select>
-            <label htmlFor="internNbs" className="form-label mt-3">
+            <label htmlFor="internNo" className="form-label mt-3">
                 le nombre de stagiaires que la compagnie est ouverte à
                 accueillir
             </label>
             <input
-                id="internNbs"
+                id="internNo"
                 className="form-control"
                 type="number"
                 value={formData.internNbs}
                 onChange={(e) =>
-                    setFormData({ ...formData, city: e.target.value })
+                    setFormData({ ...formData, internNo: e.target.value })
                 }
+                required
             />
             <div class="form-check mt-3">
                 <input
@@ -260,14 +276,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                   ))
                 : null}
 
-            <button
-                onClick={(e) => {
-                    e.preventDefault();
-                    console.log(formData);
-                }}
-            >
-                test
-            </button>
+            <input type={"submit"} />
         </form>
     );
 };

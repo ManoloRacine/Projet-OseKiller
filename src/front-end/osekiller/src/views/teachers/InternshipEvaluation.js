@@ -33,13 +33,13 @@ const InternshipEvaluation = ({ contractId }) => {
         comment: null,
         preferredInternship: null,
         internNo: null,
-        keepIntern: null,
+        keepIntern: false,
         workShifts: [
             [null, null],
             [null, null],
             [null, null],
         ],
-        variableWorkShifts: null,
+        variableWorkShifts: false,
         date: null,
     });
 
