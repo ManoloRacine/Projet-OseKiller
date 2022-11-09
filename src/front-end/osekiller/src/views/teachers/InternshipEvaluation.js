@@ -1,7 +1,6 @@
 import { useState } from "react";
-import EvaluationForm from "../../components/forms/EvaluationForm";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import EvaluationForm from "../../components/forms/EvalForm/EvaluationForm";
+import { useLocation } from "react-router-dom";
 
 const evaluationQuestions = [
     "Les tâches confiées au stagiaire sont conformes aux tâches annoncées dans l’entente de stage.",
@@ -16,11 +15,16 @@ const evaluationQuestions = [
     "Le volume de travail est acceptable.",
 ];
 
-const InternshipEvaluation = ({ contractId }) => {
+const InternshipEvaluation = () => {
+    const location = useLocation();
+    const { state } = location;
+    const contractInfo = state?.contractInfo;
+
     let evalArray = [];
     for (let index = 0; index < evaluationQuestions.length; index++) {
         evalArray.push({ question: evaluationQuestions[index], answer: null });
     }
+
     const [formData, setFormData] = useState({
         companyContact: null,
         address: null,
@@ -45,6 +49,7 @@ const InternshipEvaluation = ({ contractId }) => {
 
     return (
         <EvaluationForm
+            contractInfo={contractInfo}
             formData={formData}
             setFormData={setFormData}
             evaluationQuestions={evaluationQuestions}

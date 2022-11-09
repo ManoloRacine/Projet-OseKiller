@@ -1,81 +1,18 @@
-import TimePicker from "react-time-picker";
+import AgreeDisagree from "./AgreeDisagree";
+import WorkShiftsPicker from "./WorkShiftsPicker";
 
-const AccordDesaccord = ({ position, setFormData, formData }) => {
-    return (
-        <div>
-            <label
-                htmlFor={"evaluation-" + position}
-                className="form-label mt-3"
-            >
-                {formData.evaluation[position].question}
-            </label>
-            <select
-                onChange={(e) => {
-                    let updatedEvaluation = [...formData.evaluation];
-                    if (e.target.value === "") {
-                        updatedEvaluation[position].answer = null;
-                    } else {
-                        updatedEvaluation[position].answer = e.target.value;
-                    }
-
-                    setFormData({ ...formData, evaluation: updatedEvaluation });
-                }}
-                className="form-select"
-                id={"evaluation-" + position}
-                required
-            >
-                <option selected value={""}>
-                    Choix
-                </option>
-                <option value={0}>Impossible de se prononcer</option>
-                <option value={1}>Totalement en désaccord</option>
-                <option value={2}>Plutôt en désaccord</option>
-                <option value={3}>Plutôt en accord</option>
-                <option value={4}>Totalement en accord</option>
-            </select>
-        </div>
-    );
-};
-
-const WorkShiftsPicker = ({ setFormData, formData, position }) => {
-    return (
-        <div className="row">
-            <div className="col-3">
-                <TimePicker
-                    onChange={(value) => {
-                        let updatedworkShifts = [...formData.workShifts];
-                        updatedworkShifts[0][0] = value;
-                        setFormData({
-                            ...formData,
-                            workShifts: updatedworkShifts,
-                        });
-                    }}
-                    value={formData.workShifts[position][0]}
-                />
-            </div>
-            <div className="col-3">
-                <TimePicker
-                    onChange={(value) => {
-                        let updatedworkShifts = [...formData.workShifts];
-                        updatedworkShifts[0][0] = value;
-                        setFormData({
-                            ...formData,
-                            workShifts: updatedworkShifts,
-                        });
-                    }}
-                    value={formData.workShifts[position][1]}
-                />
-            </div>
-        </div>
-    );
-};
-
-const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
+const EvaluationForm = ({
+    formData,
+    setFormData,
+    evaluationQuestions,
+    contractInfo,
+}) => {
     const nbEvaluations = [...formData.evaluation];
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
+        console.log(contractInfo);
     };
 
     return (
@@ -173,7 +110,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 <option value={2}>Deuxième Stage</option>
             </select>
             {nbEvaluations.map((value, index) => (
-                <AccordDesaccord
+                <AgreeDisagree
                     position={index}
                     formData={formData}
                     setFormData={setFormData}
@@ -261,7 +198,7 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 </label>
             </div>
 
-            {formData.variableWorkShifts == true
+            {formData.variableWorkShifts
                 ? formData.workShifts.map((value, index) => (
                       <WorkShiftsPicker
                           position={index}
