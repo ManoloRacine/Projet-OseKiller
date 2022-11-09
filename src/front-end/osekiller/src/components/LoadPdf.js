@@ -2,14 +2,14 @@ import PropTypes from "prop-types";
 
 const LoadPdf = ({ title, type, src, height, width }) => {
     return (
-        <iframe
+        <object
             title={title}
             type={type}
-            src={src}
+            data={src}
             height={height}
             width={width}
             data-testid={"pdf"}
-        ></iframe>
+        ></object>
     );
 };
 
