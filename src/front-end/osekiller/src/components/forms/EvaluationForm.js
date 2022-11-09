@@ -1,26 +1,21 @@
 import TimePicker from "react-time-picker";
 
-const AccordDesaccord = ({
-    position,
-    setFormData,
-    formData,
-    evaluationQuestions,
-}) => {
+const AccordDesaccord = ({ position, setFormData, formData }) => {
     return (
         <div>
             <label
                 htmlFor={"evaluation-" + position}
                 className="form-label mt-3"
             >
-                {evaluationQuestions[position]}
+                {formData.evaluation[position].question}
             </label>
             <select
                 onChange={(e) => {
                     let updatedEvaluation = [...formData.evaluation];
                     if (e.target.value === "") {
-                        updatedEvaluation[position] = null;
+                        updatedEvaluation[position].answer = null;
                     } else {
-                        updatedEvaluation[position] = e.target.value;
+                        updatedEvaluation[position].answer = e.target.value;
                     }
 
                     setFormData({ ...formData, evaluation: updatedEvaluation });

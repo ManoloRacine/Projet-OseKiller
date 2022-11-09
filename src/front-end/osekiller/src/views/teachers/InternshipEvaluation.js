@@ -19,7 +19,7 @@ const evaluationQuestions = [
 const InternshipEvaluation = ({ contractId }) => {
     let evalArray = [];
     for (let index = 0; index < evaluationQuestions.length; index++) {
-        evalArray.push(null);
+        evalArray.push({ question: evaluationQuestions[index], answer: null });
     }
     const [formData, setFormData] = useState({
         companyContact: null,
