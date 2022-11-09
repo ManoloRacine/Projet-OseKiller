@@ -882,6 +882,8 @@ paths:
                     description: Le pdf de l'évaluation du stagiaire a été généré
                 "403":
                     description: Requête non autorisée
+                "404":
+                    description: Compagnie ou étudiant inexistant.
                 "409":
                     description: le pdf a déjà été généré ou l'évaluation n'a pas été acceptée
 
