@@ -1,129 +1,160 @@
 import React from "react";
 import PropTypes from "prop-types";
+import TextInput from "./TextInput";
+import SelectInput from "./SelectInput";
+import TextareaInput from "./TextareaInput";
 
-const EvaluateStudentForm = (props) => {
+const EvaluateStudentForm = ({ formData, setFormData }) => {
     return (
         <div className={"mt-4"}>
             <h1 className={"text-center"}>FICHE D'ÉVALUATION DU STAGIAIRE</h1>
             <form>
                 <div className="section mb-3">
-                    <label htmlFor="studentName" className="form-label">
-                        Nom de l'élève
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control mb-2"
-                        id={"studentName"}
+                    <TextInput
+                        label={"Nom de l'élève"}
+                        inputName={"studentName"}
+                        inputValue={formData.studentName}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                studentName: target.value,
+                            })
+                        }
                     />
-                    <label htmlFor="program" className="form-label">
-                        Programme d'études
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control mb-2"
-                        id={"program"}
+                    <TextInput
+                        label={"Programme d'études"}
+                        inputName={"program"}
+                        inputValue={formData.program}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                program: target.value,
+                            })
+                        }
                     />
-                    <label htmlFor="companyName" className="form-label">
-                        Nom de l'entreprise
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control mb-2"
-                        id={"companyName"}
+                    <TextInput
+                        label={"Nom de l'entreprise"}
+                        inputName={"companyName"}
+                        inputValue={formData.companyName}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                companyName: target.value,
+                            })
+                        }
                     />
-                    <label htmlFor="supervisorName" className="form-label">
-                        Nom du superviseur
-                    </label>
-                    <input
-                        type="text"
-                        className="form-control mb-2"
-                        id={"supervisorName"}
+                    <TextInput
+                        label={"Nom du superviseur"}
+                        inputName={"supervisorName"}
+                        inputValue={formData.supervisorName}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                supervisorName: target.value,
+                            })
+                        }
                     />
                     <div className={"d-flex mt-4"}>
-                        <label
-                            htmlFor="supervisorFunction"
-                            className="form-label"
-                        >
-                            Fonction
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control mb-2 me-2"
-                            id={"supervisorFunction"}
+                        <TextInput
+                            label={"Fonction"}
+                            inputName={"supervisorFunction"}
+                            inputValue={formData.supervisorFunction}
+                            changeInputValue={({ target }) =>
+                                setFormData({
+                                    ...formData,
+                                    supervisorFunction: target.value,
+                                })
+                            }
                         />
-                        <label htmlFor="phoneNumber" className="form-label">
-                            Téléphone
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control mb-2"
-                            id={"phoneNumber"}
+                        <TextInput
+                            label={"Téléphone"}
+                            inputName={"phone"}
+                            inputValue={formData.phone}
+                            changeInputValue={({ target }) =>
+                                setFormData({
+                                    ...formData,
+                                    phone: target.value,
+                                })
+                            }
                         />
                     </div>
                 </div>
+
                 <div className="section mb-3">
                     <h2 className={"text-center"}>1. PRODUCTIVITÉ</h2>
                     <p className={"text-center"}>
                         Capacité d'optimiser son rendement au travail
                     </p>
                     <p className={"fs-4"}>Le stagiaire a été en mesure de :</p>
-                    <label htmlFor="field1.1" className="form-label">
-                        Planifier et organiser son travail de façon efficace
-                    </label>
-                    <select id="field1.1" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field1.2" className="form-label">
-                        Comprendre rapidement les directives relatives à son
-                        travail
-                    </label>
-                    <select id="field1.2" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field1.3" className="form-label">
-                        Maintenir un rythme de travail soutenu
-                    </label>
-                    <select id="field1.3" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field1.4" className="form-label">
-                        Établir ses priorités
-                    </label>
-                    <select id="field1.4" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field1.5" className="form-label">
-                        Respecter ses échéanciers
-                    </label>
-                    <select id="field1.5" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="section1Comment">Commentaire</label>
-                    <textarea
-                        name="section1Comment"
-                        id="section1Comment"
-                        className={"form-control mb-2"}
-                    ></textarea>
+                    <SelectInput
+                        label={
+                            "Planifier et organiser son travail de façon efficace"
+                        }
+                        inputName={"field1.1"}
+                        inputValue={formData["field1.1"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field1.1": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={
+                            "Comprendre rapidement les directives relatives à son travail"
+                        }
+                        inputName={"field1.2"}
+                        inputValue={formData["field1.2"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field1.2": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Maintenir un rythme de travail soutenu"}
+                        inputName={"field1.3"}
+                        inputValue={formData["field1.3"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field1.3": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Établir ses priorités"}
+                        inputName={"field1.4"}
+                        inputValue={formData["field1.4"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field1.4": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Respecter ses échéanciers"}
+                        inputName={"field1.5"}
+                        inputValue={formData["field1.5"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field1.5": target.value,
+                            })
+                        }
+                    />
+                    <TextareaInput
+                        inputName={"section1Comment"}
+                        inputValue={formData["section1Comment"]}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                section1Comment: target.value,
+                            });
+                        }}
+                    />
                 </div>
 
                 <div className="section mb-3">
@@ -134,63 +165,77 @@ const EvaluateStudentForm = (props) => {
                         de qualité
                     </p>
                     <p className={"fs-4"}>Le stagiaire a été en mesure de :</p>
-                    <label htmlFor="field2.1" className="form-label">
-                        Respecter les mandats qui lui ont été confiés
-                    </label>
-                    <select id="field2.1" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field2.2" className="form-label">
-                        Porter attention aux détails dans la réalisation de ses
-                        tâches
-                    </label>
-                    <select id="field2.2" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field2.3" className="form-label">
-                        Vérifier son travail, s’assurer que rien n’a été oublié
-                    </label>
-                    <select id="field2.3" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field2.4" className="form-label">
-                        Rechercher des occasions de se perfectionner
-                    </label>
-                    <select id="field2.4" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field2.5" className="form-label">
-                        Faire une bonne analyse des problèmes rencontrés
-                    </label>
-                    <select id="field2.5" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="section2Comment">Commentaire</label>
-                    <textarea
-                        name="section2Comment"
-                        id="section2Comment"
-                        className={"form-control mb-2"}
-                    ></textarea>
+                    <SelectInput
+                        label={"Respecter les mandats qui lui ont été confiés"}
+                        inputName={"field2.1"}
+                        inputValue={formData["field2.1"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field2.1": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={
+                            "Porter attention aux détails dans la réalisation de ses tâches"
+                        }
+                        inputName={"field2.2"}
+                        inputValue={formData["field2.2"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field2.2": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={
+                            "Vérifier son travail, s’assurer que rien n’a été oublié"
+                        }
+                        inputName={"field2.3"}
+                        inputValue={formData["field2.3"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field2.3": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Rechercher des occasions de se perfectionner"}
+                        inputName={"field2.4"}
+                        inputValue={formData["field2.4"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field2.4": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={
+                            "Faire une bonne analyse des problèmes rencontrés"
+                        }
+                        inputName={"field2.5"}
+                        inputValue={formData["field2.5"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field2.5": target.value,
+                            })
+                        }
+                    />
+                    <TextareaInput
+                        inputName={"section2Comment"}
+                        inputValue={formData["section2Comment"]}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                section2Comment: target.value,
+                            });
+                        }}
+                    />
                 </div>
 
                 <div className="section mb-3">
@@ -202,73 +247,86 @@ const EvaluateStudentForm = (props) => {
                         son milieu de travail
                     </p>
                     <p className={"fs-4"}>Le stagiaire a été en mesure de :</p>
-                    <label htmlFor="field3.1" className="form-label">
-                        Établir facilement des contacts avec les gens
-                    </label>
-                    <select id="field3.1" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field3.2" className="form-label">
-                        Contribuer activement au travail d’équipe
-                    </label>
-                    <select id="field3.2" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field3.3" className="form-label">
-                        S’adapter facilement à la culture de l’entreprise
-                    </label>
-                    <select id="field3.3" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field3.4" className="form-label">
-                        Accepter les critiques constructives
-                    </label>
-                    <select id="field3.4" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field3.5" className="form-label">
-                        Être respectueux envers les gens
-                    </label>
-                    <select id="field3.5" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field3.6" className="form-label">
-                        Faire preuve d’écoute active en essayant de comprendre
-                        le point de vue de l’autre
-                    </label>
-                    <select id="field3.6" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="section3Comment">Commentaire</label>
-                    <textarea
-                        name="section3Comment"
-                        id="section3Comment"
-                        className={"form-control mb-2"}
-                    ></textarea>
+                    <SelectInput
+                        label={"Établir facilement des contacts avec les gens"}
+                        inputName={"field3.1"}
+                        inputValue={formData["field3.1"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field3.1": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Contribuer activement au travail d’équipe"}
+                        inputName={"field3.2"}
+                        inputValue={formData["field3.2"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field3.2": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={
+                            "S’adapter facilement à la culture de l’entreprise"
+                        }
+                        inputName={"field3.3"}
+                        inputValue={formData["field3.3"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field3.3": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Accepter les critiques constructives"}
+                        inputName={"field3.4"}
+                        inputValue={formData["field3.4"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field3.4": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Être respectueux envers les gens"}
+                        inputName={"field3.5"}
+                        inputValue={formData["field3.5"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field3.5": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={
+                            "Faire preuve d’écoute active en essayant de comprendre le point de vue de l’autre"
+                        }
+                        inputName={"field3.6"}
+                        inputValue={formData["field3.6"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field3.6": target.value,
+                            })
+                        }
+                    />
+                    <TextareaInput
+                        inputName={"section3Comment"}
+                        inputValue={formData["section3Comment"]}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                section3Comment: target.value,
+                            });
+                        }}
+                    />
                 </div>
 
                 <div className="section mb-3">
@@ -278,79 +336,95 @@ const EvaluateStudentForm = (props) => {
                         matures et responsables
                     </p>
                     <p className={"fs-4"}>Le stagiaire a été en mesure de :</p>
-                    <label htmlFor="field4.1" className="form-label">
-                        Démontrer de l’intérêt et de la motivation au travail
-                    </label>
-                    <select id="field4.1" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field4.2" className="form-label">
-                        Exprimer clairement ses idées
-                    </label>
-                    <select id="field4.2" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field4.3" className="form-label">
-                        Faire preuve d’initiative
-                    </label>
-                    <select id="field4.3" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field4.4" className="form-label">
-                        Travailler de façon sécuritaire
-                    </label>
-                    <select id="field4.4" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field4.5" className="form-label">
-                        Démontrer un bon sens des responsabilités ne requérant
-                        qu’un minimum de supervision
-                    </label>
-                    <select id="field4.5" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="field4.6" className="form-label">
-                        Être ponctuel et assidu à son travail
-                    </label>
-                    <select id="field4.6" className="form-select mb-2">
-                        <option>Totalement en accord</option>
-                        <option>Plutôt en accord</option>
-                        <option>Plutôt en désaccord</option>
-                        <option>Totalement en désaccord</option>
-                        <option>N/A</option>
-                    </select>
-                    <label htmlFor="section4Comment">Commentaire</label>
-                    <textarea
-                        name="section4Comment"
-                        id="section4Comment"
-                        className={"form-control mb-2"}
-                    ></textarea>
+                    <SelectInput
+                        label={
+                            "Démontrer de l’intérêt et de la motivation au travail"
+                        }
+                        inputName={"field4.1"}
+                        inputValue={formData["field4.1"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field4.1": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Exprimer clairement ses idées"}
+                        inputName={"field4.2"}
+                        inputValue={formData["field4.2"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field4.2": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Faire preuve d’initiative"}
+                        inputName={"field4.3"}
+                        inputValue={formData["field4.3"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field4.3": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Travailler de façon sécuritaire"}
+                        inputName={"field4.4"}
+                        inputValue={formData["field4.4"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field4.4": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={
+                            "Démontrer un bon sens des responsabilités ne requérant qu’un minimum de supervision"
+                        }
+                        inputName={"field4.5"}
+                        inputValue={formData["field4.5"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field4.5": target.value,
+                            })
+                        }
+                    />
+                    <SelectInput
+                        label={"Être ponctuel et assidu à son travail"}
+                        inputName={"field4.6"}
+                        inputValue={formData["field4.6"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                "field4.6": target.value,
+                            })
+                        }
+                    />
+                    <TextareaInput
+                        inputName={"section4Comment"}
+                        inputValue={formData["section4Comment"]}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                section4Comment: target.value,
+                            });
+                        }}
+                    />
                 </div>
             </form>
         </div>
     );
 };
 
-EvaluateStudentForm.propTypes = {};
+EvaluateStudentForm.propTypes = {
+    formData: PropTypes.object.isRequired,
+    setFormData: PropTypes.func.isRequired,
+};
 
 export default EvaluateStudentForm;
