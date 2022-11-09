@@ -1,5 +1,6 @@
 import AgreeDisagree from "./AgreeDisagree";
 import WorkShiftsPicker from "./WorkShiftsPicker";
+import { evaluateInternship } from "../../../services/TeacherService";
 
 const EvaluationForm = ({
     formData,
@@ -11,8 +12,7 @@ const EvaluationForm = ({
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
-        console.log(contractInfo);
+        evaluateInternship(contractInfo.contractId, formData);
     };
 
     return (

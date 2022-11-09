@@ -1,10 +1,22 @@
 import { useEffect, useState } from "react";
 import { ContractEvalCard } from "../../components/ContractEvalCard";
+import { getContractsToEvaluate } from "../../services/TeacherService";
 
 const InternshipsToEvaluate = () => {
-    const [internships, setInternships] = useState([]);
+    const [internships, setInternships] = useState([
+        {
+            contractId: 10,
+            companyName: "Google",
+            studentName: "Obama",
+            position: "dev",
+        },
+    ]);
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        getContractsToEvaluate().then((response) => {
+            setInternships(response.data);
+        });
+    }, []);
 
     return (
         <div>
