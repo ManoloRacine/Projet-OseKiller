@@ -10,6 +10,7 @@ import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.ManagerRepository;
+import com.osekiller.projet.repository.user.SignatoryRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
@@ -18,15 +19,18 @@ import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +43,8 @@ public class ContractServiceImpl implements ContractService {
     ManagerRepository managerRepository ;
     StudentRepository studentRepository ;
     ContractRepository contractRepository ;
+    SignatoryRepository signatoryRepository;
+
 
     private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
     private static final float FONT_SIZE = 12;
@@ -64,6 +70,8 @@ public class ContractServiceImpl implements ContractService {
 
         writeTasksInPdf(contractTasks, pdfDocument);
 
+        writePageTitle(pdfDocument, "SIGNATURES", pdfDocument.getPage(3));
+
         PDDocumentInformation pdd = pdfDocument.getDocumentInformation() ;
         pdd.setTitle(offer.getOwner().getName() + "-" + student.getName() + "-Contract");
 
@@ -77,6 +85,26 @@ public class ContractServiceImpl implements ContractService {
         contractRepository.save(contract) ;
 
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
+    }
+
+    private void writePageTitle(PDDocument document, String Title,  PDPage page) throws IOException {
+        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+        PDRectangle mediaBox = page.getMediaBox();
+
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+
+        addParagraph(contentStream, width, startX, startY, Title, true);
+
+        contentStream.endText();
+
+        contentStream.close();
     }
 
     private void writeValuesInPdf(Student student, Offer offer, Manager manager, PDDocument pdfDocument) throws IOException {
@@ -119,18 +147,16 @@ public class ContractServiceImpl implements ContractService {
         PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
 
         PDRectangle mediaBox = pdPage.getMediaBox();
-        float marginY = 80;
         float marginX = 60;
         float width = mediaBox.getWidth() - 2 * marginX;
-        float startX = mediaBox.getLowerLeftX() + marginX;
-        float startY = mediaBox.getUpperRightY() - marginY;
+
+        writePageTitle(pdfDocument, "TACHES ET RESPONSABILITES DU STAGIAIRE", pdPage);
 
         contentStream.beginText();
-        addParagraph(contentStream, width, startX, startY, "TACHES ET RESPONSABILITES DU STAGIAIRE", true);
 
         for (String task : contractTasks) {
             System.out.println(task);
-            addParagraph(contentStream, width, 0, -FONT_SIZE, "-" + task, true);
+            addParagraph(contentStream, width, 0, -FONT_SIZE, "- " + task, true);
         }
 
         contentStream.endText();
@@ -217,5 +243,61 @@ public class ContractServiceImpl implements ContractService {
     public Resource getContract(long contractId) {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
         return new ByteArrayResource(contract.getPdf()) ;
+    }
+
+    @Override
+    public Resource signContract(long contractId, long signatoryId) {
+
+        return null;
+    }
+
+    @Override
+    public Resource signContract(long contractId, long signatoryId, MultipartFile signature) throws IOException {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        PDDocument pdf = PDDocument.load(contract.getPdf());
+        PDPage page = pdf.getPage(3);
+        PDImageXObject pdImage = PDImageXObject.createFromByteArray(pdf,signature.getBytes(),"signature");
+
+        if(contract.getManager().getId().equals(signatoryId)){
+            addSignatureToPdf(pdf, page, pdImage, "Le gestionnaire de stage:");
+            pdf.save(byteArrayOutputStream);
+        }
+
+        if(contract.getStudent().getId().equals(signatoryId)){
+            addSignatureToPdf(pdf, page, pdImage, "L\'étudiant(e):");
+        }
+
+        if(contract.getOffer().getOwner().getId().equals(signatoryId)){
+            addSignatureToPdf(pdf, page, pdImage, "L'employeur:");
+        }
+
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    }
+
+    @Override
+    public boolean hasSignature(long signatoryId) {
+        return signatoryRepository.findByIdAndSignatureIsNotNull(signatoryId).isPresent();
+    }
+
+    private void addSignatureToPdf(PDDocument pdf, PDPage page, PDImageXObject pdImage, String signatory) throws IOException {
+        PDPageContentStream contentStream = new PDPageContentStream(pdf, page);
+
+        PDRectangle mediaBox = page.getMediaBox();
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+
+        contentStream.beginText();
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, signatory, true);
+
+        contentStream.drawImage(pdImage, 70, 250);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, LocalDate.now().toString(), true);
+
+        contentStream.endText();
+
+        contentStream.close();
     }
 }
