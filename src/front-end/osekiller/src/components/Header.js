@@ -110,7 +110,7 @@ export const Header = () => {
                     )}
                     {authenticatedUser.role === "TEACHER" && (
                         <Link
-                            to={"/internship-evaluations"}
+                            to={"/internships-to-evaluate"}
                             className="m-4 fs-2 d-flex align-items-center"
                         >
                             Évaluer des milieux de stage
