@@ -108,6 +108,14 @@ export const Header = () => {
                             Téléverser une offre de stage
                         </Link>
                     )}
+                    {authenticatedUser.role === "TEACHER" && (
+                        <Link
+                            to={"/internship-evaluations"}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Évaluer des milieux de stage
+                        </Link>
+                    )}
                 </div>
 
                 {/* Bouton à améliorer */}
