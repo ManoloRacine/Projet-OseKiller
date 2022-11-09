@@ -823,7 +823,7 @@ paths:
 
             security:
                 - bearerAuth: []
-    /{id}/evaluateInternship:
+    /teacher/{contractId}/evaluateInternship:
         post:
             tags :
                 - Teacher
@@ -832,7 +832,7 @@ paths:
             operationId : evaluateInternship
             parameters:
                 - in: path
-                  name: id
+                  name: contractId
                   schema:
                       type: integer
                   required: true
@@ -845,6 +845,13 @@ paths:
             responses :
                 "200":
                     description : L'évaluation du milieu de stage a été envoyé
+                "403":
+                    description: Requête non autorisée
+                "409":
+                    description: l'évaluation a déjà été générée
+
+            security:
+                - bearerAuth: []
 
 
 components:
@@ -1016,13 +1023,10 @@ components:
         EvaluationInternship:
             type: object
             properties:
-                contractId :
-                    type : number
-                    example : 23
                 companyContact:
                     type : string
                     example : Obama
-                adress :
+                address :
                     type : string
                     example: 105 dummy street
                 city:
@@ -1043,7 +1047,8 @@ components:
                 evaluation:
                     type : array
                     items :
-                        type : number
+                        $ref: "#/components/schemas/Question"
+
                 comment :
                     type : string
                     example : shit, that guy was so bad ahahahahhaha lmao banu code
@@ -1087,3 +1092,14 @@ components:
                     example: java dev
             xml:
                 name: Application
+        Question:
+            type: object
+            properties:
+                question:
+                    type: string
+                    example: Des mesures d’accueil facilitent l’intégration du nouveau stagiaire.
+                answer:
+                    type : number
+                    example : 4
+            xml:
+                name: Question
