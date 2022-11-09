@@ -10,19 +10,20 @@ export const App = () => {
     const [authenticatedUser, setAuthenticatedUser] = useState({});
 
     return (
-        /*
-        <AuthenticatedUserContext.Provider value={{authenticatedUser, setAuthenticatedUser}}>
+        <AuthenticatedUserContext.Provider
+            value={{ authenticatedUser, setAuthenticatedUser }}
+        >
             <div
-            className="App p-3"
-            style={{
-                backgroundColor: "#da8362",
-                minHeight: "100vh",
-                color: "#2C324C",
-            }}>
+                className="App p-3"
+                style={{
+                    backgroundColor: "#da8362",
+                    minHeight: "100vh",
+                    color: "#2C324C",
+                }}
+            >
                 <Header />
                 <Outlet />
             </div>
-        </AuthenticatedUserContext.Provider>*/
-        <InternshipEvaluation />
+        </AuthenticatedUserContext.Provider>
     );
 };
