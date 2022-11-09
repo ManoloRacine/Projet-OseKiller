@@ -1,6 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import calLogo from "../assets/calLogo.jpg";
 import { AuthenticatedUserContext } from "../App";
 
 export const Header = () => {
@@ -70,6 +69,14 @@ export const Header = () => {
                             className="m-4 fs-2 d-flex align-items-center"
                         >
                             Application à mes offres de stage
+                        </Link>
+                    )}
+                    {authenticatedUser.role === "COMPANY" && (
+                        <Link
+                            to={"/evaluate-student"}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Évaluer mes stagiaires
                         </Link>
                     )}
                     {authenticatedUser.role === "STUDENT" && (

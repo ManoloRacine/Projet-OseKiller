@@ -25,3 +25,10 @@ svg:hover {
 .offer p{
   margin: 0;
 }
+
+form .section{
+  background-color: #2C324C;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+}
