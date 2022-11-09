@@ -26,6 +26,13 @@ const StudentCv = ({ studentInfo, studentId }) => {
         });
     }, []);
 
+    const isFeedbackPresent = () => {
+        return (
+            studentInfo["cvPresent"] &&
+            (studentInfo["cvRejected"] || studentInfo["cvValidated"])
+        );
+    };
+
     return (
         <>
             {userPdf !== "" ? (
@@ -69,29 +76,27 @@ const StudentCv = ({ studentInfo, studentId }) => {
                                 </div>
                             )}
                         </div>
-                        {studentInfo["cvPresent"] &&
-                            (studentInfo["cvRejected"] ||
-                                studentInfo["cvValidated"]) && (
-                                <div
-                                    className={
-                                        "d-flex justify-content-between align-items-center"
-                                    }
-                                >
-                                    <div>
-                                        <h4>Feedback :</h4>
-                                        <p>{studentInfo["feedback"]}</p>
-                                    </div>
-
-                                    {studentInfo["cvRejected"] && (
-                                        <Link
-                                            className={"btn btn-primary"}
-                                            to={"/upload-cv"}
-                                        >
-                                            Modifier votre CV
-                                        </Link>
-                                    )}
+                        {isFeedbackPresent() && (
+                            <div
+                                className={
+                                    "d-flex justify-content-between align-items-center"
+                                }
+                            >
+                                <div>
+                                    <h4>Feedback :</h4>
+                                    <p>{studentInfo["feedback"]}</p>
                                 </div>
-                            )}
+
+                                {studentInfo["cvRejected"] && (
+                                    <Link
+                                        className={"btn btn-primary"}
+                                        to={"/upload-cv"}
+                                    >
+                                        Modifier votre CV
+                                    </Link>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </>
             ) : (
