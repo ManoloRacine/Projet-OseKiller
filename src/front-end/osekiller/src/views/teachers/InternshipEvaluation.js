@@ -16,12 +16,32 @@ const evaluationQuestions = [
     "Le volume de travail est acceptable.",
 ];
 
-const InternshipEvaluation = () => {
+const InternshipEvaluation = ({ contractId }) => {
     let evalArray = [];
     for (let index = 0; index < evaluationQuestions.length; index++) {
         evalArray.push(null);
     }
-    const [formData, setFormData] = useState({ evaluation: evalArray });
+    const [formData, setFormData] = useState({
+        companyContact: null,
+        address: null,
+        city: null,
+        postalCode: null,
+        phoneNumber: null,
+        fax: null,
+        internshipNo: null,
+        evaluation: evalArray,
+        comment: null,
+        preferredInternship: null,
+        internNo: null,
+        keepIntern: null,
+        workShifts: [
+            [null, null],
+            [null, null],
+            [null, null],
+        ],
+        variableWorkShifts: null,
+        date: null,
+    });
 
     return (
         <EvaluationForm

@@ -1,3 +1,5 @@
+import TimePicker from "react-time-picker";
+
 const AccordDesaccord = ({
     position,
     setFormData,
@@ -39,6 +41,39 @@ const AccordDesaccord = ({
     );
 };
 
+const WorkShiftsPicker = ({ setFormData, formData, position }) => {
+    return (
+        <div className="row">
+            <div className="col-3">
+                <TimePicker
+                    onChange={(value) => {
+                        let updatedworkShifts = [...formData.workShifts];
+                        updatedworkShifts[0][0] = value;
+                        setFormData({
+                            ...formData,
+                            workShifts: updatedworkShifts,
+                        });
+                    }}
+                    value={formData.workShifts[position][0]}
+                />
+            </div>
+            <div className="col-3">
+                <TimePicker
+                    onChange={(value) => {
+                        let updatedworkShifts = [...formData.workShifts];
+                        updatedworkShifts[0][0] = value;
+                        setFormData({
+                            ...formData,
+                            workShifts: updatedworkShifts,
+                        });
+                    }}
+                    value={formData.workShifts[position][1]}
+                />
+            </div>
+        </div>
+    );
+};
+
 const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
     const nbEvaluations = [...formData.evaluation];
 
@@ -56,16 +91,16 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                     setFormData({ ...formData, companyContact: e.target.value })
                 }
             />
-            <label htmlFor="adress" className="form-label mt-3">
+            <label htmlFor="address" className="form-label mt-3">
                 Adresse
             </label>
             <input
-                id="adress"
+                id="address"
                 className="form-control"
                 type="text"
                 value={formData.adress}
                 onChange={(e) =>
-                    setFormData({ ...formData, adress: e.target.value })
+                    setFormData({ ...formData, address: e.target.value })
                 }
             />
             <label htmlFor="city" className="form-label mt-3">
@@ -183,13 +218,56 @@ const EvaluationForm = ({ formData, setFormData, evaluationQuestions }) => {
                 <input
                     class="form-check-input"
                     type="checkbox"
-                    value=""
+                    value={formData.keepIntern}
+                    onChange={(e) => {
+                        setFormData({
+                            ...formData,
+                            keepIntern: e.target.checked,
+                        });
+                    }}
                     id="keepIntern"
                 />
                 <label class="form-check-label" for="keepIntern">
                     La compagnie veut-elle garder le stagiaire ?
                 </label>
             </div>
+
+            <div class="form-check mt-3">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value={formData.keepIntern}
+                    onChange={(e) => {
+                        setFormData({
+                            ...formData,
+                            variableWorkShifts: e.target.checked,
+                        });
+                    }}
+                    id="variableWorkShifts"
+                />
+                <label class="form-check-label" for="keepIntern">
+                    Ce milieu offre des quarts de travail variables ?
+                </label>
+            </div>
+
+            {formData.variableWorkShifts == true
+                ? formData.workShifts.map((value, index) => (
+                      <WorkShiftsPicker
+                          position={index}
+                          formData={formData}
+                          setFormData={setFormData}
+                      />
+                  ))
+                : null}
+
+            <button
+                onClick={(e) => {
+                    e.preventDefault();
+                    console.log(formData);
+                }}
+            >
+                test
+            </button>
         </form>
     );
 };

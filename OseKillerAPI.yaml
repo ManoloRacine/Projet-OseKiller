@@ -1022,7 +1022,7 @@ components:
                 companyContact:
                     type : string
                     example : Obama
-                adress :
+                address :
                     type : string
                     example: 105 dummy street
                 city:
