@@ -2,6 +2,7 @@ package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
+import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
@@ -110,6 +111,44 @@ public class ContractServiceTest {
         //Assert
         assertNotNull(applicationDtos);
         assertSame(applicationDtos.size(), 0);
+
+    }
+
+    @Test
+    void getContractsToEvaluateHappyDay() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        for (int i = 0; i < 5; i++) {
+            Contract contract1 = mock(Contract.class) ;
+            when(contract1.getStudent()).thenReturn(mock(Student.class)) ;
+            when(contract1.getOffer()).thenReturn(mock(Offer.class)) ;
+            when(contract1.getOffer().getOwner()).thenReturn(mock(Company.class)) ;
+            contract1.setEvaluationPdf(new byte[16]);
+            contracts.add(contract1);
+        }
+        when(contractRepository.findAllByEvaluationPdfIsNotNull()).thenReturn(contracts) ;
+
+        //Act
+        List<ContractToEvaluateDto> contractDtos = contractService.getUnEvaluatedContracts() ;
+
+        //Assert
+        assertNotNull(contractDtos);
+        assertSame(contractDtos.size(), 5);
+
+    }
+
+    @Test
+    void getContractsToEvaluateEmpty() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        when(contractRepository.findAllByEvaluationPdfIsNotNull()).thenReturn(contracts) ;
+
+        //Act
+        List<ContractToEvaluateDto> contractDtos = contractService.getUnEvaluatedContracts() ;
+
+        //Assert
+        assertNotNull(contractDtos);
+        assertSame(contractDtos.size(), 0);
 
     }
 }

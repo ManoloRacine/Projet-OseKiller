@@ -1,8 +1,10 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.ContractController;
+import com.osekiller.projet.controller.payload.request.EvaluationDto;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
+import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
@@ -218,4 +220,18 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
         return new ByteArrayResource(contract.getPdf()) ;
     }
+
+    @Override
+    public List<ContractToEvaluateDto> getUnEvaluatedContracts() {
+        List<ContractToEvaluateDto> dtos = new ArrayList<>() ;
+        contractRepository.findAllByEvaluationPdfIsNotNull().stream().forEach(contract -> dtos.add(ContractToEvaluateDto.from(contract)));
+        return dtos ;
+    }
+
+    @Override
+    public void evaluateIntership(Long contractId, EvaluationDto dto) {
+
+    }
+
+
 }

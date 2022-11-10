@@ -1,7 +1,9 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.controller.payload.request.EvaluationDto;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
+import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -14,4 +16,8 @@ public interface ContractService {
     List<ContractDto> getContracts() ;
 
     Resource getContract(long contractId) ;
+
+    List<ContractToEvaluateDto> getUnEvaluatedContracts();
+
+    void evaluateIntership(Long contractId, EvaluationDto dto);
 }
