@@ -233,5 +233,43 @@ public class ContractServiceImpl implements ContractService {
 
     }
 
+    private void writeValuesInPdf(EvaluationDto evaluationDto, Contract contract, PDDocument pdfDocument) throws IOException {
+
+        PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
+        PDAcroForm acroForm = docCatalog.getAcroForm();
+
+        PDField fieldCompanyName = acroForm.getField( "companyName" );
+        fieldCompanyName.setValue(contract.getOffer().getOwner().getName());
+
+        PDField fieldCompanyContact = acroForm.getField( "companyContact" );
+        fieldCompanyContact.setValue(contract.getOffer().getOwner().getName());
+
+        PDField fieldAddress = acroForm.getField( "address" );
+        fieldAddress.setValue(evaluationDto.address());
+
+        PDField fieldCity = acroForm.getField( "city" );
+        fieldCity.setValue(evaluationDto.city());
+
+        PDField fieldPostalCode = acroForm.getField( "postalCode" );
+        fieldPostalCode.setValue(evaluationDto.postalCode());
+
+        PDField fieldPhoneNumber = acroForm.getField( "phoneNumber" );
+        fieldPhoneNumber.setValue(evaluationDto.phoneNumber());
+
+        PDField fieldFax = acroForm.getField( "fax" );
+        fieldFax.setValue(evaluationDto.fax());
+
+        PDField fieldStudentName = acroForm.getField( "studentName" );
+        fieldStudentName.setValue(contract.getStudent().getName());
+
+        PDField fieldInternshipDate = acroForm.getField( "internshipDate" );
+        fieldInternshipDate.setValue(contract.getOffer().getStartDate().toString());
+
+        PDField fieldInternshipNo = acroForm.getField( "internshipNo" );
+        fieldInternshipNo.setValue(evaluationDto.internshipNo().toString());
+
+        acroForm.flatten() ;
+    }
+
 
 }
