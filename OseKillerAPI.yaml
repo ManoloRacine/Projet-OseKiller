@@ -718,214 +718,6 @@ paths:
                     description: entreprise ou offre non trouvé
             security:
                 - bearerAuth: []
-    /companies/{companyId}/student/{studentId}/evaluate:
-        post:
-            tags:
-                - Company
-            parameters:
-                - in: path
-                  name: companyId
-                  schema:
-                      type: integer
-                - in: path
-                  name: studentId
-                  schema:
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                supervisorName:
-                                    type: string
-                                    example: "Elon Musk"
-                                supervisorPosition:
-                                    type: string
-                                    example: "Développeur Java sénior"
-                                phoneNumber:
-                                    type: string
-                                    example: "(514) 420-4202"
-                                productivity:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: string
-                                            example: "Totalement en accord"
-                                        fieldB:
-                                            type: string
-                                            example: "Plutôt en accord"
-                                        fieldC:
-                                            type: string
-                                            example: "Plutôt en désaccord"
-                                        fieldD:
-                                            type: string
-                                            example: "Totalement en désaccord"
-                                        fieldE:
-                                            type: string
-                                            example: "N/A"
-                                        comments:
-                                            type: string
-                                            example: "En général, satisfaisant."
-                                workQuality:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: string
-                                            example: "Totalement en accord"
-                                        fieldB:
-                                            type: string
-                                            example: "Plutôt en accord"
-                                        fieldC:
-                                            type: string
-                                            example: "Plutôt en désaccord"
-                                        fieldD:
-                                            type: string
-                                            example: "Totalement en désaccord"
-                                        fieldE:
-                                            type: string
-                                            example: "N/A"
-                                        comments:
-                                            type: string
-                                            example: "En général, satisfaisant."
-                                interpersonalQuality:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: string
-                                            example: "Totalement en accord"
-                                        fieldB:
-                                            type: string
-                                            example: "Plutôt en accord"
-                                        fieldC:
-                                            type: string
-                                            example: "Plutôt en désaccord"
-                                        fieldD:
-                                            type: string
-                                            example: "Totalement en désaccord"
-                                        fieldE:
-                                            type: string
-                                            example: "N/A"
-                                        fieldF:
-                                            type: string
-                                            example: "Totalement en accord"
-                                        comments:
-                                            type: string
-                                            example: "En général, satisfaisant."
-                                personalAbility:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: string
-                                            example: "Totalement en accord"
-                                        fieldB:
-                                            type: string
-                                            example: "Plutôt en accord"
-                                        fieldC:
-                                            type: string
-                                            example: "Plutôt en désaccord"
-                                        fieldD:
-                                            type: string
-                                            example: "Totalement en désaccord"
-                                        fieldE:
-                                            type: string
-                                            example: "N/A"
-                                        fieldF:
-                                            type: string
-                                            example: "Totalement en accord"
-                                        comments:
-                                            type: string
-                                            example: "En général, satisfaisant."
-                                globalAppreciation:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: string
-                                            example: "Les habiletés démontrées dépassent de beaucoup les attentes"
-                                        fieldB:
-                                            type: string
-                                            example: "Rien à redire"
-                                        fieldC:
-                                            type: string
-                                            example: "Oui"
-                                hoursOfSupportPerWeek:
-                                    type: number
-                                    example: 2.5
-                                nextInternship:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: string
-                                            example: "Oui"
-                                        fieldB:
-                                            type: string
-                                            example: "Reste à voir"
-                                        fieldC:
-                                            type: string
-                                            example: "Oui"
-                                        supervisorName:
-                                            type: string
-                                            example: "Elon Musk"
-                                        supervisorPosition:
-                                            type: string
-                                            example: "Développeur Java sénior"
-                                        date:
-                                            type: string
-                                            example: "2023-05-22"
-
-
-
-            summary: Évaluation d'un étudiant
-            description: Évaluation d'un étudiant
-            responses:
-                "201":
-                    description: Le pdf de l'évaluation du stagiaire a été généré
-                "403":
-                    description: Requête non autorisée
-                "404":
-                    description: Compagnie ou étudiant inexistant.
-                "409":
-                    description: le pdf a déjà été généré ou l'évaluation n'a pas été acceptée
-
-            security:
-                - bearerAuth: [ ]
-    /companies/{companyId}/student/{studentId}/sign:
-        post:
-            tags:
-                - Company
-            summary: Signer l'évaluation de l'étudiant
-            description: Signer l'évaluation de l'étudiant
-            operationId: signEvaluation
-            parameters:
-                - in: path
-                  name: companyId
-                  schema:
-                      type: integer
-                  required: true
-                - in: path
-                  name: studentId
-                  schema:
-                      type: integer
-                  required: true
-            requestBody:
-                content:
-                    image/png:
-                        schema:
-                            type: string
-                            format: binary
-            responses:
-                "200":
-                    description: L'évaluation à été signée
-                "400":
-                    description: Signature manquante
-                "409":
-                    description: L'évaluation à déjà été signée
-                "403":
-                    description: Requête non autorisée
-                "404":
-                    description: Évaluation non trouvée
-            security:
-                - bearerAuth: [ ]
     /offers:
         get:
             tags:
@@ -1101,6 +893,199 @@ paths:
 
             security:
                 - bearerAuth: []
+    /contracts/{contractId}/evaluate-intern:
+        post:
+            tags:
+                - Contracts
+            parameters:
+                - in: path
+                  name: contractId
+                  schema:
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                supervisorName:
+                                    type: string
+                                    example: "Elon Musk"
+                                supervisorPosition:
+                                    type: string
+                                    example: "Développeur Java sénior"
+                                phoneNumber:
+                                    type: string
+                                    example: "(514) 420-4202"
+                                productivity:
+                                    type: object
+                                    properties:
+                                        fieldA:
+                                            type: integer
+                                            example: 0
+                                        fieldB:
+                                            type: integer
+                                            example: 1
+                                        fieldC:
+                                            type: integer
+                                            example: 2
+                                        fieldD:
+                                            type: integer
+                                            example: 3
+                                        fieldE:
+                                            type: integer
+                                            example: 4
+                                        comments:
+                                            type: string
+                                            example: "En général, satisfaisant."
+                                workQuality:
+                                    type: object
+                                    properties:
+                                        fieldA:
+                                            type: integer
+                                            example: 0
+                                        fieldB:
+                                            type: integer
+                                            example: 1
+                                        fieldC:
+                                            type: integer
+                                            example: 2
+                                        fieldD:
+                                            type: integer
+                                            example: 3
+                                        fieldE:
+                                            type: integer
+                                            example: 4
+                                        comments:
+                                            type: string
+                                            example: "En général, satisfaisant."
+                                interpersonalQuality:
+                                    type: object
+                                    properties:
+                                        fieldA:
+                                            type: integer
+                                            example: 0
+                                        fieldB:
+                                            type: integer
+                                            example: 1
+                                        fieldC:
+                                            type: integer
+                                            example: 2
+                                        fieldD:
+                                            type: integer
+                                            example: 3
+                                        fieldE:
+                                            type: integer
+                                            example: 4
+                                        fieldF:
+                                            type: integer
+                                            example: 0
+                                        comments:
+                                            type: string
+                                            example: "En général, satisfaisant."
+                                personalAbility:
+                                    type: object
+                                    properties:
+                                        fieldA:
+                                            type: integer
+                                            example: 0
+                                        fieldB:
+                                            type: integer
+                                            example: 1
+                                        fieldC:
+                                            type: integer
+                                            example: 2
+                                        fieldD:
+                                            type: integer
+                                            example: 3
+                                        fieldE:
+                                            type: integer
+                                            example: 4
+                                        fieldF:
+                                            type: integer
+                                            example: 0
+                                        comments:
+                                            type: string
+                                            example: "En général, satisfaisant."
+                                globalAppreciation:
+                                    type: object
+                                    properties:
+                                        fieldA:
+                                            type: integer
+                                            example: 0
+                                        fieldB:
+                                            type: string
+                                            example: "Rien à redire"
+                                        fieldC:
+                                            type: boolean
+                                            example: true
+                                hoursOfSupportPerWeek:
+                                    type: number
+                                    example: 2.5
+                                nextInternship:
+                                    type: object
+                                    properties:
+                                        fieldA:
+                                            type: integer
+                                            example: 0
+                                        fieldB:
+                                            type: string
+                                            example: "Reste à voir"
+                                        fieldC:
+                                            type: boolean
+                                            example: true
+                                        date:
+                                            type: string
+                                            example: "2023-05-22"
+
+
+
+            summary: Évaluation d'un étudiant
+            description: Évaluation d'un étudiant
+            responses:
+                "201":
+                    description: Le pdf de l'évaluation du stagiaire a été généré
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Compagnie ou étudiant inexistant.
+                "409":
+                    description: le pdf a déjà été généré ou l'évaluation n'a pas été acceptée
+
+            security:
+                - bearerAuth: [ ]
+    /contracts/{contractId}/sign-intern-evaluation:
+        post:
+            tags:
+                - Contracts
+            summary: Signer l'évaluation de l'étudiant
+            description: Signer l'évaluation de l'étudiant
+            operationId: signEvaluation
+            parameters:
+                - in: path
+                  name: contractId
+                  schema:
+                      type: integer
+                  required: true
+            requestBody:
+                content:
+                    image/png:
+                        schema:
+                            type: string
+                            format: binary
+            responses:
+                "200":
+                    description: L'évaluation à été signée
+                "400":
+                    description: Signature manquante
+                "409":
+                    description: L'évaluation à déjà été signée
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Évaluation non trouvée
+            security:
+                - bearerAuth: [ ]
     /contracts:
         get:
             parameters:
