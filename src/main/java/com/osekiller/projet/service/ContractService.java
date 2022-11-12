@@ -13,7 +13,7 @@ public interface ContractService {
     List<ApplicationDto> getAcceptedApplications();
     List<ContractDto> getContracts();
     Resource getContract(long contractId);
-    Resource signContract(long contractId, long signatoryId);
+    Resource signContract(long contractId, long signatoryId) throws IOException;
     Resource signContract(long contractId, long signatoryId, MultipartFile signature) throws IOException;
     boolean hasSignature(long signatoryId);
 }

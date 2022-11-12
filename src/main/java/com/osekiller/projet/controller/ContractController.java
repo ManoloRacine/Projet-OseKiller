@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -40,7 +41,7 @@ public class ContractController {
     }
 
     @PostMapping("/{id}/sign")
-    public ResponseEntity<Resource> signContract(@PathVariable(name = "id") Long contractId, @RequestHeader(HttpHeaders.AUTHORIZATION) String header, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<Resource> signContract(@PathVariable(name = "id") Long contractId, @RequestHeader(HttpHeaders.AUTHORIZATION) String header, @RequestParam("image") MultipartFile image) throws IOException {
         String jwt = header.substring(7);
         UserDto userDto = authService.getUserFromToken(jwt);
 

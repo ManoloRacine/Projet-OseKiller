@@ -27,6 +27,10 @@ public class Contract {
     @NonNull
     private Manager manager;
 
+    private boolean signedByStudent;
+    private boolean signedByCompany;
+    private boolean signedByManager;
+
     @Lob
     private byte[] pdf;
 }
