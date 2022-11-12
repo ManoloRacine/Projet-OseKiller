@@ -9,21 +9,18 @@ const EvaluateStudent = () => {
         supervisorName: "",
         supervisorFunction: "",
         phone: "",
-
         "field1.1": "",
         "field1.2": "",
         "field1.3": "",
         "field1.4": "",
         "field1.5": "",
         section1Comment: "",
-
         "field2.1": "",
         "field2.2": "",
         "field2.3": "",
         "field2.4": "",
         "field2.5": "",
         section2Comment: "",
-
         "field3.1": "",
         "field3.2": "",
         "field3.3": "",
@@ -31,7 +28,6 @@ const EvaluateStudent = () => {
         "field3.5": "",
         "field3.6": "",
         section3Comment: "",
-
         "field4.1": "",
         "field4.2": "",
         "field4.3": "",
@@ -39,6 +35,13 @@ const EvaluateStudent = () => {
         "field4.5": "",
         "field4.6": "",
         section4Comment: "",
+        globalAppreciation: "",
+        section5Comment: "",
+        hasBeenDiscussed: "",
+        nbHoursPerWeekOfSupport: "",
+        wouldLikeToRetakeStudent: "",
+        formationWasAdequate: "",
+        date: "",
     });
 
     return (

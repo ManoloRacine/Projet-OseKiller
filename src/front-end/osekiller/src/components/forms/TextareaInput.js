@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const TextareaInput = ({ inputName, inputValue, changeInputValue }) => {
+const TextareaInput = ({ label, inputName, inputValue, changeInputValue }) => {
     return (
         <>
-            <label htmlFor={inputName}>Commentaire</label>
+            <label htmlFor={inputName}>{label}</label>
             <textarea
                 name={inputName}
                 id={inputName}
@@ -20,6 +20,11 @@ TextareaInput.propTypes = {
     inputName: PropTypes.string.isRequired,
     inputValue: PropTypes.any.isRequired,
     changeInputValue: PropTypes.func.isRequired,
+    label: PropTypes.string,
+};
+
+TextareaInput.defaultProps = {
+    label: "Commentaire",
 };
 
 export default TextareaInput;

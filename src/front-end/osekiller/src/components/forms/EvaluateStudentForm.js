@@ -417,6 +417,108 @@ const EvaluateStudentForm = ({ formData, setFormData }) => {
                         }}
                     />
                 </div>
+
+                <div className="section mb-3">
+                    <SelectInput
+                        label={"Appréciation globale du stagiaire"}
+                        inputName={"globalAppreciation"}
+                        inputValue={formData["globalAppreciation"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                globalAppreciation: target.value,
+                            })
+                        }
+                        optionsValues={[
+                            "Les habiletés démontrées dépassent de beaucoup les attentes",
+                            "Les habiletés démontrées dépassent les attentes",
+                            "Les habiletés démontrées répondent pleinement aux attentes",
+                            "Les habiletés démontrées répondent partiellement aux attentes",
+                            "Les habiletés démontrées ne répondent pas aux attentes",
+                        ]}
+                    />
+                    <TextareaInput
+                        label={"Précisez votre appréciation"}
+                        inputName={"section5Comment"}
+                        inputValue={formData["section5Comment"]}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                section5Comment: target.value,
+                            });
+                        }}
+                    />
+                    <SelectInput
+                        label={
+                            "Cette évaluation a été discutée avec le stagiaire"
+                        }
+                        inputName={"hasBeenDiscussed"}
+                        inputValue={formData["hasBeenDiscussed"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                hasBeenDiscussed: target.value,
+                            })
+                        }
+                        optionsValues={["Oui", "Non"]}
+                    />
+                    <TextInput
+                        label={
+                            "Veuillez indiquer le nombre d’heures réel par semaine d’encadrement accordé au stagiaire"
+                        }
+                        inputName={"nbHoursPerWeekOfSupport"}
+                        inputType={"number"}
+                        inputValue={formData.nbHoursPerWeekOfSupport}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                nbHoursPerWeekOfSupport: target.value,
+                            });
+                        }}
+                    />
+                </div>
+
+                <div className="section mb-3">
+                    <SelectInput
+                        label={
+                            "L'entreprise aimerait accueillir cet élève pour son prochain stage"
+                        }
+                        inputName={"wouldLikeToRetakeStudent"}
+                        inputValue={formData["wouldLikeToRetakeStudent"]}
+                        changeInputValue={({ target }) =>
+                            setFormData({
+                                ...formData,
+                                wouldLikeToRetakeStudent: target.value,
+                            })
+                        }
+                        optionsValues={["Oui", "Non", "Peut-être"]}
+                    />
+                    <TextareaInput
+                        label={
+                            "La formation technique du stagiaire était-elle suffisante pour accomplir le mandat de stage?"
+                        }
+                        inputName={"formationWasAdequate"}
+                        inputValue={formData["formationWasAdequate"]}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                formationWasAdequate: target.value,
+                            });
+                        }}
+                    />
+                    <TextInput
+                        label={"Date"}
+                        inputName={"date"}
+                        inputType={"date"}
+                        inputValue={formData.date}
+                        changeInputValue={({ target }) => {
+                            setFormData({
+                                ...formData,
+                                date: target.value,
+                            });
+                        }}
+                    />
+                </div>
             </form>
         </div>
     );

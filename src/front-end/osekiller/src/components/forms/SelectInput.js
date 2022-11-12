@@ -1,7 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const SelectInput = ({ label, inputName, inputValue, changeInputValue }) => {
+const SelectInput = ({
+    label,
+    inputName,
+    inputValue,
+    changeInputValue,
+    optionsValues,
+}) => {
     return (
         <>
             <label htmlFor={inputName} className="form-label">
@@ -13,11 +19,9 @@ const SelectInput = ({ label, inputName, inputValue, changeInputValue }) => {
                 value={inputValue}
                 onChange={changeInputValue}
             >
-                <option>Totalement en accord</option>
-                <option>Plutôt en accord</option>
-                <option>Plutôt en désaccord</option>
-                <option>Totalement en désaccord</option>
-                <option>N/A</option>
+                {optionsValues.map((option, index) => (
+                    <option value={index}>{option}</option>
+                ))}
             </select>
         </>
     );
@@ -28,6 +32,17 @@ SelectInput.propTypes = {
     inputName: PropTypes.string.isRequired,
     inputValue: PropTypes.any.isRequired,
     changeInputValue: PropTypes.func.isRequired,
+    optionsValues: PropTypes.array,
+};
+
+SelectInput.defaultProps = {
+    optionsValues: [
+        "Totalement en accord",
+        "Plutôt en accord",
+        "Plutôt en désaccord",
+        "Totalement en désaccord",
+        "N/A",
+    ],
 };
 
 export default SelectInput;
