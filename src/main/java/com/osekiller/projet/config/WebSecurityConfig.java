@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                                 .antMatchers("/companies/{companyId}/offers/{offerId}/applicants/accept").hasAuthority(ERole.COMPANY.name())
                                 .antMatchers("/students/{id}/cv/validate").hasAuthority(ERole.MANAGER.name())
                                 .antMatchers("/{studentId}/applications/{offerId}/generate-contract").hasAuthority(ERole.MANAGER.name())
+                                .antMatchers("/teacher").hasAuthority(ERole.TEACHER.name())
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )
