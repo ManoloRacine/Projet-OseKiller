@@ -823,7 +823,7 @@ paths:
 
             security:
                 - bearerAuth: []
-    /contracts/{contractId}/evaluateInternship:
+    /contracts/{contractId}/evaluate-internship:
         post:
             tags :
                 - Contracts
