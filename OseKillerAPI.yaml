@@ -730,7 +730,7 @@ paths:
     /contracts/{id}/sign:
         post:
             tags:
-                - Contract
+                - Contracts
             summary: Signer une entente de stage
             description: Signer une entente de stage
             operationId: signContract
@@ -823,10 +823,10 @@ paths:
 
             security:
                 - bearerAuth: []
-    /teacher/{contractId}/evaluateInternship:
+    /contracts/{contractId}/evaluateInternship:
         post:
             tags :
-                - Teacher
+                - Contracts
             summary : Évaluer le milieu du stage
             description : Évaluer le milieu du stage
             operationId : evaluateInternship
@@ -852,10 +852,15 @@ paths:
 
             security:
                 - bearerAuth: []
-    /teacher/contracts-to-evaluate:
+    /contracts:
         get:
+            parameters:
+                - in: query
+                  name: toEvaluate
+                  schema:
+                      type: boolean
             tags :
-                - Teacher
+                - Contracts
             summary : Recevoir tous les contrats
             description : Recevoir tous les contrats
             operationId : getContractsToEvaluate
