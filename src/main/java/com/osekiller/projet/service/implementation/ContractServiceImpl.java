@@ -1,7 +1,7 @@
 package com.osekiller.projet.service.implementation;
 
-import com.osekiller.projet.controller.ContractController;
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
+import com.osekiller.projet.controller.payload.request.QuestionAnswerDto;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -224,16 +225,40 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<ContractToEvaluateDto> getUnEvaluatedContracts() {
         List<ContractToEvaluateDto> dtos = new ArrayList<>() ;
-        contractRepository.findAllByEvaluationPdfIsNotNull().stream().forEach(contract -> dtos.add(ContractToEvaluateDto.from(contract)));
+        contractRepository.findAllByEvaluationPdfIsNull().stream().forEach(contract -> dtos.add(ContractToEvaluateDto.from(contract)));
         return dtos ;
     }
 
     @Override
-    public void evaluateIntership(Long contractId, EvaluationDto dto) {
+    public void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
 
+        if (contract.getEvaluationPdf() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT) ;
+        }
+
+        PDDocument pdfDocument = PDDocument.load(new File("Templates/êvaluation du milieu de stage.pdf"));
+
+        writeValuesInEvaluationPdf(dto, contract, pdfDocument);
+
+        writeQuestionsAndAnswers(dto, pdfDocument) ;
+
+        writeObservations(dto, pdfDocument);
+
+        PDDocumentInformation pdd = pdfDocument.getDocumentInformation() ;
+        pdd.setTitle(contract.getOffer().getOwner().getName() + "-" + contract.getStudent().getName() + "-Evaluation");
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
+        pdfDocument.save(byteArrayOutputStream);
+        pdfDocument.save("./CV/test.pdf");
+
+        pdfDocument.close();
+
+        contract.setEvaluationPdf(byteArrayOutputStream.toByteArray());
+        contractRepository.save(contract) ;
     }
 
-    private void writeValuesInPdf(EvaluationDto evaluationDto, Contract contract, PDDocument pdfDocument) throws IOException {
+    private void writeValuesInEvaluationPdf(EvaluationDto evaluationDto, Contract contract, PDDocument pdfDocument) throws IOException {
 
         PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
         PDAcroForm acroForm = docCatalog.getAcroForm();
@@ -242,7 +267,7 @@ public class ContractServiceImpl implements ContractService {
         fieldCompanyName.setValue(contract.getOffer().getOwner().getName());
 
         PDField fieldCompanyContact = acroForm.getField( "companyContact" );
-        fieldCompanyContact.setValue(contract.getOffer().getOwner().getName());
+        fieldCompanyContact.setValue(evaluationDto.companyContact());
 
         PDField fieldAddress = acroForm.getField( "address" );
         fieldAddress.setValue(evaluationDto.address());
@@ -269,6 +294,81 @@ public class ContractServiceImpl implements ContractService {
         fieldInternshipNo.setValue(evaluationDto.internshipNo().toString());
 
         acroForm.flatten() ;
+    }
+
+    private void writeQuestionsAndAnswers(EvaluationDto dto, PDDocument pdfDocument) throws IOException {
+        PDPage pdPage = pdfDocument.getPage(1) ;
+        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
+
+        PDRectangle mediaBox = pdPage.getMediaBox();
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+        addParagraph(contentStream, width, startX, startY, "EVALUATION", true);
+
+        for (QuestionAnswerDto questionAnswerDto : dto.evaluation()) {
+            addParagraph(contentStream, width, 0, -FONT_SIZE, "-" + questionAnswerDto.question() + " : " + getAnswerString(questionAnswerDto.answer()), true);
+        }
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "COMMENTAIRES : " + dto.comment(), true);
+
+        contentStream.endText();
+
+        contentStream.close();
+    }
+
+    private String getAnswerString(int value) {
+        return switch (value) {
+            case 0 -> "Impossible de se prononcer";
+            case 1 -> "Totalement en désaccord";
+            case 2 -> "Plutôt en désaccord";
+            case 3 -> "Plutôt en accord";
+            case 4 -> "Totalement en accord";
+            default -> "ERROR";
+        };
+    }
+
+    private void writeObservations(EvaluationDto dto, PDDocument pdfDocument) throws IOException {
+        PDPage pdPage = pdfDocument.getPage(2) ;
+        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
+
+        PDRectangle mediaBox = pdPage.getMediaBox();
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+        addParagraph(contentStream, width, startX, startY, "OBSERVATIONS GÉNÉRALES", true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Ce milieu est à privilégier pour le stage : " + dto.preferredInternship(), true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Ce milieu est ouvert à accueillir : " + dto.internNbs() + " stagiaire(s)", true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Ce milieu désire accueillir le même stagiaire pour un prochain stage : " + (dto.keepIntern() ? "Oui" : "Non"), true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Ce milieu désire accueillir le même stagiaire pour un prochain stage : " + (dto.keepIntern() ? "Oui" : "Non"), true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Ce milieu offre des quarts de travail variables: " + (dto.variableWorkShifts() ? "Oui" : "Non"), true);
+
+        if (dto.variableWorkShifts()) {
+            for (List<String> workShift : dto.workShifts()) {
+                if (!workShift.get(0).equals("") && !workShift.get(1).equals("")) {
+                    addParagraph(contentStream, width, 0, -FONT_SIZE, workShift.get(0) + " - " + workShift.get(1), true);
+                }
+            }
+        }
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Date : " + LocalDate.now(), true);
+
+        contentStream.endText();
+
+        contentStream.close();
     }
 
 

@@ -10,7 +10,6 @@ import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
-import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import com.osekiller.projet.service.implementation.ContractServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -126,7 +125,7 @@ public class ContractServiceTest {
             contract1.setEvaluationPdf(new byte[16]);
             contracts.add(contract1);
         }
-        when(contractRepository.findAllByEvaluationPdfIsNotNull()).thenReturn(contracts) ;
+        when(contractRepository.findAllByEvaluationPdfIsNull()).thenReturn(contracts) ;
 
         //Act
         List<ContractToEvaluateDto> contractDtos = contractService.getUnEvaluatedContracts() ;
@@ -141,7 +140,7 @@ public class ContractServiceTest {
     void getContractsToEvaluateEmpty() {
         //Arrange
         List<Contract> contracts = new ArrayList<>() ;
-        when(contractRepository.findAllByEvaluationPdfIsNotNull()).thenReturn(contracts) ;
+        when(contractRepository.findAllByEvaluationPdfIsNull()).thenReturn(contracts) ;
 
         //Act
         List<ContractToEvaluateDto> contractDtos = contractService.getUnEvaluatedContracts() ;

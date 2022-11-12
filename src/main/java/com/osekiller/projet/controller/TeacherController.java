@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class TeacherController {
 
     @PostMapping("/{contractId}/evaluateInternship")
     public ResponseEntity<Void> evaluateInternship(@PathVariable(name = "contractId") Long contractId,
-                                                   @Valid @RequestBody EvaluationDto dto) {
+                                                   @Valid @RequestBody EvaluationDto dto) throws IOException {
         contractService.evaluateIntership(contractId, dto) ;
         return ResponseEntity.ok().build() ;
     }

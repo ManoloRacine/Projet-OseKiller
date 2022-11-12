@@ -17,6 +17,7 @@ public record EvaluationDto(
         @NotNull Integer preferredInternship,
         @NotNull Integer internNbs,
         @NotNull Boolean keepIntern,
-        @NotNull List<List<Integer>> workShifts
+        @NotNull Boolean variableWorkShifts,
+        @NotNull List<List<String>> workShifts
         ) {
 }
