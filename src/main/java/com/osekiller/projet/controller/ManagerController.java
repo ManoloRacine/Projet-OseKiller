@@ -4,6 +4,8 @@ import com.osekiller.projet.controller.payload.response.EvaluationSimpleDto;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,9 @@ public class ManagerController {
 
     @GetMapping("/{contractId}/evaluation-pdf")
     public ResponseEntity<Resource> getEvaluationPdf(@PathVariable Long contractId) {
-        return ResponseEntity.ok(contractService.getEvaluationPdf(contractId)) ;
+        Resource evaluation = contractService.getEvaluationPdf(contractId);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
+                        evaluation.getFilename() + "\"").body(evaluation) ;
     }
 }
