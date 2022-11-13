@@ -44,8 +44,17 @@ const EvaluateStudent = () => {
         date: "",
     });
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+    };
+
     return (
-        <EvaluateStudentForm formData={formData} setFormData={setFormData} />
+        <EvaluateStudentForm
+            formData={formData}
+            setFormData={setFormData}
+            submit={handleSubmit}
+        />
     );
 };
 

@@ -18,10 +18,19 @@ const SelectInput = ({
                 className="form-select mb-2"
                 value={inputValue}
                 onChange={changeInputValue}
+                required
             >
-                {optionsValues.map((option, index) => (
-                    <option value={index}>{option}</option>
-                ))}
+                {optionsValues.map((option, index) =>
+                    option[1] === "" ? (
+                        <option key={index} value={option[1]} disabled hidden>
+                            {option[0]}
+                        </option>
+                    ) : (
+                        <option key={index} value={option[1]}>
+                            {option[0]}
+                        </option>
+                    )
+                )}
             </select>
         </>
     );
@@ -37,11 +46,12 @@ SelectInput.propTypes = {
 
 SelectInput.defaultProps = {
     optionsValues: [
-        "Totalement en accord",
-        "Plutôt en accord",
-        "Plutôt en désaccord",
-        "Totalement en désaccord",
-        "N/A",
+        ["Veuillez choisir une réponse", ""],
+        ["Totalement en accord", 0],
+        ["Plutôt en accord", 1],
+        ["Plutôt en désaccord", 2],
+        ["Totalement en désaccord", 3],
+        ["N/A", 4],
     ],
 };
 

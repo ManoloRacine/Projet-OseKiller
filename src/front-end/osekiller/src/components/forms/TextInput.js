@@ -19,6 +19,7 @@ const TextInput = ({
                 id={inputName}
                 value={inputValue}
                 onChange={changeInputValue}
+                required
             />
         </>
     );

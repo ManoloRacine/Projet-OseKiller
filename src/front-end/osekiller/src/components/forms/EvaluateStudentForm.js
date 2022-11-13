@@ -4,11 +4,11 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 import TextareaInput from "./TextareaInput";
 
-const EvaluateStudentForm = ({ formData, setFormData }) => {
+const EvaluateStudentForm = ({ formData, setFormData, submit }) => {
     return (
         <div className={"mt-4"}>
             <h1 className={"text-center"}>FICHE D'ÉVALUATION DU STAGIAIRE</h1>
-            <form>
+            <form onSubmit={submit}>
                 <div className="section mb-3">
                     <TextInput
                         label={"Nom de l'élève"}
@@ -430,11 +430,27 @@ const EvaluateStudentForm = ({ formData, setFormData }) => {
                             })
                         }
                         optionsValues={[
-                            "Les habiletés démontrées dépassent de beaucoup les attentes",
-                            "Les habiletés démontrées dépassent les attentes",
-                            "Les habiletés démontrées répondent pleinement aux attentes",
-                            "Les habiletés démontrées répondent partiellement aux attentes",
-                            "Les habiletés démontrées ne répondent pas aux attentes",
+                            ["Veuillez choisir une réponse", ""],
+                            [
+                                "Les habiletés démontrées dépassent de beaucoup les attentes",
+                                0,
+                            ],
+                            [
+                                "Les habiletés démontrées dépassent les attentes",
+                                1,
+                            ],
+                            [
+                                "Les habiletés démontrées répondent pleinement aux attentes",
+                                2,
+                            ],
+                            [
+                                "Les habiletés démontrées répondent partiellement aux attentes",
+                                3,
+                            ],
+                            [
+                                "Les habiletés démontrées ne répondent pas aux attentes",
+                                4,
+                            ],
                         ]}
                     />
                     <TextareaInput
@@ -460,7 +476,11 @@ const EvaluateStudentForm = ({ formData, setFormData }) => {
                                 hasBeenDiscussed: target.value,
                             })
                         }
-                        optionsValues={["Oui", "Non"]}
+                        optionsValues={[
+                            ["Veuillez choisir une réponse", ""],
+                            ["Oui", true],
+                            ["Non", false],
+                        ]}
                     />
                     <TextInput
                         label={
@@ -491,7 +511,12 @@ const EvaluateStudentForm = ({ formData, setFormData }) => {
                                 wouldLikeToRetakeStudent: target.value,
                             })
                         }
-                        optionsValues={["Oui", "Non", "Peut-être"]}
+                        optionsValues={[
+                            ["Veuillez choisir une réponse", ""],
+                            ["Oui", 0],
+                            ["Non", 1],
+                            ["Peut-être", 2],
+                        ]}
                     />
                     <TextareaInput
                         label={
@@ -519,6 +544,7 @@ const EvaluateStudentForm = ({ formData, setFormData }) => {
                         }}
                     />
                 </div>
+                <button className={"btn btn-primary"}>Soumettre</button>
             </form>
         </div>
     );
@@ -527,6 +553,7 @@ const EvaluateStudentForm = ({ formData, setFormData }) => {
 EvaluateStudentForm.propTypes = {
     formData: PropTypes.object.isRequired,
     setFormData: PropTypes.func.isRequired,
+    submit: PropTypes.func.isRequired,
 };
 
 export default EvaluateStudentForm;
