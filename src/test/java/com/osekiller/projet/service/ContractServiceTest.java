@@ -9,22 +9,37 @@ import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
+import com.osekiller.projet.repository.user.ManagerRepository;
+import com.osekiller.projet.repository.user.SignatoryRepository;
+import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
 import com.osekiller.projet.service.implementation.ContractServiceImpl;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -35,8 +50,32 @@ public class ContractServiceTest {
     @Mock
     OfferRepository offerRepository ;
 
+    @Mock
+    SignatoryRepository signatoryRepository;
+
+    @Mock
+    ManagerRepository managerRepository;
+
+    @Mock
+    StudentRepository studentRepository;
+
+    @Spy
     @InjectMocks
     ContractServiceImpl contractService;
+
+    static Student student;
+    static Offer offer;
+    static Manager manager;
+
+    @BeforeAll
+    static void setupAll(){
+        student = new Student("student","student@email.com","123");
+        student.setId(5L);
+        offer = new Offer(mock(Company.class), "test",24, LocalDate.of(2022,12,12),LocalDate.of(2023,1,23));
+        offer.setId(6L);
+        manager = new Manager("manager","manager@email.com","123");
+        manager.setId(7L);
+    }
 
     @Test
     void getContractsHappyDay() {
@@ -111,5 +150,78 @@ public class ContractServiceTest {
         assertNotNull(applicationDtos);
         assertSame(applicationDtos.size(), 0);
 
+    }
+
+    @Test
+    void signContractNoSignature() throws IOException {
+        // Arrange
+
+        doReturn(mock(Contract.class)).when(contractService).contractSignatoryGuardClause(anyLong(),anyLong());
+        doReturn(false).when(contractService).hasSignature(anyLong());
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> contractService.signContract(1, 2))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void contractSignatoryGuardClauseHappyDay() {
+        //Arrange
+
+        when(contractRepository.findById(anyLong())).thenReturn(
+                Optional.of(
+                        new Contract(
+                                student,
+                                offer,
+                                manager
+                        ))
+        );
+
+        //Act
+
+        Contract contract = contractService.contractSignatoryGuardClause(1, manager.getId());
+
+        //Assert
+
+        assertThat(contract).isNotNull();
+        assertThat(contract.getOffer()).isEqualTo(offer);
+        assertThat(contract.getManager()).isEqualTo(manager);
+        assertThat(contract.getStudent()).isEqualTo(student);
+
+    }
+
+    @Test
+    void contractSignatoryGuardClauseContractNotFound() {
+
+        //Act & Assert
+        assertThatThrownBy(() -> contractService.contractSignatoryGuardClause(1, 2))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void contractSignatoryGuardClauseSignatoryNotInContract() {
+
+        //Arrange
+
+        when(contractRepository.findById(anyLong())).thenReturn(
+                Optional.of(
+                        new Contract(
+                                student,
+                                offer,
+                                manager
+                        ))
+        );
+
+        //Act & Assert
+
+        assertThatThrownBy(() -> contractService.contractSignatoryGuardClause(1, 2))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.FORBIDDEN);
     }
 }

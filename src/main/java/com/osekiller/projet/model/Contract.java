@@ -5,6 +5,7 @@ import com.osekiller.projet.model.user.Student;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -27,9 +28,9 @@ public class Contract {
     @NonNull
     private Manager manager;
 
-    private boolean signedByStudent;
-    private boolean signedByCompany;
-    private boolean signedByManager;
+    private LocalDate studentSigningDate;
+    private LocalDate managerSigningDate;
+    private LocalDate companySigningDate;
 
     @Lob
     private byte[] pdf;

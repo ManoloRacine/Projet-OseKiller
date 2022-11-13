@@ -39,9 +39,9 @@ import java.util.Optional;
 @AllArgsConstructor
 @Slf4j
 public class ContractServiceImpl implements ContractService {
-    OfferRepository offerRepository ;
-    ManagerRepository managerRepository ;
-    StudentRepository studentRepository ;
+    OfferRepository offerRepository;
+    ManagerRepository managerRepository;
+    StudentRepository studentRepository;
     ContractRepository contractRepository ;
     SignatoryRepository signatoryRepository;
 
@@ -257,14 +257,14 @@ public class ContractServiceImpl implements ContractService {
     public Resource signContract(long contractId, long signatoryId) throws IOException {
         Contract contract = contractSignatoryGuardClause(contractId, signatoryId);
 
-        Signatory signatory = signatoryRepository.findById(signatoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)); //Should be impossible
+        if(!hasSignature(signatoryId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
 
         PDDocument pdf = PDDocument.load(contract.getPdf());
         PDPage page = pdf.getPage(3);
-        PDImageXObject pdImage = PDImageXObject.createFromByteArray(pdf,signatory.getSignature(),"signature");
 
-        return signPdf(signatoryId, contract, pdf, page, pdImage);
+        return signPdf(signatoryId, contract, pdf, page);
     }
 
     @Override
@@ -273,19 +273,25 @@ public class ContractServiceImpl implements ContractService {
 
         PDDocument pdf = PDDocument.load(contract.getPdf());
         PDPage page = pdf.getPage(3);
-        PDImageXObject pdImage = PDImageXObject.createFromByteArray(pdf,signature.getBytes(),"signature");
 
-        Signatory signatory = signatoryRepository.findById(signatoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)); //Should be impossible
+        if(contract.getManager().getId().equals(signatoryId)){
+            contract.getManager().setSignature(signature.getBytes());
+        }
 
-        signatory.setSignature(signature.getBytes());
+        if(contract.getStudent().getId().equals(signatoryId)){
+            contract.getStudent().setSignature(signature.getBytes());
+        }
 
-        signatoryRepository.save(signatory);
+        if(contract.getOffer().getOwner().getId().equals(signatoryId)){
+            contract.getOffer().getOwner().setSignature(signature.getBytes());
+        }
 
-        return signPdf(signatoryId, contract, pdf, page, pdImage);
+        contractRepository.save(contract);
+
+        return signPdf(signatoryId, contract, pdf, page);
     }
 
-    private Contract contractSignatoryGuardClause(long contractId, long signatoryId) {
+    public Contract contractSignatoryGuardClause(long contractId, long signatoryId) {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -302,27 +308,30 @@ public class ContractServiceImpl implements ContractService {
         return contract;
     }
 
-    private Resource signPdf(long signatoryId, Contract contract, PDDocument pdf, PDPage page, PDImageXObject pdImage) throws IOException {
-        if(contract.getManager().getId().equals(signatoryId) && !contract.isSignedByManager()){
-            addSignatureToPdf(pdf, page, pdImage, "Le gestionnaire de stage:");
-            contract.setSignedByManager(true);
-        } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
+    private Resource signPdf(long signatoryId, Contract contract, PDDocument pdf, PDPage page) throws IOException {
+
+        if(contract.getManager().getId().equals(signatoryId)){
+            if(contract.getManagerSigningDate() != null){
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            contract.setManagerSigningDate(LocalDate.now());
         }
 
         if(contract.getStudent().getId().equals(signatoryId)){
-            addSignatureToPdf(pdf, page, pdImage, "L'étudiant(e):");
-            contract.setSignedByStudent(true);
-        } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
+            if(contract.getStudentSigningDate() != null){
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            contract.setStudentSigningDate(LocalDate.now());
         }
 
         if(contract.getOffer().getOwner().getId().equals(signatoryId)){
-            addSignatureToPdf(pdf, page, pdImage, "L'employeur:");
-            contract.setSignedByCompany(true);
-        } else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
+            if(contract.getCompanySigningDate() != null){
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            contract.setCompanySigningDate(LocalDate.now());
         }
+
+        generateSignaturePagePdf(pdf, page, contract);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         pdf.save(byteArrayOutputStream);
@@ -332,8 +341,8 @@ public class ContractServiceImpl implements ContractService {
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
     }
 
-    private void addSignatureToPdf(PDDocument pdf, PDPage page, PDImageXObject pdImage, String signatory) throws IOException {
-        PDPageContentStream contentStream = new PDPageContentStream(pdf, page, PDPageContentStream.AppendMode.APPEND, true); //Create Stream
+    private void generateSignaturePagePdf(PDDocument pdf, PDPage page, Contract contract) throws IOException {
+        PDPageContentStream contentStream = new PDPageContentStream(pdf, page); //Create Stream
 
         PDRectangle mediaBox = page.getMediaBox();
 
@@ -345,17 +354,70 @@ public class ContractServiceImpl implements ContractService {
 
         contentStream.beginText();
 
-        addParagraph(contentStream, width, 0, -FONT_SIZE, signatory, true);
+        addParagraph(contentStream, width, startX, startY, "SIGNATURES", true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Signature du gestionnaire de stage: " + contract.getManager().getName(), true);
+
+        addParagraph(
+                contentStream,
+                width,
+                0,
+                -FONT_SIZE * 6,
+                contract.getManagerSigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getManagerSigningDate(),
+                true);
+
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Signature de l'employeur: " + contract.getOffer().getOwner().getName(), true);
+
+        addParagraph(
+                contentStream,
+                width,
+                0,
+                -FONT_SIZE * 6,
+                contract.getCompanySigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getCompanySigningDate(),
+                true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Signature de l'étudiant: " + contract.getStudent().getName(), true);
+
+        addParagraph(
+                contentStream,
+                width,
+                0,
+                -FONT_SIZE * 6,
+                contract.getStudentSigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getStudentSigningDate(),
+                true);
 
         contentStream.endText();
 
-        contentStream.drawImage(pdImage, startX, startY, (float) ((90 * pdImage.getWidth()) / pdImage.getHeight()), 90);
+        if(contract.getManagerSigningDate() != null) {
+            PDImageXObject pdImage = PDImageXObject.createFromByteArray(
+                    pdf,
+                    contract.getManager().getSignature(),
+                    "manager-signature"
+            );
 
-        contentStream.beginText();
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 50, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+        }
 
-        addParagraph(contentStream, width, 0, -FONT_SIZE, LocalDate.now().toString(), true);
+        if(contract.getCompanySigningDate() != null) {
+            PDImageXObject pdImage = PDImageXObject.createFromByteArray(
+                    pdf,
+                    contract.getOffer().getOwner().getSignature(),
+                    "company-signature"
+            );
 
-        contentStream.endText();
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 40, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+        }
+
+        if(contract.getStudentSigningDate() != null) {
+            PDImageXObject pdImage = PDImageXObject.createFromByteArray(
+                    pdf,
+                    contract.getStudent().getSignature(),
+                    "student-signature"
+            );
+
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 30, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+        }
 
         contentStream.close(); //Close Stream
     }
