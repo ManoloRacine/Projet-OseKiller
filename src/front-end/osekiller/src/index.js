@@ -23,6 +23,8 @@ import AppliedOffers from "./views/students/AppliedOffers";
 import InviteStudent from "./views/companies/InviteStudent";
 import OfferDetails from "./views/managers/OfferDetails";
 import AcceptedApplications from "./views/managers/AcceptedApplications";
+import EvaluationDetail from "./views/managers/EvaluationDetail";
+import Evaluations from "./views/managers/Evaluations";
 
 <link
     rel="stylesheet"
@@ -214,6 +216,28 @@ root.render(
                             allowedRoles={["MANAGER"]}
                         >
                             <AcceptedApplications />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="evaluation-detail"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["MANAGER"]}
+                        >
+                            <EvaluationDetail />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="evaluations"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["MANAGER"]}
+                        >
+                            <Evaluations />
                         </ProtectedRoute>
                     }
                 />

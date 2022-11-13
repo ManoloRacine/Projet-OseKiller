@@ -34,3 +34,5 @@ const EvaluationDetail = () => {
         </div>
     );
 };
+
+export default EvaluationDetail;
