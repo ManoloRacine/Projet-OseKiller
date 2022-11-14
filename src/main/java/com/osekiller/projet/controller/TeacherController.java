@@ -1,7 +1,6 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
-import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,7 @@ public class TeacherController {
 
     @GetMapping("/contracts-to-evaluate")
     public ResponseEntity<List<ContractToEvaluateDto>> getContractsToEvaluate() {
-        return ResponseEntity.ok(contractService.getUnEvaluatedContracts()) ;
+        return ResponseEntity.ok(contractService.getUnevaluatedContracts()) ;
     }
 
     @PostMapping("/{contractId}/evaluateInternship")

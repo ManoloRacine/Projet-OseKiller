@@ -1,7 +1,6 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
-import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -31,7 +30,7 @@ public class ContractController {
             return ResponseEntity.ok(contractService.getContracts()) ;
         }
         if (toEvaluate) {
-            return ResponseEntity.ok(contractService.getUnEvaluatedContracts()) ;
+            return ResponseEntity.ok(contractService.getUnevaluatedContracts()) ;
         }
         else  {
             throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED) ;
