@@ -730,7 +730,7 @@ paths:
     /contracts/{id}/sign:
         post:
             tags:
-                - Contract
+                - Contracts
             summary: Signer une entente de stage
             description: Signer une entente de stage
             operationId: signContract
@@ -823,16 +823,16 @@ paths:
 
             security:
                 - bearerAuth: []
-    /{id}/evaluateInternship:
+    /contracts/{contractId}/evaluate-internship:
         post:
             tags :
-                - Teacher
+                - Contracts
             summary : Évaluer le milieu du stage
             description : Évaluer le milieu du stage
             operationId : evaluateInternship
             parameters:
                 - in: path
-                  name: id
+                  name: contractId
                   schema:
                       type: integer
                   required: true
@@ -845,7 +845,96 @@ paths:
             responses :
                 "200":
                     description : L'évaluation du milieu de stage a été envoyé
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Contrat non existant
+                "409":
+                    description: l'évaluation a déjà été générée
 
+            security:
+                - bearerAuth: []
+    /contracts:
+        get:
+            parameters:
+                - in: query
+                  name: toEvaluate
+                  schema:
+                      type: boolean
+            tags :
+                - Contracts
+            summary : Recevoir tous les contrats
+            description : Recevoir tous les contrats
+            operationId : getContractsToEvaluate
+            responses :
+                "200":
+                    description : Les contrats on étés envoyés
+                    content :
+                        application/json:
+                            schema:
+                                type : array
+                                items:
+                                    $ref : "#/components/schemas/ContractToEvaluate"
+
+                "403":
+                    description: Requête non autorisée
+
+            security:
+                - bearerAuth: []
+
+    /manager/evaluations:
+        get:
+            tags:
+                - Manager
+            summary: Recevoir toutes les évaluations
+            description: Recevoir toutes les évaluations
+            operationId: getEvaluations
+            responses:
+                "200":
+                    description: Les évaluations des milieux de stage ont été envoyées
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Evaluation"
+
+                "403":
+                    description: Requête non autorisée
+
+            security:
+                - bearerAuth: [ ]
+    /manager/{contractId}/evaluation-pdf:
+        get:
+            parameters:
+                - in: path
+                  name: contractId
+                  schema:
+                      type: integer
+                  required: true
+            tags:
+                - Manager
+            summary: Recevoir le pdf de l'évaluation
+            description: Recevoir le pdf de l'évaluation
+            operationId: getEvaluationPdf
+            responses:
+                "200":
+                    description: Le pdf de l'évaluation a été envoyé
+                    content:
+                        multipart/form-data:
+                            schema:
+                                type: object
+                                properties:
+                                    file:
+                                        type: string
+                                        format: binary
+                "404":
+                    description: Évaluation non existante
+                "403":
+                    description: Requête non autorisée
+
+            security:
+                - bearerAuth: [ ]
 
 components:
     securitySchemes:
@@ -1016,9 +1105,6 @@ components:
         EvaluationInternship:
             type: object
             properties:
-                contractId :
-                    type : number
-                    example : 23
                 companyContact:
                     type : string
                     example : Obama
@@ -1043,14 +1129,15 @@ components:
                 evaluation:
                     type : array
                     items :
-                        type : number
+                        $ref: "#/components/schemas/Question"
+
                 comment :
                     type : string
                     example : shit, that guy was so bad ahahahahhaha lmao banu code
                 preferredInternship :
                     type : number
                     example : 2
-                internNo :
+                internNbs :
                     type : number
                     example : 3
                 keepIntern :
@@ -1087,3 +1174,51 @@ components:
                     example: java dev
             xml:
                 name: Application
+        Question:
+            type: object
+            properties:
+                question:
+                    type: string
+                    example: Des mesures d’accueil facilitent l’intégration du nouveau stagiaire.
+                answer:
+                    type : number
+                    example : 4
+            xml:
+                name: Question
+        ContractToEvaluate:
+            type: object
+            properties:
+                contractId:
+                    type: number
+                    example: 10
+                companyName:
+                    type : string
+                    example : Google
+                studentName :
+                    type : string
+                    example : Obama
+                position :
+                    type : string
+                    example: dev
+            xml:
+                name: contractToEvaluate
+        Evaluation:
+            type: object
+            properties:
+                contractId:
+                    type: number
+                companyName:
+                    type: string
+                    example: Google
+                studentName:
+                    type: string
+                    example: Obama
+                position:
+                    type: string
+                    example: dev
+                startDate :
+                    type: string
+                    example: 2022-10-20
+                endDate :
+                    type: string
+                    example: 2022-12-20
