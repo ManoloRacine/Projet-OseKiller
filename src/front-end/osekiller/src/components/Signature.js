@@ -8,25 +8,25 @@ const Signature = ({ saveData }) => {
 
     const handleSave = () => {
         setData(sigPad.current.toDataURL());
-        saveData(data);
+        saveData(sigPad.current.toDataURL());
     };
 
     return (
         <div>
             <SignaturePad
                 ref={sigPad}
-                backgroundColor={"white"}
-                style={{ backgroundColor: "#2C324C" }}
+                backgroundColor={"#D3D3D3"}
+                style={{ border: "1px solid black" }}
             />
             <div className={"d-flex"}>
+                <button className={"btn btn-primary me-1"} onClick={handleSave}>
+                    Sauvegarder
+                </button>
                 <button
-                    className={"btn btn-primary me-1"}
+                    className={"btn btn-primary"}
                     onClick={() => sigPad.current.clear()}
                 >
                     Effacer
-                </button>
-                <button className={"btn btn-primary"} onClick={handleSave}>
-                    Sauvegarder
                 </button>
             </div>
         </div>
