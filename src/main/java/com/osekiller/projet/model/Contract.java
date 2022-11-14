@@ -32,4 +32,7 @@ public class Contract {
 
     @Lob
     private byte[] evaluationPdf;
+
+    @Lob
+    private byte[] studentEvaluationPdf ;
 }

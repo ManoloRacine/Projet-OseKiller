@@ -51,4 +51,8 @@ public class ContractController {
         contractService.evaluateIntership(contractId, dto) ;
         return ResponseEntity.ok().build() ;
     }
+
+    @PostMapping("/{contractId}/evaluate-intern")
+    public ResponseEntity<Void> evaluateIntern(@PathVariable(name = "contractId") Long contractId,
+                                               @Valid @RequestBody StudentEvaluationDto dt)
 }
