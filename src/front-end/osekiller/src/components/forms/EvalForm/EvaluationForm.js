@@ -161,17 +161,17 @@ const EvaluationForm = ({
                     <option value={1}>Premier Stage</option>
                     <option value={2}>Deuxième Stage</option>
                 </select>
-                <label htmlFor="internNo" className="form-label mt-3">
+                <label htmlFor="internNbs" className="form-label mt-3">
                     le nombre de stagiaires que la compagnie est ouverte à
                     accueillir
                 </label>
                 <input
-                    id="internNo"
+                    id="internNbs"
                     className="form-control"
                     type="number"
                     value={formData.internNbs}
                     onChange={(e) =>
-                        setFormData({ ...formData, internNo: e.target.value })
+                        setFormData({ ...formData, internNbs: e.target.value })
                     }
                     required
                 />

@@ -36,7 +36,7 @@ const InternshipEvaluation = () => {
         evaluation: evalArray,
         comment: null,
         preferredInternship: null,
-        internNo: null,
+        internNbs: null,
         keepIntern: false,
         workShifts: [
             [null, null],
