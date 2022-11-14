@@ -5,10 +5,7 @@ import com.osekiller.projet.controller.payload.request.ValidationDto;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.InterviewDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
-import com.osekiller.projet.service.AuthService;
-import com.osekiller.projet.service.CompanyService;
-import com.osekiller.projet.service.InterviewService;
-import com.osekiller.projet.service.StudentService;
+import com.osekiller.projet.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ public class StudentController {
     StudentService studentService;
     InterviewService interviewService;
     AuthService authService;
+    ContractService contractService ;
 
     CompanyService companyService;
     @GetMapping
@@ -105,6 +104,19 @@ public class StudentController {
     @PostMapping("/{id}/updateSession")
     public ResponseEntity<StudentWithCvStateDto> updateStudentSession(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(studentService.updateSession(id)) ;
+    }
+
+    @PostMapping("/{studentId}/applications/{offerId}/generate-contract")
+    public ResponseEntity<Resource> generateContract(@RequestHeader(HttpHeaders.AUTHORIZATION) String header,
+                                                     @PathVariable(name = "studentId") Long studentId,
+                                                     @PathVariable(name = "offerId") Long offerId,
+                                                     @RequestBody List<String> contractTasks) throws IOException {
+
+        String jwt = header.substring(7);
+        Long managerId = authService.getUserFromToken(jwt).id();
+        Resource contract = contractService.generateContract(contractTasks, offerId, studentId, managerId);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + contract.getFilename() + "\"").body(contract);
     }
 
     @PostMapping("/{studentId}/interviews/{interviewId}/confirm")
