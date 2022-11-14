@@ -1,8 +1,6 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
-import com.osekiller.projet.service.ContractService;
-import com.osekiller.projet.service.OfferService;
 import com.osekiller.projet.service.implementation.ContractServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +18,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -41,7 +38,7 @@ public class ContractControllerTest {
         for (int i = 0; i < 3; i++) {
             contractToEvaluateDtoList.add(mock(ContractToEvaluateDto.class));
         }
-        when(contractService.getUnEvaluatedContracts()).thenReturn(contractToEvaluateDtoList) ;
+        when(contractService.getUnevaluatedContracts()).thenReturn(contractToEvaluateDtoList) ;
 
         //Act & Assert
         mockMvc.perform(get("/contracts?toEvaluate=true", 1)).

@@ -224,7 +224,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public List<ContractToEvaluateDto> getUnEvaluatedContracts() {
+    public List<ContractToEvaluateDto> getUnevaluatedContracts() {
         List<ContractToEvaluateDto> dtos = new ArrayList<>() ;
         contractRepository.findAllByEvaluationPdfIsNull().stream().forEach(contract -> dtos.add(ContractToEvaluateDto.from(contract)));
         return dtos ;

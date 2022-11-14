@@ -138,7 +138,7 @@ public class ContractServiceTest {
         when(contractRepository.findAllByEvaluationPdfIsNull()).thenReturn(contracts) ;
 
         //Act
-        List<ContractToEvaluateDto> contractDtos = contractService.getUnEvaluatedContracts() ;
+        List<ContractToEvaluateDto> contractDtos = contractService.getUnevaluatedContracts() ;
 
         //Assert
         assertNotNull(contractDtos);
@@ -153,7 +153,7 @@ public class ContractServiceTest {
         when(contractRepository.findAllByEvaluationPdfIsNull()).thenReturn(contracts) ;
 
         //Act
-        List<ContractToEvaluateDto> contractDtos = contractService.getUnEvaluatedContracts() ;
+        List<ContractToEvaluateDto> contractDtos = contractService.getUnevaluatedContracts() ;
 
         //Assert
         assertNotNull(contractDtos);
