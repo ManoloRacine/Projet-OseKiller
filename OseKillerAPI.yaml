@@ -847,6 +847,8 @@ paths:
                     description : L'évaluation du milieu de stage a été envoyé
                 "403":
                     description: Requête non autorisée
+                "404":
+                    description: Contrat non existant
                 "409":
                     description: l'évaluation a déjà été générée
 
@@ -866,7 +868,7 @@ paths:
             operationId : getContractsToEvaluate
             responses :
                 "200":
-                    description : L'évaluation du milieu de stage a été envoyé
+                    description : Les contrats on étés envoyés
                     content :
                         application/json:
                             schema:
@@ -880,6 +882,59 @@ paths:
             security:
                 - bearerAuth: []
 
+    /manager/evaluations:
+        get:
+            tags:
+                - Manager
+            summary: Recevoir toutes les évaluations
+            description: Recevoir toutes les évaluations
+            operationId: getEvaluations
+            responses:
+                "200":
+                    description: Les évaluations des milieux de stage ont été envoyées
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Evaluation"
+
+                "403":
+                    description: Requête non autorisée
+
+            security:
+                - bearerAuth: [ ]
+    /manager/{contractId}/evaluation-pdf:
+        get:
+            parameters:
+                - in: path
+                  name: contractId
+                  schema:
+                      type: integer
+                  required: true
+            tags:
+                - Manager
+            summary: Recevoir le pdf de l'évaluation
+            description: Recevoir le pdf de l'évaluation
+            operationId: getEvaluationPdf
+            responses:
+                "200":
+                    description: Le pdf de l'évaluation a été envoyé
+                    content:
+                        multipart/form-data:
+                            schema:
+                                type: object
+                                properties:
+                                    file:
+                                        type: string
+                                        format: binary
+                "404":
+                    description: Évaluation non existante
+                "403":
+                    description: Requête non autorisée
+
+            security:
+                - bearerAuth: [ ]
 
 components:
     securitySchemes:
@@ -1147,3 +1202,23 @@ components:
                     example: dev
             xml:
                 name: contractToEvaluate
+        Evaluation:
+            type: object
+            properties:
+                contractId:
+                    type: number
+                companyName:
+                    type: string
+                    example: Google
+                studentName:
+                    type: string
+                    example: Obama
+                position:
+                    type: string
+                    example: dev
+                startDate :
+                    type: string
+                    example: 2022-10-20
+                endDate :
+                    type: string
+                    example: 2022-12-20
