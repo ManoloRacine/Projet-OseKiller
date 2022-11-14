@@ -1,15 +1,16 @@
 package com.osekiller.projet.service.implementation;
 
-import com.osekiller.projet.controller.ContractController;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
+import com.osekiller.projet.model.user.Signatory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.ManagerRepository;
+import com.osekiller.projet.repository.user.SignatoryRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
@@ -18,15 +19,18 @@ import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,10 +39,12 @@ import java.util.Optional;
 @AllArgsConstructor
 @Slf4j
 public class ContractServiceImpl implements ContractService {
-    OfferRepository offerRepository ;
-    ManagerRepository managerRepository ;
-    StudentRepository studentRepository ;
+    OfferRepository offerRepository;
+    ManagerRepository managerRepository;
+    StudentRepository studentRepository;
     ContractRepository contractRepository ;
+    SignatoryRepository signatoryRepository;
+
 
     private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
     private static final float FONT_SIZE = 12;
@@ -62,7 +68,21 @@ public class ContractServiceImpl implements ContractService {
 
         writeValuesInPdf(student, offer, manager, pdfDocument);
 
-        writeTasksInPdf(contractTasks, pdfDocument);
+        PDPage pdPageTasks = pdfDocument.getPage(2) ;
+
+        PDPageContentStream contentStreamTasksPage = new PDPageContentStream(pdfDocument, pdPageTasks); //Create Stream
+
+        writeTasksInPdf(contractTasks, contentStreamTasksPage, pdPageTasks);
+
+        contentStreamTasksPage.close();  //Close Stream
+
+        PDPage pdPageSignatures = pdfDocument.getPage(3) ;
+
+        PDPageContentStream contentStreamTasksSignatures = new PDPageContentStream(pdfDocument, pdPageSignatures);  //Create Stream
+
+        writePageTitle(contentStreamTasksSignatures, "SIGNATURES", pdPageSignatures);
+
+        contentStreamTasksSignatures.close(); //Close Stream
 
         PDDocumentInformation pdd = pdfDocument.getDocumentInformation() ;
         pdd.setTitle(offer.getOwner().getName() + "-" + student.getName() + "-Contract");
@@ -77,6 +97,22 @@ public class ContractServiceImpl implements ContractService {
         contractRepository.save(contract) ;
 
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
+    }
+
+    private void writePageTitle(PDPageContentStream contentStream, String Title,  PDPage page) throws IOException {
+        PDRectangle mediaBox = page.getMediaBox();
+
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+
+        addParagraph(contentStream, width, startX, startY, Title, true);
+
+        contentStream.endText();
     }
 
     private void writeValuesInPdf(Student student, Offer offer, Manager manager, PDDocument pdfDocument) throws IOException {
@@ -114,11 +150,10 @@ public class ContractServiceImpl implements ContractService {
         acroForm.flatten() ;
     }
 
-    private void writeTasksInPdf(List<String> contractTasks, PDDocument pdfDocument) throws IOException {
-        PDPage pdPage = pdfDocument.getPage(2) ;
-        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
+    private void writeTasksInPdf(List<String> contractTasks, PDPageContentStream contentStream, PDPage pdPage) throws IOException {
 
         PDRectangle mediaBox = pdPage.getMediaBox();
+
         float marginY = 80;
         float marginX = 60;
         float width = mediaBox.getWidth() - 2 * marginX;
@@ -126,16 +161,15 @@ public class ContractServiceImpl implements ContractService {
         float startY = mediaBox.getUpperRightY() - marginY;
 
         contentStream.beginText();
+
         addParagraph(contentStream, width, startX, startY, "TACHES ET RESPONSABILITES DU STAGIAIRE", true);
 
         for (String task : contractTasks) {
             System.out.println(task);
-            addParagraph(contentStream, width, 0, -FONT_SIZE, "-" + task, true);
+            addParagraph(contentStream, width, 0, -FONT_SIZE, "- " + task, true);
         }
 
         contentStream.endText();
-
-        contentStream.close();
     }
 
     //https://memorynotfound.com/apache-pdfbox-adding-multiline-paragraph/
@@ -217,5 +251,179 @@ public class ContractServiceImpl implements ContractService {
     public Resource getContract(long contractId) {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
         return new ByteArrayResource(contract.getPdf()) ;
+    }
+
+    @Override
+    public Resource signContract(long contractId, long signatoryId) throws IOException {
+        Contract contract = contractSignatoryGuardClause(contractId, signatoryId);
+
+        if(!hasSignature(signatoryId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        PDDocument pdf = PDDocument.load(contract.getPdf());
+        PDPage page = pdf.getPage(3);
+
+        return signPdf(signatoryId, contract, pdf, page);
+    }
+
+    @Override
+    public Resource signContract(long contractId, long signatoryId, MultipartFile signature) throws IOException {
+        Contract contract = contractSignatoryGuardClause(contractId, signatoryId);
+
+        PDDocument pdf = PDDocument.load(contract.getPdf());
+        PDPage page = pdf.getPage(3);
+
+        if(contract.getManager().getId().equals(signatoryId)){
+            contract.getManager().setSignature(signature.getBytes());
+        }
+
+        if(contract.getStudent().getId().equals(signatoryId)){
+            contract.getStudent().setSignature(signature.getBytes());
+        }
+
+        if(contract.getOffer().getOwner().getId().equals(signatoryId)){
+            contract.getOffer().getOwner().setSignature(signature.getBytes());
+        }
+
+        contractRepository.save(contract);
+
+        return signPdf(signatoryId, contract, pdf, page);
+    }
+
+    public Contract contractSignatoryGuardClause(long contractId, long signatoryId) {
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        boolean signatoryIsNotInContract = !(
+                contract.getManager().getId().equals(signatoryId) ||
+                        contract.getStudent().getId().equals(signatoryId) ||
+                        contract.getOffer().getOwner().getId().equals(signatoryId)
+        );
+
+        if(signatoryIsNotInContract){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        return contract;
+    }
+
+    private Resource signPdf(long signatoryId, Contract contract, PDDocument pdf, PDPage page) throws IOException {
+
+        if(contract.getManager().getId().equals(signatoryId)){
+            if(contract.getManagerSigningDate() != null){
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            contract.setManagerSigningDate(LocalDate.now());
+        }
+
+        if(contract.getStudent().getId().equals(signatoryId)){
+            if(contract.getStudentSigningDate() != null){
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            contract.setStudentSigningDate(LocalDate.now());
+        }
+
+        if(contract.getOffer().getOwner().getId().equals(signatoryId)){
+            if(contract.getCompanySigningDate() != null){
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            contract.setCompanySigningDate(LocalDate.now());
+        }
+
+        generateSignaturePagePdf(pdf, page, contract);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        pdf.save(byteArrayOutputStream);
+        pdf.close();
+        contract.setPdf(byteArrayOutputStream.toByteArray());
+        contractRepository.save(contract);
+        return new ByteArrayResource(byteArrayOutputStream.toByteArray());
+    }
+
+    private void generateSignaturePagePdf(PDDocument pdf, PDPage page, Contract contract) throws IOException {
+        PDPageContentStream contentStream = new PDPageContentStream(pdf, page); //Create Stream
+
+        PDRectangle mediaBox = page.getMediaBox();
+
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+
+        addParagraph(contentStream, width, startX, startY, "SIGNATURES", true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Signature du gestionnaire de stage: " + contract.getManager().getName(), true);
+
+        addParagraph(
+                contentStream,
+                width,
+                0,
+                -FONT_SIZE * 6,
+                contract.getManagerSigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getManagerSigningDate(),
+                true);
+
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Signature de l'employeur: " + contract.getOffer().getOwner().getName(), true);
+
+        addParagraph(
+                contentStream,
+                width,
+                0,
+                -FONT_SIZE * 6,
+                contract.getCompanySigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getCompanySigningDate(),
+                true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Signature de l'étudiant: " + contract.getStudent().getName(), true);
+
+        addParagraph(
+                contentStream,
+                width,
+                0,
+                -FONT_SIZE * 6,
+                contract.getStudentSigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getStudentSigningDate(),
+                true);
+
+        contentStream.endText();
+
+        if(contract.getManagerSigningDate() != null) {
+            PDImageXObject pdImage = PDImageXObject.createFromByteArray(
+                    pdf,
+                    contract.getManager().getSignature(),
+                    "manager-signature"
+            );
+
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 50, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+        }
+
+        if(contract.getCompanySigningDate() != null) {
+            PDImageXObject pdImage = PDImageXObject.createFromByteArray(
+                    pdf,
+                    contract.getOffer().getOwner().getSignature(),
+                    "company-signature"
+            );
+
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 40, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+        }
+
+        if(contract.getStudentSigningDate() != null) {
+            PDImageXObject pdImage = PDImageXObject.createFromByteArray(
+                    pdf,
+                    contract.getStudent().getSignature(),
+                    "student-signature"
+            );
+
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 30, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+        }
+
+        contentStream.close(); //Close Stream
+    }
+
+    @Override
+    public boolean hasSignature(long signatoryId) {
+        return signatoryRepository.findByIdAndSignatureIsNotNull(signatoryId).isPresent();
     }
 }
