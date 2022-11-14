@@ -3,5 +3,6 @@ package com.osekiller.projet.model;
 public enum ERole {
     STUDENT,
     MANAGER,
-    COMPANY;
+    COMPANY,
+    TEACHER;
 }
