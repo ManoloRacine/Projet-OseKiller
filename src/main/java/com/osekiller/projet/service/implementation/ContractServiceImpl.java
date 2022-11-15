@@ -2,6 +2,7 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
 import com.osekiller.projet.controller.payload.request.QuestionAnswerDto;
+import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
@@ -258,6 +259,7 @@ public class ContractServiceImpl implements ContractService {
         contractRepository.save(contract) ;
     }
 
+
     private void writeValuesInEvaluationPdf(EvaluationDto evaluationDto, Contract contract, PDDocument pdfDocument) throws IOException {
 
         PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
@@ -369,6 +371,11 @@ public class ContractServiceImpl implements ContractService {
         contentStream.endText();
 
         contentStream.close();
+    }
+
+    @Override
+    public void evaluateIntern(long contractId, StudentEvaluationDto dto) {
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
+import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
@@ -20,4 +21,6 @@ public interface ContractService {
     List<ContractToEvaluateDto> getUnevaluatedContracts();
 
     void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException;
+
+    void evaluateIntern(long contractId, StudentEvaluationDto dto);
 }

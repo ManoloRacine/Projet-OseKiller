@@ -1,6 +1,7 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
+import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -54,5 +55,8 @@ public class ContractController {
 
     @PostMapping("/{contractId}/evaluate-intern")
     public ResponseEntity<Void> evaluateIntern(@PathVariable(name = "contractId") Long contractId,
-                                               @Valid @RequestBody StudentEvaluationDto dt)
+                                               @Valid @RequestBody StudentEvaluationDto dto) {
+        contractService.evaluateIntern(contractId, dto) ;
+        return ResponseEntity.ok().build() ;
+    }
 }
