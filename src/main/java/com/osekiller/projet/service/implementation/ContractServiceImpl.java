@@ -5,6 +5,7 @@ import com.osekiller.projet.controller.payload.request.QuestionAnswerDto;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
+import com.osekiller.projet.controller.payload.response.EvaluationSimpleDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
@@ -258,6 +259,8 @@ public class ContractServiceImpl implements ContractService {
         contractRepository.save(contract) ;
     }
 
+
+
     private void writeValuesInEvaluationPdf(EvaluationDto evaluationDto, Contract contract, PDDocument pdfDocument) throws IOException {
 
         PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
@@ -369,6 +372,21 @@ public class ContractServiceImpl implements ContractService {
         contentStream.endText();
 
         contentStream.close();
+    }
+
+    @Override
+    public List<EvaluationSimpleDto> getEvaluations() {
+        List<EvaluationSimpleDto> dtos = new ArrayList<>() ;
+        contractRepository.findAllByEvaluationPdfIsNotNull().forEach(
+                contract -> dtos.add(EvaluationSimpleDto.from(contract))
+        );
+        return dtos ;
+    }
+
+    @Override
+    public Resource getEvaluationPdf(Long contractId) {
+        return new ByteArrayResource(contractRepository.findById(contractId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getEvaluationPdf()) ;
     }
 
 
