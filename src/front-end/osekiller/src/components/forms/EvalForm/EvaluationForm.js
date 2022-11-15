@@ -221,7 +221,7 @@ const EvaluationForm = ({
                       ))
                     : null}
 
-                <input type={"submit"} />
+                <input className="btn btn-primary" type={"submit"} />
             </div>
         </form>
     );

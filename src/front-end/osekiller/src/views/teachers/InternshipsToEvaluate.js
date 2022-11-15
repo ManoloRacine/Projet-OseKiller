@@ -3,14 +3,7 @@ import { ContractEvalCard } from "../../components/ContractEvalCard";
 import { getContractsToEvaluate } from "../../services/TeacherService";
 
 const InternshipsToEvaluate = () => {
-    const [internships, setInternships] = useState([
-        {
-            contractId: 10,
-            companyName: "Google",
-            studentName: "Obama",
-            position: "dev",
-        },
-    ]);
+    const [internships, setInternships] = useState([]);
 
     useEffect(() => {
         getContractsToEvaluate().then((response) => {

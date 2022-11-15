@@ -1,7 +1,7 @@
 import axios from "../api/axios";
 
 export const getContractsToEvaluate = async () => {
-    return axios.get("/teacher/contracts-to-evaluate", {
+    return axios.get("/contracts?toEvaluate=true", {
         headers: {
             Authorization: localStorage.getItem("accessToken"),
         },
@@ -9,10 +9,14 @@ export const getContractsToEvaluate = async () => {
 };
 
 export const evaluateInternship = async (contractId, formData) => {
-    return axios.post(`/teacher/${contractId}/evaluateInternship`, formData, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("accessToken"),
-        },
-    });
+    return axios.post(
+        `/contracts/${contractId}/evaluate-internship`,
+        formData,
+        {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+            },
+        }
+    );
 };

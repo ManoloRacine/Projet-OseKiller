@@ -361,7 +361,7 @@ public class ContractServiceImpl implements ContractService {
 
         if (dto.variableWorkShifts()) {
             for (List<String> workShift : dto.workShifts()) {
-                if (!workShift.get(0).equals("") && !workShift.get(1).equals("")) {
+                if (workShift.get(0) != null && workShift.get(1) != null) {
                     addParagraph(contentStream, width, 0, -FONT_SIZE, workShift.get(0) + " - " + workShift.get(1), true);
                 }
             }

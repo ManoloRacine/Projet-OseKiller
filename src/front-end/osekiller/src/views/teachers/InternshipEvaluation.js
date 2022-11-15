@@ -40,8 +40,8 @@ const InternshipEvaluation = () => {
         keepIntern: false,
         workShifts: [
             [null, null],
-            [null, null],
-            [null, null],
+            ["", ""],
+            ["", ""],
         ],
         variableWorkShifts: false,
         date: null,
