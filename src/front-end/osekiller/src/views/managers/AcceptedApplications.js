@@ -97,7 +97,8 @@ const AcceptedApplications = () => {
     };
 
     const signContract = (data) => {
-        const payload = { image: data };
+        const payload = new FormData();
+        payload.append("image", data);
         applyContract(currentContractId, payload)
             .then((response) => {
                 console.log(response);
