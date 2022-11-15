@@ -1,6 +1,9 @@
 import AgreeDisagree from "./AgreeDisagree";
 import WorkShiftsPicker from "./WorkShiftsPicker";
 import { evaluateInternship } from "../../../services/TeacherService";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import ErrorMessage from "../../ErrorMessage";
 
 const EvaluationForm = ({
     formData,
@@ -9,10 +12,16 @@ const EvaluationForm = ({
     contractInfo,
 }) => {
     const nbEvaluations = [...formData.evaluation];
+    const navigate = useNavigate();
+    const [hasOpenError, setHasOpenError] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        evaluateInternship(contractInfo.contractId, formData);
+        evaluateInternship(contractInfo.contractId, formData)
+            .then(() => navigate("/dashboard"))
+            .catch(() => {
+                setHasOpenError(true);
+            });
     };
 
     return (
@@ -223,6 +232,14 @@ const EvaluationForm = ({
 
                 <input className="btn btn-primary" type={"submit"} />
             </div>
+            {hasOpenError && (
+                <ErrorMessage
+                    message={
+                        "Il y a eu une erreur, la demande n'a pas été envoyée."
+                    }
+                    severity="error"
+                />
+            )}
         </form>
     );
 };
