@@ -4,10 +4,8 @@ import PropTypes from "prop-types";
 
 const Signature = ({ saveData }) => {
     const sigPad = useRef({});
-    const [data, setData] = useState("");
 
     const handleSave = () => {
-        setData(sigPad.current.toDataURL());
         saveData(sigPad.current.toDataURL());
     };
 

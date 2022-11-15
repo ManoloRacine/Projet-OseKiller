@@ -362,7 +362,7 @@ public class ContractServiceImpl implements ContractService {
                 contentStream,
                 width,
                 0,
-                -FONT_SIZE * 6,
+                -FONT_SIZE * 7,
                 contract.getManagerSigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getManagerSigningDate(),
                 true);
 
@@ -373,7 +373,7 @@ public class ContractServiceImpl implements ContractService {
                 contentStream,
                 width,
                 0,
-                -FONT_SIZE * 6,
+                -FONT_SIZE * 7,
                 contract.getCompanySigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getCompanySigningDate(),
                 true);
 
@@ -383,7 +383,7 @@ public class ContractServiceImpl implements ContractService {
                 contentStream,
                 width,
                 0,
-                -FONT_SIZE * 6,
+                -FONT_SIZE * 7,
                 contract.getStudentSigningDate() == null ? "En attente de signature" : "Signé le: " + contract.getStudentSigningDate(),
                 true);
 
@@ -396,7 +396,7 @@ public class ContractServiceImpl implements ContractService {
                     "manager-signature"
             );
 
-            contentStream.drawImage(pdImage, startX, FONT_SIZE * 50, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 50, (float) ((70 * pdImage.getWidth()) / pdImage.getHeight()), 70);
         }
 
         if(contract.getCompanySigningDate() != null) {
@@ -406,7 +406,7 @@ public class ContractServiceImpl implements ContractService {
                     "company-signature"
             );
 
-            contentStream.drawImage(pdImage, startX, FONT_SIZE * 40, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 39, (float) ((70 * pdImage.getWidth()) / pdImage.getHeight()), 70);
         }
 
         if(contract.getStudentSigningDate() != null) {
@@ -416,7 +416,7 @@ public class ContractServiceImpl implements ContractService {
                     "student-signature"
             );
 
-            contentStream.drawImage(pdImage, startX, FONT_SIZE * 30, (float) ((80 * pdImage.getWidth()) / pdImage.getHeight()), 80);
+            contentStream.drawImage(pdImage, startX, FONT_SIZE * 28, (float) ((70 * pdImage.getWidth()) / pdImage.getHeight()), 70);
         }
 
         contentStream.close(); //Close Stream

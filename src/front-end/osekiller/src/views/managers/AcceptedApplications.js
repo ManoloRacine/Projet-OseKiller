@@ -15,6 +15,7 @@ import Button from "react-bootstrap/Button";
 import ContractTask from "../../components/ContractTask";
 import LoadPdf from "../../components/LoadPdf";
 import Signature from "../../components/Signature";
+import dataURItoBlob from "../../utils/DataURLConverter";
 
 const AcceptedApplications = () => {
     const [acceptedApplications, setAcceptedApplications] = useState([]);
@@ -98,7 +99,8 @@ const AcceptedApplications = () => {
 
     const signContract = (data) => {
         const payload = new FormData();
-        payload.append("image", data);
+        const blob = dataURItoBlob(data);
+        payload.append("image", blob);
         applyContract(currentContractId, payload)
             .then((response) => {
                 console.log(response);
