@@ -57,12 +57,12 @@ const EvaluateStudentForm = ({ formData, setFormData, submit }) => {
                     <div className={"d-flex mt-4"}>
                         <TextInput
                             label={"Fonction"}
-                            inputName={"supervisorFunction"}
-                            inputValue={formData.supervisorFunction}
+                            inputName={"supervisorPosition"}
+                            inputValue={formData.supervisorPosition}
                             changeInputValue={({ target }) =>
                                 setFormData({
                                     ...formData,
-                                    supervisorFunction: target.value,
+                                    supervisorPosition: target.value,
                                 })
                             }
                         />

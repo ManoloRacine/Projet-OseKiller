@@ -7,7 +7,7 @@ const EvaluateStudent = () => {
         program: "",
         companyName: "",
         supervisorName: "",
-        supervisorFunction: "",
+        supervisorPosition: "",
         phone: "",
         "field1.1": "",
         "field1.2": "",
@@ -47,6 +47,9 @@ const EvaluateStudent = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
+            supervisorName: formData.supervisorName,
+            supervisorPosition: formData.supervisorPosition,
+            phoneNumber: formData.phone,
             productivity: {
                 questionsAnswers: [
                     {
@@ -179,7 +182,7 @@ const EvaluateStudent = () => {
                 date: formData.date,
             },
         };
-        console.log(formData);
+        console.log(payload);
     };
 
     return (
