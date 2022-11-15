@@ -13,11 +13,7 @@ const Signature = ({ saveData }) => {
 
     return (
         <div>
-            <SignaturePad
-                ref={sigPad}
-                backgroundColor={"#D3D3D3"}
-                style={{ border: "1px solid black" }}
-            />
+            <SignaturePad ref={sigPad} backgroundColor={"#D3D3D3"} />
             <div className={"d-flex"}>
                 <button className={"btn btn-primary me-1"} onClick={handleSave}>
                     Sauvegarder

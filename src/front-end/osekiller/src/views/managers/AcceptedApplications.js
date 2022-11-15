@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import AcceptedApplicationCard from "../../components/AcceptedApplicationCard";
 import { getAllAcceptedApplications } from "../../services/ApplicationService";
 
-import { generateContract, getContract } from "../../services/ContractService";
+import {
+    applyContract,
+    generateContract,
+    getContract,
+} from "../../services/ContractService";
 import Modal from "react-bootstrap/Modal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,6 +20,7 @@ const AcceptedApplications = () => {
     const [acceptedApplications, setAcceptedApplications] = useState([]);
     const [currentApplication, setCurrentApplication] = useState({});
     const [currentContractPdf, setCurrentContractPdf] = useState("");
+    const [currentContractId, setCurrentContractId] = useState("");
     const [modalTitle, setModalTitle] = useState("");
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -37,6 +42,7 @@ const AcceptedApplications = () => {
         setShowModal(true);
     };
     const handleShowContractModalById = (contractId) => {
+        setCurrentContractId(contractId);
         getContract(contractId).then((response) => {
             const blob = new Blob([response.data], {
                 type: "application/pdf",
@@ -74,6 +80,13 @@ const AcceptedApplications = () => {
             .finally(() => {
                 getAllAcceptedApplications()
                     .then((response) => {
+                        Object.entries(response.data).forEach(
+                            ([key, value]) => {
+                                if (value.offerId === offerId) {
+                                    setCurrentContractId(value.contractId);
+                                }
+                            }
+                        );
                         setAcceptedApplications(response.data);
                     })
                     .catch((error) => {
@@ -84,7 +97,14 @@ const AcceptedApplications = () => {
     };
 
     const signContract = (data) => {
-        console.log("Signer le contrat", data);
+        const payload = { image: data };
+        applyContract(currentContractId, payload)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     useEffect(() => {
