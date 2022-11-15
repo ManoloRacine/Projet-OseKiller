@@ -46,6 +46,139 @@ const EvaluateStudent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const payload = {
+            productivity: {
+                questionsAnswers: [
+                    {
+                        question:
+                            "Planifier et organiser son travail de façon efficace",
+                        answer: formData["field1.1"],
+                    },
+                    {
+                        question:
+                            "Comprendre rapidement les directives relatives à son travail",
+                        answer: formData["field1.2"],
+                    },
+                    {
+                        question: "Maintenir un rythme de travail soutenu",
+                        answer: formData["field1.3"],
+                    },
+                    {
+                        question: "Établir ses priorités",
+                        answer: formData["field1.4"],
+                    },
+                    {
+                        question: "Respecter ses échéanciers",
+                        answer: formData["field1.5"],
+                    },
+                ],
+                comments: formData.section1Comment,
+            },
+            workQuality: {
+                questionsAnswers: [
+                    {
+                        question:
+                            "Respecter les mandats qui lui ont été confiés",
+                        answer: formData["field2.1"],
+                    },
+                    {
+                        question:
+                            "Porter attention aux détails dans la réalisation de ses tâches",
+                        answer: formData["field2.2"],
+                    },
+                    {
+                        question:
+                            "Vérifier son travail, s’assurer que rien n’a été oublié",
+                        answer: formData["field2.3"],
+                    },
+                    {
+                        question:
+                            "Rechercher des occasions de se perfectionner",
+                        answer: formData["field2.4"],
+                    },
+                    {
+                        question:
+                            "Faire une bonne analyse des problèmes rencontrés",
+                        answer: formData["field2.5"],
+                    },
+                ],
+                comments: formData.section2Comment,
+            },
+            interpersonalQuality: {
+                questionsAnswers: [
+                    {
+                        question:
+                            "Établir facilement des contacts avec les gens",
+                        answer: formData["field3.1"],
+                    },
+                    {
+                        question: "Contribuer activement au travail d’équipe",
+                        answer: formData["field3.2"],
+                    },
+                    {
+                        question:
+                            "S’adapter facilement à la culture de l’entreprise",
+                        answer: formData["field3.3"],
+                    },
+                    {
+                        question: "Accepter les critiques constructives",
+                        answer: formData["field3.4"],
+                    },
+                    {
+                        question: "Être respectueux envers les gens",
+                        answer: formData["field3.5"],
+                    },
+                    {
+                        question:
+                            "Faire preuve d’écoute active en essayant de comprendre le point de vue de l’autre",
+                        answer: formData["field3.6"],
+                    },
+                ],
+                comments: formData.section3Comment,
+            },
+            personalAbility: {
+                questionsAnswers: [
+                    {
+                        question:
+                            "Démontrer de l’intérêt et de la motivation au travail",
+                        answer: formData["field4.1"],
+                    },
+                    {
+                        question: "Exprimer clairement ses idées",
+                        answer: formData["field4.2"],
+                    },
+                    {
+                        question: "Faire preuve d’initiative",
+                        answer: formData["field4.3"],
+                    },
+                    {
+                        question: "Travailler de façon sécuritaire",
+                        answer: formData["field4.4"],
+                    },
+                    {
+                        question:
+                            "Démontrer un bon sens des responsabilités ne requérant qu’un minimum de supervision",
+                        answer: formData["field4.5"],
+                    },
+                    {
+                        question: "Être ponctuel et assidu à son travail",
+                        answer: formData["field4.6"],
+                    },
+                ],
+                comments: formData.section4Comment,
+            },
+            globalAppreciation: {
+                fieldA: formData.globalAppreciation,
+                fieldB: formData.section5Comment,
+                fieldC: formData.hasBeenDiscussed,
+            },
+            hoursOdSupportPerWeek: formData.nbHoursPerWeekOfSupport,
+            nextInternShip: {
+                fieldA: formData.wouldLikeToRetakeStudent,
+                fieldB: formData.formationWasAdequate,
+                date: formData.date,
+            },
+        };
         console.log(formData);
     };
 
