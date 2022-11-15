@@ -22,5 +22,5 @@ public interface ContractService {
 
     void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException;
 
-    void evaluateIntern(long contractId, StudentEvaluationDto dto);
+    void evaluateIntern(long contractId, StudentEvaluationDto dto) throws IOException;
 }

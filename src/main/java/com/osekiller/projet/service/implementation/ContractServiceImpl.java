@@ -3,6 +3,7 @@ package com.osekiller.projet.service.implementation;
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
 import com.osekiller.projet.controller.payload.request.QuestionAnswerDto;
 import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
+import com.osekiller.projet.controller.payload.request.StudentEvaluationSection;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
@@ -374,9 +375,159 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public void evaluateIntern(long contractId, StudentEvaluationDto dto) {
+    public void evaluateIntern(long contractId, StudentEvaluationDto dto) throws IOException {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+
+        if (contract.getStudentEvaluationPdf() != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT) ;
+        }
+
+        PDDocument pdfDocument = PDDocument.load(new File("Templates/êvaluation du milieu de stage.pdf"));
+
+        writeValuesInStudentEvaluation(dto, contract, pdfDocument);
+
+        writeSectionEvaluation(dto.productivity(), 1, pdfDocument, "PRODUCTIVITÉ");
+
+        writeSectionEvaluation(dto.workQuality(), 2, pdfDocument, "QUALITÉ DU TRAVAIL");
+
+        writeSectionEvaluation(dto.interpersonalQuality(), 3, pdfDocument, "QUALITÉS DES RELATIONS INTERPERSONNELLES");
+
+        writeSectionEvaluation(dto.personalAbility(), 4, pdfDocument, "HABILETÉS PERSONNELLES");
+
+        writeGlobalAppreciation(dto, 5, pdfDocument) ;
+
+        writeNextInternship(dto, 6, pdfDocument);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream() ;
+        pdfDocument.save(byteArrayOutputStream);
+        pdfDocument.save("./CV/testIntern.pdf");
+
+        pdfDocument.close();
+
+        contract.setStudentEvaluationPdf(byteArrayOutputStream.toByteArray());
+        contractRepository.save(contract) ;
 
     }
 
+    private void writeValuesInStudentEvaluation(StudentEvaluationDto dto, Contract contract, PDDocument pdfDocument) throws IOException {
+        PDDocumentCatalog docCatalog = pdfDocument.getDocumentCatalog();
+        PDAcroForm acroForm = docCatalog.getAcroForm();
 
+        PDField fieldCompanyName = acroForm.getField( "companyName" );
+        fieldCompanyName.setValue(contract.getOffer().getOwner().getName());
+
+        PDField fieldCompanyContact = acroForm.getField( "companyContact" );
+        fieldCompanyContact.setValue(dto.supervisorName());
+
+        PDField fieldProgram = acroForm.getField( "program" );
+        fieldProgram.setValue("TO ADD");
+
+        PDField fieldPhoneNumber = acroForm.getField( "phoneNumber" );
+        fieldPhoneNumber.setValue(dto.phoneNumber());
+
+        PDField fieldStudentName = acroForm.getField( "studentName" );
+        fieldStudentName.setValue(contract.getStudent().getName());
+
+        acroForm.flatten() ;
+    }
+
+
+    private void writeSectionEvaluation(StudentEvaluationSection section, int pageIndex, PDDocument pdfDocument, String sectionName) throws IOException {
+        PDPage pdPage = pdfDocument.getPage(pageIndex) ;
+        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
+
+        PDRectangle mediaBox = pdPage.getMediaBox();
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+        addParagraph(contentStream, width, startX, startY, sectionName, true);
+
+        for (QuestionAnswerDto questionAnswerDto : section.questionsAnswers()) {
+            addParagraph(contentStream, width, 0, -FONT_SIZE, "-" + questionAnswerDto.question() + " : " + getAnswerString(questionAnswerDto.answer()), true);
+        }
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "COMMENTAIRES : " + section.comment(), true);
+
+        contentStream.endText();
+
+        contentStream.close();
+    }
+
+    private void writeGlobalAppreciation(StudentEvaluationDto dto, int pageIndex, PDDocument pdfDocument) throws IOException {
+        PDPage pdPage = pdfDocument.getPage(pageIndex) ;
+        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
+
+        PDRectangle mediaBox = pdPage.getMediaBox();
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+        addParagraph(contentStream, width, startX, startY, "APPRÉCIATION GLOBALE", true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "-Les habiletés démontrées : " + getAbilityString(dto.expectationsAchieved()), true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "Appréciation : " + dto.expectationsComment(), true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE, dto.internInformed() ? "Cette évaluation a été discutée avec le stagiaire " :
+                "Cette évaluation n'a pas été discutée avec le stagiaire" , true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE,
+                "Le nombre d'heures réel par semain d'encadrement accordé au stagiaire : " + dto.hoursOfSupportPerWeek(), true);
+
+        contentStream.endText();
+
+        contentStream.close();
+    }
+
+    private void writeNextInternship(StudentEvaluationDto dto, int pageIndex, PDDocument pdfDocument) throws IOException {
+        PDPage pdPage = pdfDocument.getPage(pageIndex) ;
+        PDPageContentStream contentStream = new PDPageContentStream(pdfDocument, pdPage);
+
+        PDRectangle mediaBox = pdPage.getMediaBox();
+        float marginY = 80;
+        float marginX = 60;
+        float width = mediaBox.getWidth() - 2 * marginX;
+        float startX = mediaBox.getLowerLeftX() + marginX;
+        float startY = mediaBox.getUpperRightY() - marginY;
+
+        contentStream.beginText();
+        addParagraph(contentStream, width, startX, startY, "APPRÉCIATION GLOBALE", true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE,
+                "L'entreprise aimerait accueillir cet élève pour son prochain stage : " + getKeepInternString(dto.keepIntern()) , true);
+
+        addParagraph(contentStream, width, 0, -FONT_SIZE,
+                "La formation technique du stagiaire était-elle suffisante pour accomplir le mandat de stage? : " + dto.expectationsComment(), true);
+
+        contentStream.endText();
+
+        contentStream.close();
+    }
+
+    private String getKeepInternString(int value) {
+        return switch (value) {
+            case 0 -> "Oui";
+            case 1 -> "Non";
+            case 2 -> "Peut-être";
+            default -> "ERROR";
+        };
+    }
+
+    private String getAbilityString(int value) {
+        return switch (value) {
+            case 0 -> "ne répondent pas aux attentes";
+            case 1 -> "répondent partiellement aux attentes";
+            case 2 -> "répondent pleinement aux attentes";
+            case 3 -> "dépassent les attentes";
+            case 4 -> "dépassent de beaucoup les attentes";
+            default -> "ERROR";
+        };
+    }
 }
