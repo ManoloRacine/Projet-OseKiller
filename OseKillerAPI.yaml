@@ -920,90 +920,116 @@ paths:
                                 productivity:
                                     type: object
                                     properties:
-                                        fieldA:
-                                            type: integer
-                                            example: 0
-                                        fieldB:
-                                            type: integer
-                                            example: 1
-                                        fieldC:
-                                            type: integer
-                                            example: 2
-                                        fieldD:
-                                            type: integer
-                                            example: 3
-                                        fieldE:
-                                            type: integer
-                                            example: 4
+                                        questionsAnswers:
+                                            type: array
+                                            items:
+                                                type: object
+                                                properties:
+                                                    question:
+                                                        type: string
+                                                        example: "Ceci est la question"
+                                                    answer:
+                                                        type: integer
+                                                        example: 0
+                                                example:
+                                                    - question: "Ceci est la question 1"
+                                                      answer: 0
+                                                    - question: "Ceci est la question 2"
+                                                      answer: 1
+                                                    - question: "Ceci est la question 3"
+                                                      answer: 2
+                                                    - question: "Ceci est la question 4"
+                                                      answer: 3
+                                                    - question: "Ceci est la question 5"
+                                                      answer: 4
                                         comments:
                                             type: string
                                             example: "En général, satisfaisant."
                                 workQuality:
                                     type: object
                                     properties:
-                                        fieldA:
-                                            type: integer
-                                            example: 0
-                                        fieldB:
-                                            type: integer
-                                            example: 1
-                                        fieldC:
-                                            type: integer
-                                            example: 2
-                                        fieldD:
-                                            type: integer
-                                            example: 3
-                                        fieldE:
-                                            type: integer
-                                            example: 4
+                                        questionsAnswers:
+                                            type: array
+                                            items:
+                                                type: object
+                                                properties:
+                                                    question:
+                                                        type: string
+                                                        example: "Ceci est la question"
+                                                    answer:
+                                                        type: integer
+                                                        example: 0
+                                                example:
+                                                    - question: "Ceci est la question 1"
+                                                      answer: 0
+                                                    - question: "Ceci est la question 2"
+                                                      answer: 1
+                                                    - question: "Ceci est la question 3"
+                                                      answer: 2
+                                                    - question: "Ceci est la question 4"
+                                                      answer: 3
+                                                    - question: "Ceci est la question 5"
+                                                      answer: 4
                                         comments:
                                             type: string
                                             example: "En général, satisfaisant."
                                 interpersonalQuality:
                                     type: object
                                     properties:
-                                        fieldA:
-                                            type: integer
-                                            example: 0
-                                        fieldB:
-                                            type: integer
-                                            example: 1
-                                        fieldC:
-                                            type: integer
-                                            example: 2
-                                        fieldD:
-                                            type: integer
-                                            example: 3
-                                        fieldE:
-                                            type: integer
-                                            example: 4
-                                        fieldF:
-                                            type: integer
-                                            example: 0
+                                        questionsAnswers:
+                                            type: array
+                                            items:
+                                                type: object
+                                                properties:
+                                                    question:
+                                                        type: string
+                                                        example: "Ceci est la question"
+                                                    answer:
+                                                        type: integer
+                                                        example: 0
+                                                example:
+                                                    - question: "Ceci est la question 1"
+                                                      answer: 0
+                                                    - question: "Ceci est la question 2"
+                                                      answer: 1
+                                                    - question: "Ceci est la question 3"
+                                                      answer: 2
+                                                    - question: "Ceci est la question 4"
+                                                      answer: 3
+                                                    - question: "Ceci est la question 5"
+                                                      answer: 4
+                                                    - question: "Ceci est la question 6"
+                                                      answer: 4
                                         comments:
                                             type: string
                                             example: "En général, satisfaisant."
                                 personalAbility:
                                     type: object
                                     properties:
-                                        fieldA:
-                                            type: integer
-                                            example: 0
-                                        fieldB:
-                                            type: integer
-                                            example: 1
-                                        fieldC:
-                                            type: integer
-                                            example: 2
-                                        fieldD:
-                                            type: integer
-                                            example: 3
-                                        fieldE:
-                                            type: integer
-                                            example: 4
-                                        fieldF:
-                                            type: integer
-                                            example: 0
+                                        questionsAnswers:
+                                            type: array
+                                            items:
+                                                type: object
+                                                properties:
+                                                    question:
+                                                        type: string
+                                                        example: "Ceci est la question"
+                                                    answer:
+                                                        type: integer
+                                                        example: 0
+                                                example:
+                                                    - question: "Ceci est la question 1"
+                                                      answer: 0
+                                                    - question: "Ceci est la question 2"
+                                                      answer: 1
+                                                    - question: "Ceci est la question 3"
+                                                      answer: 2
+                                                    - question: "Ceci est la question 4"
+                                                      answer: 3
+                                                    - question: "Ceci est la question 5"
+                                                      answer: 4
+                                                    - question: "Ceci est la question 6"
+                                                      answer: 4
                                         comments:
                                             type: string
                                             example: "En général, satisfaisant."
@@ -1031,9 +1057,6 @@ paths:
                                         fieldB:
                                             type: string
                                             example: "Reste à voir"
-                                        fieldC:
-                                            type: boolean
-                                            example: true
                                         date:
                                             type: string
                                             example: "2023-05-22"
