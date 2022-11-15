@@ -4,6 +4,7 @@ import com.osekiller.projet.controller.payload.request.EvaluationDto;
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
+import com.osekiller.projet.controller.payload.response.EvaluationSimpleDto;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -20,4 +21,8 @@ public interface ContractService {
     List<ContractToEvaluateDto> getUnevaluatedContracts();
 
     void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException;
+
+    List<EvaluationSimpleDto> getEvaluations();
+
+    Resource getEvaluationPdf(Long contractId);
 }
