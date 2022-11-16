@@ -211,7 +211,7 @@ root.render(
                     element={
                         <ProtectedRoute
                             authenticated
-                            allowedRoles={["MANAGER"]}
+                            allowedRoles={["MANAGER", "STUDENT", "COMPANY"]}
                         >
                             <AcceptedApplications />
                         </ProtectedRoute>
