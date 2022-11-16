@@ -1,11 +1,13 @@
 package com.osekiller.projet;
 
+import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.service.CompanyService;
@@ -40,6 +42,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private ContractService contractService;
     private OfferRepository offerRepository;
 
+    private ContractRepository contractRepository;
+
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -51,6 +55,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         bootStrapOffers();
         initializeManagers();
         initializeStudents();
+        bootStrapContract();
 
         /*
         try {
@@ -66,6 +71,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         for(ERole role : ERole.values()){
             createRoleIfNotFound(role);
         }
+    }
+
+    @Transactional
+    void bootStrapContract() {
+        Optional<Manager> manager = managerRepository.findByEmail("testmanager@osk.com") ;
+        Optional<Student> student = studentRepository.findByEmail("teststudent1@osk.com") ;
+        Optional<Offer> offer = Optional.ofNullable(offerRepository.findAll().get(0));
+        Contract contract = new Contract(student.get(), offer.get(), manager.get()) ;
+        contractRepository.save(contract) ;
+        System.out.println(contract.getId());
     }
 
     @Transactional
@@ -85,7 +100,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             offerRepository.save(offer3) ;
             offerRepository.save(offer4) ;
             offerRepository.save(offer5) ;
-            System.out.println(offer1.getId());
         }
 
     }
@@ -113,7 +127,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createStudentIfNotFound(testStudent1);
         createStudentIfNotFound(testStudent2);
         createStudentIfNotFound(testStudent3);
-        System.out.println(testStudent1.getId());
     }
 
     void createCompanyIfNotFound(Company company){
@@ -136,7 +149,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
         manager.setRole(managerRole);
         managerRepository.save(manager);
-        System.out.println(manager.getId());
     }
 
     void createRoleIfNotFound(ERole role) {

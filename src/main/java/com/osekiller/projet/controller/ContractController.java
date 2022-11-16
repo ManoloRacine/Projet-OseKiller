@@ -55,7 +55,7 @@ public class ContractController {
 
     @PostMapping("/{contractId}/evaluate-intern")
     public ResponseEntity<Void> evaluateIntern(@PathVariable(name = "contractId") Long contractId,
-                                               @Valid @RequestBody StudentEvaluationDto dto) {
+                                               @Valid @RequestBody StudentEvaluationDto dto) throws IOException {
         contractService.evaluateIntern(contractId, dto) ;
         return ResponseEntity.ok().build() ;
     }

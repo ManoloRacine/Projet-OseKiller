@@ -14,9 +14,9 @@ public record StudentEvaluationDto(
         @NotNull StudentEvaluationSection personalAbility,
         @NotNull Integer hoursOfSupportPerWeek,
         @NotNull Integer expectationsAchieved,
-        @NotNull String expectationsComment,
+        @NotBlank String expectationsComment,
         @NotNull Boolean internInformed,
         @NotNull Integer keepIntern,
-        @NotNull String internFormationComment
+        @NotBlank String internFormationComment
 ) {
 }
