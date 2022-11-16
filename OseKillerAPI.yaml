@@ -522,6 +522,9 @@ paths:
                                         studentId:
                                             type: integer
                                             example: 1
+                                        contractId:
+                                            type: integer
+                                            example: 23
                                         studentName:
                                             type: string
                                             example: Chuck Norris
