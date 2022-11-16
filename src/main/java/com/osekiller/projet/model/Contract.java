@@ -5,6 +5,7 @@ import com.osekiller.projet.model.user.Student;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -26,6 +27,10 @@ public class Contract {
     @ManyToOne(cascade = CascadeType.MERGE)
     @NonNull
     private Manager manager;
+
+    private LocalDate studentSigningDate;
+    private LocalDate managerSigningDate;
+    private LocalDate companySigningDate;
 
     @Lob
     private byte[] pdf;
