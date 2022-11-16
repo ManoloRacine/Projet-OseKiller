@@ -11,8 +11,9 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Data
-public class Manager extends Signatory {
-    public Manager(@NonNull String name, @NonNull String email, @NonNull String password) {
+public class Teacher extends User{
+
+    public Teacher(@NonNull String name, @NonNull String email, @NonNull String password) {
         super(name, email, password);
     }
 }

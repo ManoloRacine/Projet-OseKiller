@@ -16,6 +16,11 @@ public record ApplicationDto(
         Long contractId
 ) {
     public static ApplicationDto from (Offer offer, Student student, Contract contract){
-        return new ApplicationDto(student.getName(), student.getId(), offer.getOwner().getName(), offer.getId(), offer.getPosition(), (contract == null ? null : contract.getId()));
+        return new ApplicationDto(
+                student.getName(),
+                student.getId(),
+                offer.getOwner().getName(),
+                offer.getId(), offer.getPosition(),
+                (contract == null ? null : contract.getId()));
     }
 }

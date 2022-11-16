@@ -1,13 +1,17 @@
-import axios from "../api/axios"
+import axios from "../api/axios";
 
 export const generateContract = (studentId, offerId, tasks) => {
-    return axios.post(`/students/${studentId}/applications/${offerId}/generate-contract`,tasks, {
-        responseType: "arraybuffer",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("accessToken"),
+    return axios.post(
+        `/students/${studentId}/applications/${offerId}/generate-contract`,
+        tasks,
+        {
+            responseType: "arraybuffer",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: localStorage.getItem("accessToken"),
+            },
         }
-    });
+    );
 };
 
 export const getContract = (contractId) => {
@@ -16,6 +20,15 @@ export const getContract = (contractId) => {
         headers: {
             "Content-Type": "application/pdf",
             Authorization: localStorage.getItem("accessToken"),
-        }
-    })
-}
+        },
+    });
+};
+
+export const signContract = async (contractId, data) => {
+    return axios.post(`/contracts/${contractId}/sign`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
