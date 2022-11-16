@@ -1033,36 +1033,24 @@ paths:
                                         comments:
                                             type: string
                                             example: "En général, satisfaisant."
-                                globalAppreciation:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: integer
-                                            example: 0
-                                        fieldB:
-                                            type: string
-                                            example: "Rien à redire"
-                                        fieldC:
-                                            type: boolean
-                                            example: true
+                                expectationsAchieved:
+                                    type: integer
+                                    example: 3
+                                expectationsComment:
+                                    type: string
+                                    example: "test comment"
                                 hoursOfSupportPerWeek:
                                     type: number
                                     example: 2.5
-                                nextInternship:
-                                    type: object
-                                    properties:
-                                        fieldA:
-                                            type: integer
-                                            example: 0
-                                        fieldB:
-                                            type: string
-                                            example: "Reste à voir"
-                                        date:
-                                            type: string
-                                            example: "2023-05-22"
-
-
-
+                                internInformed:
+                                    type: boolean
+                                    example: true
+                                keepIntern:
+                                    type: integer
+                                    example: 1
+                                internFormationComment:
+                                    type: string
+                                    example: "test comment"
             summary: Évaluation d'un étudiant
             description: Évaluation d'un étudiant
             responses:
