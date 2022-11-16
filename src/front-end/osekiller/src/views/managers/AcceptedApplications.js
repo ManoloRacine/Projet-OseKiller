@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AcceptedApplicationCard from "../../components/AcceptedApplicationCard";
 import { getAllAcceptedApplications } from "../../services/ApplicationService";
 
@@ -16,8 +16,12 @@ import ContractTask from "../../components/ContractTask";
 import LoadPdf from "../../components/LoadPdf";
 import Signature from "../../components/Signature";
 import dataURItoBlob from "../../utils/DataURLConverter";
+import { AuthenticatedUserContext } from "../../App";
 
 const AcceptedApplications = () => {
+    const authenticatedUser = useContext(
+        AuthenticatedUserContext
+    )?.authenticatedUser;
     const [acceptedApplications, setAcceptedApplications] = useState([]);
     const [currentApplication, setCurrentApplication] = useState({});
     const [currentContractPdf, setCurrentContractPdf] = useState("");
@@ -118,6 +122,7 @@ const AcceptedApplications = () => {
     };
 
     useEffect(() => {
+        console.log(authenticatedUser);
         getAllAcceptedApplications()
             .then((response) => {
                 setAcceptedApplications(response.data);
@@ -130,16 +135,35 @@ const AcceptedApplications = () => {
     return (
         <>
             <div>
-                {acceptedApplications.map((acceptedApplication, key) => (
-                    <AcceptedApplicationCard
-                        application={acceptedApplication}
-                        showContractGenerationModal={handleShowTasksModal}
-                        handleShowContractModalById={
-                            handleShowContractModalById
-                        }
-                        key={key}
-                    />
-                ))}
+                {authenticatedUser?.role === "STUDENT"
+                    ? acceptedApplications
+                          .filter(
+                              (application) =>
+                                  application.studentId ===
+                                  authenticatedUser?.id
+                          )
+                          .map((acceptedApplication, key) => (
+                              <AcceptedApplicationCard
+                                  application={acceptedApplication}
+                                  showContractGenerationModal={
+                                      handleShowTasksModal
+                                  }
+                                  handleShowContractModalById={
+                                      handleShowContractModalById
+                                  }
+                                  key={key}
+                              />
+                          ))
+                    : acceptedApplications.map((acceptedApplication, key) => (
+                          <AcceptedApplicationCard
+                              application={acceptedApplication}
+                              showContractGenerationModal={handleShowTasksModal}
+                              handleShowContractModalById={
+                                  handleShowContractModalById
+                              }
+                              key={key}
+                          />
+                      ))}
             </div>
             <Modal show={showModal} onHide={handleCloseModal} size="xl">
                 <Modal.Header closeButton>
