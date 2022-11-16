@@ -7,10 +7,7 @@ import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.RefreshToken;
 import com.osekiller.projet.model.Role;
-import com.osekiller.projet.model.user.Company;
-import com.osekiller.projet.model.user.Manager;
-import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.model.user.User;
+import com.osekiller.projet.model.user.*;
 import com.osekiller.projet.repository.RefreshTokenRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
@@ -38,6 +35,8 @@ public class AuthServiceImpl implements AuthService {
         private CompanyRepository companyRepository;
         private StudentRepository studentRepository;
         private ManagerRepository managerRepository;
+
+        private TeacherRepository teacherRepository;
         private UserRepository userRepository;
 
         private StudentService studentService;
@@ -97,6 +96,14 @@ public class AuthServiceImpl implements AuthService {
                                         .orElseThrow(EntityNotFoundException::new);
                         company.setRole(companyRole);
                         companyRepository.save(company);
+                        return;
+                }
+                if (dto.role().equals(ERole.TEACHER.name())) {
+                        Teacher teacher = new Teacher(dto.name(), dto.email(), passwordEncoder.encode(dto.password())) ;
+                        Role teacherRole = roleRepository.findByName(ERole.TEACHER.name())
+                                        .orElseThrow(EntityNotFoundException::new) ;
+                        teacher.setRole(teacherRole);
+                        teacherRepository.save(teacher);
                         return;
                 }
 

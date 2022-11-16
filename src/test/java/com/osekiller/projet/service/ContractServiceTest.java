@@ -2,6 +2,8 @@ package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.ApplicationDto;
 import com.osekiller.projet.controller.payload.response.ContractDto;
+import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
+import com.osekiller.projet.controller.payload.response.EvaluationSimpleDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
@@ -24,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,6 +35,9 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -190,6 +196,27 @@ public class ContractServiceTest {
         assertThat(contract.getOffer()).isEqualTo(offer);
         assertThat(contract.getManager()).isEqualTo(manager);
         assertThat(contract.getStudent()).isEqualTo(student);
+    
+    }
+    void getContractsToEvaluateHappyDay() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        for (int i = 0; i < 5; i++) {
+            Contract contract1 = mock(Contract.class) ;
+            when(contract1.getStudent()).thenReturn(mock(Student.class)) ;
+            when(contract1.getOffer()).thenReturn(mock(Offer.class)) ;
+            when(contract1.getOffer().getOwner()).thenReturn(mock(Company.class)) ;
+            contract1.setEvaluationPdf(new byte[16]);
+            contracts.add(contract1);
+        }
+        when(contractRepository.findAllByEvaluationPdfIsNull()).thenReturn(contracts) ;
+
+        //Act
+        List<ContractToEvaluateDto> contractDtos = contractService.getUnevaluatedContracts() ;
+
+        //Assert
+        assertNotNull(contractDtos);
+        assertSame(contractDtos.size(), 5);
 
     }
 
@@ -223,5 +250,85 @@ public class ContractServiceTest {
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status")
                 .isEqualTo(HttpStatus.FORBIDDEN);
+    }
+    void getContractsToEvaluateEmpty() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        when(contractRepository.findAllByEvaluationPdfIsNull()).thenReturn(contracts) ;
+
+        //Act
+        List<ContractToEvaluateDto> contractDtos = contractService.getUnevaluatedContracts() ;
+
+        //Assert
+        assertNotNull(contractDtos);
+        assertSame(contractDtos.size(), 0);
+
+    }
+
+    @Test
+    void getEvaluationsHappyDay() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        for (int i = 0; i < 5; i++) {
+            Contract contract1 = mock(Contract.class) ;
+            when(contract1.getStudent()).thenReturn(mock(Student.class)) ;
+            when(contract1.getOffer()).thenReturn(mock(Offer.class)) ;
+            when(contract1.getOffer().getOwner()).thenReturn(mock(Company.class)) ;
+            when(contract1.getOffer().getStartDate()).thenReturn(mock(LocalDate.class)) ;
+            when(contract1.getOffer().getEndDate()).thenReturn(mock(LocalDate.class)) ;
+            when(contract1.getOffer().getStartDate().toString()).thenReturn("2022-10-22") ;
+            when(contract1.getOffer().getEndDate().toString()).thenReturn("2022-10-22") ;
+            contract1.setEvaluationPdf(new byte[16]);
+            contracts.add(contract1);
+        }
+        when(contractRepository.findAllByEvaluationPdfIsNotNull()).thenReturn(contracts) ;
+
+        //Act
+        List<EvaluationSimpleDto> contractDtos = contractService.getEvaluations() ;
+
+        //Assert
+        assertNotNull(contractDtos);
+        assertSame(contractDtos.size(), 5);
+
+    }
+
+    @Test
+    void getEvaluationsEmpty() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        when(contractRepository.findAllByEvaluationPdfIsNotNull()).thenReturn(contracts) ;
+
+        //Act
+        List<EvaluationSimpleDto> contractDtos = contractService.getEvaluations() ;
+
+        //Assert
+        assertNotNull(contractDtos);
+        assertSame(contractDtos.size(), 0);
+
+    }
+
+    @Test
+    void getEvaluationPdfHappyDay() {
+        //Arrange
+        Contract contract = mock(Contract.class) ;
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.ofNullable(contract)) ;
+        when(contract.getEvaluationPdf()).thenReturn(new byte[16]) ;
+
+        //Act
+        Resource resource = contractService.getEvaluationPdf(1L) ;
+
+        //Assert
+        assertEquals(resource, new ByteArrayResource(new byte[16]));
+    }
+
+    @Test
+    void getEvaluationPdfNotFound() {
+        //Arrange
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
+
+        //Act && Assert
+        assertThatThrownBy(() -> contractService.getEvaluationPdf(1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

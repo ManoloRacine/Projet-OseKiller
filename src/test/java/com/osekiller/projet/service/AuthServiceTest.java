@@ -7,10 +7,7 @@ import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.RefreshToken;
 import com.osekiller.projet.model.Role;
-import com.osekiller.projet.model.user.Company;
-import com.osekiller.projet.model.user.Manager;
-import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.model.user.User;
+import com.osekiller.projet.model.user.*;
 import com.osekiller.projet.repository.RefreshTokenRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
@@ -55,6 +52,8 @@ public class AuthServiceTest {
     StudentRepository studentRepository ;
     @Mock
     CompanyRepository companyRepository ;
+    @Mock
+    TeacherRepository teacherRepository ;
 
     @Mock
     StudentService studentService ;
@@ -65,6 +64,8 @@ public class AuthServiceTest {
     static Student mockStudent;
     static Manager mockManager;
     static Company mockCompany;
+
+    static Teacher mockTeacher;
     static RefreshToken mockRefreshToken;
     static String mockAccessToken;
     @BeforeAll
@@ -77,6 +78,9 @@ public class AuthServiceTest {
 
         mockCompany = new Company("Tesla", "tesla.internship@osk.com", "encrypted-pass") ;
         mockCompany.setRole(new Role(ERole.COMPANY.name()));
+
+        mockTeacher = new Teacher("Francois", "francois@osk.com", "encrypted-pass") ;
+        mockTeacher.setRole(new Role(ERole.TEACHER.name()));
 
         mockRefreshToken = new RefreshToken(
                 UUID.randomUUID().toString(),
@@ -169,6 +173,25 @@ public class AuthServiceTest {
 
         verify(userRepository).findByEmail(mockSignUp.email());
         verify(companyRepository).save(any(Company.class)) ;
+    }
+
+    @Test
+    void signUpTeacherHappyDay() {
+        //Arrange
+        SignUpDto mockSignUp = new SignUpDto("test", "test@test.com", "1", "TEACHER") ;
+
+        when(passwordEncoder.encode(anyString())).thenReturn("encrypted-pass");
+        when(roleRepository.findByName(anyString())).thenReturn(Optional.of(new Role("TEACHER")));
+        when(teacherRepository.save(any(Teacher.class))).thenReturn(mockTeacher);
+
+        //Act
+
+        authService.signUp(mockSignUp);
+
+        //Assert
+
+        verify(userRepository).findByEmail(mockSignUp.email());
+        verify(teacherRepository).save(any(Teacher.class)) ;
     }
     @Test
     void signUpEmailTaken() {
