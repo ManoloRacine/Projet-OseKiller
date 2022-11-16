@@ -203,6 +203,8 @@ const SignUpForm = ({
                 return <h2>Gestionnaire</h2>;
             case "compagnie":
                 return <h2>Compagnie</h2>;
+            case "professeur":
+                return <h2>Professeur</h2>;
             default:
                 return "ERROR";
         }
@@ -260,6 +262,15 @@ const SignUpForm = ({
                                 style={{ backgroundColor: "#ee7600" }}
                             >
                                 Compagnie
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div
+                                onClick={() => setUserType("professeur")}
+                                className="mx-3 mb-2 w-50 btn"
+                                style={{ backgroundColor: "#ee7600" }}
+                            >
+                                Professeur
                             </div>
                         </div>
                     </div>

@@ -8,6 +8,7 @@ import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.ContractRepository;
+import com.osekiller.projet.model.user.Teacher;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.service.CompanyService;
@@ -41,6 +42,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private RoleRepository roleRepository;
     private ContractService contractService;
     private OfferRepository offerRepository;
+    private TeacherRepository teacherRepository;
 
     private ContractRepository contractRepository;
 
@@ -56,6 +58,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         initializeManagers();
         initializeStudents();
         bootStrapContract();
+        initializeTeachers();
 
         /*
         try {
@@ -129,6 +132,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createStudentIfNotFound(testStudent3);
     }
 
+    @Transactional
+    void initializeTeachers(){
+        Teacher testTeacher = new Teacher("Test Teacher","testteacher@osk.com", passwordEncoder.encode("123"));
+        testTeacher.setEnabled(true);
+        createTeacherIfNotFound(testTeacher);
+    }
+
     void createCompanyIfNotFound(Company company){
         if(companyRepository.findByEmail(company.getEmail()).isPresent()) return;
         Role companyRole = roleRepository.findByName(ERole.COMPANY.name()).orElseThrow(EntityNotFoundException::new);
@@ -149,6 +159,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Role managerRole = roleRepository.findByName(ERole.MANAGER.name()).orElseThrow(EntityNotFoundException::new);
         manager.setRole(managerRole);
         managerRepository.save(manager);
+    }
+
+    void createTeacherIfNotFound(Teacher teacher){
+        if(teacherRepository.findByEmail(teacher.getEmail()).isPresent()) return;
+        Role teacherRole = roleRepository.findByName(ERole.TEACHER.name()).orElseThrow(EntityNotFoundException::new);
+        teacher.setRole(teacherRole);
+        teacherRepository.save(teacher);
+        System.out.println(teacher.getId());
     }
 
     void createRoleIfNotFound(ERole role) {

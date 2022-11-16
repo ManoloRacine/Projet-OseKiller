@@ -25,6 +25,8 @@ import OfferDetails from "./views/managers/OfferDetails";
 import AcceptedApplications from "./views/managers/AcceptedApplications";
 import EvaluationDetail from "./views/managers/EvaluationDetail";
 import Evaluations from "./views/managers/Evaluations";
+import InternshipEvaluation from "./views/teachers/InternshipEvaluation";
+import InternshipsToEvaluate from "./views/teachers/InternshipsToEvaluate";
 
 <link
     rel="stylesheet"
@@ -231,6 +233,17 @@ root.render(
                     }
                 />
                 <Route
+                    path="internship-evaluations"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["TEACHER"]}
+                        >
+                            <InternshipEvaluation />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
                     path="evaluations"
                     element={
                         <ProtectedRoute
@@ -238,6 +251,17 @@ root.render(
                             allowedRoles={["MANAGER"]}
                         >
                             <Evaluations />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="internships-to-evaluate"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["TEACHER"]}
+                        >
+                            <InternshipsToEvaluate />
                         </ProtectedRoute>
                     }
                 />
