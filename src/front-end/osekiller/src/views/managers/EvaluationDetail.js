@@ -23,13 +23,13 @@ const EvaluationDetail = () => {
     }, []);
 
     return (
-        <div>
+        <div className="row p-5">
             <LoadPdf
                 src={pdf}
                 width={"50%"}
                 title={"student-cv"}
                 type={"application/pdf"}
-                height={"500px"}
+                height={"800px"}
             />
         </div>
     );

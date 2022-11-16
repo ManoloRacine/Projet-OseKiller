@@ -3,32 +3,7 @@ import { EvaluationCard } from "../../components/EvaluationCard";
 import { getEvaluations } from "../../services/ManagerService";
 
 const Evaluations = () => {
-    const [evaluations, setEvaluations] = useState([
-        {
-            contractId: 0,
-            companyName: "Google",
-            studentName: "Obama",
-            position: "dev",
-            startDate: "2022-10-20",
-            endDate: "2022-12-20",
-        },
-        {
-            contractId: 0,
-            companyName: "Google",
-            studentName: "Obama",
-            position: "dev",
-            startDate: "2022-10-20",
-            endDate: "2022-12-20",
-        },
-        {
-            contractId: 0,
-            companyName: "Google",
-            studentName: "Obama",
-            position: "dev",
-            startDate: "2022-10-20",
-            endDate: "2022-12-20",
-        },
-    ]);
+    const [evaluations, setEvaluations] = useState([]);
 
     useEffect(() => {
         getEvaluations().then((response) => {
