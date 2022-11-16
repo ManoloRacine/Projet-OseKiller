@@ -170,17 +170,12 @@ const EvaluateStudent = () => {
                 ],
                 comments: formData.section4Comment,
             },
-            globalAppreciation: {
-                fieldA: formData.globalAppreciation,
-                fieldB: formData.section5Comment,
-                fieldC: formData.hasBeenDiscussed,
-            },
+            expectationsAchieved: formData.globalAppreciation,
+            expectationsComment: formData.section5Comment,
             hoursOdSupportPerWeek: formData.nbHoursPerWeekOfSupport,
-            nextInternShip: {
-                fieldA: formData.wouldLikeToRetakeStudent,
-                fieldB: formData.formationWasAdequate,
-                date: formData.date,
-            },
+            internInformed: formData.hasBeenDiscussed,
+            keepIntern: formData.wouldLikeToRetakeStudent,
+            internFormationComment: formData.formationWasAdequate,
         };
         console.log(payload);
     };
