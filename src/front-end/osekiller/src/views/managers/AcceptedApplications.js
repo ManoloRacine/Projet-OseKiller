@@ -104,6 +104,13 @@ const AcceptedApplications = () => {
         applyContract(currentContractId, payload)
             .then((response) => {
                 console.log(response);
+                getContract(currentContractId).then((response) => {
+                    const blob2 = new Blob([response.data], {
+                        type: "application/pdf",
+                    });
+                    const data_url = window.URL.createObjectURL(blob2);
+                    setCurrentContractPdf(data_url);
+                });
             })
             .catch((err) => {
                 console.log(err);
