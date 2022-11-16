@@ -23,3 +23,12 @@ export const getContract = (contractId) => {
         },
     });
 };
+
+export const signContract = async (contractId, data) => {
+    return axios.post(`/contracts/${contractId}/sign`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};

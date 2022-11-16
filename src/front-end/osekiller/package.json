@@ -24,6 +24,8 @@
         "react-router-dom": "^6.4.0",
         "react-scripts": "5.0.1",
         "react-time-picker": "^5.1.0",
+        "react-signature-canvas": "^1.0.6",
+        "signature_pad": "^4.1.1",
         "web-vitals": "^2.1.4",
         "yup": "^0.32.11"
     },

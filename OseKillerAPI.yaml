@@ -742,10 +742,13 @@ paths:
                   required: true
             requestBody:
                 content:
-                    image/png:
+                    multipart/form-data:
                         schema:
-                            type: string
-                            format: binary
+                            type: object
+                            properties:
+                                image:
+                                    type: string
+                                    format: binary
             responses:
                 "200":
                     description: l'entente à été signé
