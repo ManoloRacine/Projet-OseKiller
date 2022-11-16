@@ -1,8 +1,8 @@
 import SignUpForm from "./forms/SignUpForm";
-import {useFormik} from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import {useState} from "react";
-import {userSignUp} from "../services/AuthService";
+import { useState } from "react";
+import { userSignUp } from "../services/AuthService";
 
 const SignUp = (props) => {
     const [userType, setUserType] = useState("etudiant");
@@ -17,7 +17,20 @@ const SignUp = (props) => {
         setIsOpen(false);
     };
 
-    const formikStudentOrManager = useFormik({
+    const getRoleName = () => {
+        switch (userType) {
+            case "etudiant":
+                return "STUDENT";
+            case "professeur":
+                return "TEACHER";
+            case "gestionnaire":
+                return "MANAGER";
+            default:
+                return "STUDENT";
+        }
+    };
+
+    const formikStudentOrManagerOrTeacher = useFormik({
         initialValues: {
             nom: "",
             prenom: "",
@@ -42,7 +55,7 @@ const SignUp = (props) => {
                 name: values.prenom + " " + values.nom,
                 email: values.email,
                 password: values.password,
-                role: userType === "etudiant" ? "STUDENT" : "MANAGER",
+                role: getRoleName(),
             };
 
             userSignUp(userInfo)
@@ -102,7 +115,7 @@ const SignUp = (props) => {
             usedFormik={
                 userType === "compagnie"
                     ? formikCompany
-                    : formikStudentOrManager
+                    : formikStudentOrManagerOrTeacher
             }
             userType={userType}
             isOpen={isOpen}
