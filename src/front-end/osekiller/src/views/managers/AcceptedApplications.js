@@ -3,7 +3,7 @@ import AcceptedApplicationCard from "../../components/AcceptedApplicationCard";
 import { getAllAcceptedApplications } from "../../services/ApplicationService";
 
 import {
-    applyContract,
+    signContract,
     generateContract,
     getContract,
 } from "../../services/ContractService";
@@ -97,11 +97,11 @@ const AcceptedApplications = () => {
         handleCloseModal();
     };
 
-    const signContract = (data) => {
+    const handleSignContract = (data) => {
         const payload = new FormData();
         const blob = dataURItoBlob(data);
         payload.append("image", blob);
-        applyContract(currentContractId, payload)
+        signContract(currentContractId, payload)
             .then((response) => {
                 console.log(response);
                 getContract(currentContractId).then((response) => {
@@ -202,7 +202,7 @@ const AcceptedApplications = () => {
                     {modalTitle === "Entente de stage" && (
                         <div className={"me-auto"}>
                             <p className={"fs-4"}>Signature</p>
-                            <Signature saveData={signContract} />
+                            <Signature saveData={handleSignContract} />
                         </div>
                     )}
                 </Modal.Footer>

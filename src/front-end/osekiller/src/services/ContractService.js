@@ -24,7 +24,7 @@ export const getContract = (contractId) => {
     });
 };
 
-export const applyContract = async (contractId, data) => {
+export const signContract = async (contractId, data) => {
     return axios.post(`/contracts/${contractId}/sign`, data, {
         headers: {
             "Content-Type": "multipart/form-data",
