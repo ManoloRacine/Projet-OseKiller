@@ -1,9 +1,11 @@
 package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.request.OfferDto;
+import com.osekiller.projet.controller.payload.response.InternDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
+import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.service.CompanyService;
@@ -27,6 +29,8 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository ;
 
     private OfferRepository offerRepository ;
+
+    private ContractRepository contractRepository ;
 
     @Override
     public Boolean companyExists(Long id) {
@@ -74,6 +78,18 @@ public class CompanyServiceImpl implements CompanyService {
 
         offer.setFeedback(feedback);
         offerRepository.save(offer);
+    }
+
+    @Override
+    public List<InternDto> getInterns(Long companyId) {
+        companyRepository.findById(companyId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+
+        List<InternDto> dtos = new ArrayList<>() ;
+
+        contractRepository.findAllByOffer_Owner_Id(companyId).
+                forEach(contract -> dtos.add(InternDto.from(contract)));
+
+        return dtos ;
     }
 
 }

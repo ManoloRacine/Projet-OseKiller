@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.request.ValidationDto;
+import com.osekiller.projet.controller.payload.response.InternDto;
 import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
 import com.osekiller.projet.service.CompanyService;
 import com.osekiller.projet.service.OfferService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -136,6 +138,11 @@ public class CompanyController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{companyId}/interns")
+    public ResponseEntity<List<InternDto>> getInterns(@PathVariable(name = "companyId") Long companyId) {
+        return ResponseEntity.ok(companyService.getInterns(companyId)) ;
     }
 
 }

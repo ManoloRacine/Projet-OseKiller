@@ -11,4 +11,6 @@ public interface ContractRepository extends CrudRepository<Contract, Long> {
 
     List<Contract> findAllByEvaluationPdfIsNull() ;
     List<Contract> findAllByEvaluationPdfIsNotNull() ;
+
+    List<Contract> findAllByOffer_Owner_Id(Long owner_id) ;
 }

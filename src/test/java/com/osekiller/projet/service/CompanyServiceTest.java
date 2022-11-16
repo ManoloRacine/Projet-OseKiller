@@ -1,12 +1,17 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.request.OfferDto;
+import com.osekiller.projet.controller.payload.response.InternDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
+import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
+import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.service.implementation.CompanyServiceImpl;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +46,9 @@ public class CompanyServiceTest {
 
     @Mock
     OfferRepository offerRepository ;
+
+    @Mock
+    ContractRepository contractRepository ;
 
     @Mock
     Path cvPath ;
@@ -218,5 +226,53 @@ public class CompanyServiceTest {
                 .extracting("status")
                 .isEqualTo(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @Test
+    void getInternsHappyDay() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        for (int i = 0; i < 5; i++) {
+            Contract contract1 = mock(Contract.class) ;
+            when(contract1.getStudent()).thenReturn(mock(Student.class)) ;
+            when(contract1.getOffer()).thenReturn(mock(Offer.class)) ;
+            when(contract1.getOffer().getOwner()).thenReturn(mock(Company.class)) ;
+            contracts.add(contract1);
+        }
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class))) ;
+        when(contractRepository.findAllByOffer_Owner_Id(anyLong())).thenReturn(contracts) ;
+
+        //Act
+        List<InternDto> dtos = companyService.getInterns(1L) ;
+
+        //Assert
+        assertNotNull(dtos);
+        assertSame(dtos.size(), 5);
+    }
+
+    @Test
+    void getInternsEmpty() {
+        //Arrange
+        List<Contract> contracts = new ArrayList<>() ;
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.of(mock(Company.class))) ;
+        when(contractRepository.findAllByOffer_Owner_Id(anyLong())).thenReturn(contracts) ;
+
+        //Act
+        List<InternDto> dtos = companyService.getInterns(1L) ;
+
+        //Assert
+        assertNotNull(dtos);
+        assertSame(dtos.size(), 0);
+    }
+
+    @Test
+    void getInternsNoCompany() {
+        //Arrange
+        when(companyRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
+
+        //Act && Assert
+        AssertionsForClassTypes.assertThatThrownBy(() -> companyService.getInterns(1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
