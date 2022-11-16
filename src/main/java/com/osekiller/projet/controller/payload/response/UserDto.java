@@ -12,6 +12,12 @@ public record UserDto(@NotBlank String email,
                       @NotBlank String role) {
 
     public static UserDto from(User user){
-        return new UserDto(user.getEmail(), user.getName(), user.isEnabled(), user.getId(), user.getRole().getName());
+        return new UserDto(
+                user.getEmail(),
+                user.getName(),
+                user.isEnabled(),
+                user.getId(),
+                user.getRole().getName()
+        );
     }
 }

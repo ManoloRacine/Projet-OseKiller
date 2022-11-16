@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Data
-public class Company extends User {
+public class Company extends Signatory {
     public Company(@NonNull String name, @NonNull String email, @NonNull String password) {
         super(name, email, password);
     }

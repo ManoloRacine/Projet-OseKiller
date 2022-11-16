@@ -19,7 +19,7 @@ const StudentCard = ({ student, redirectTo, offerId, confirmStudent }) => {
             </div>
             <div>
                 <p className={"fs-4 text-decoration-underline"}>Courriel</p>
-                <p>{student.email}$</p>
+                <p>{student.email}</p>
             </div>
 
             {student.isChosen ? (
