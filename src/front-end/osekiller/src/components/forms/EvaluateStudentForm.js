@@ -531,18 +531,6 @@ const EvaluateStudentForm = ({ formData, setFormData, submit }) => {
                             });
                         }}
                     />
-                    <TextInput
-                        label={"Date"}
-                        inputName={"date"}
-                        inputType={"date"}
-                        inputValue={formData.date}
-                        changeInputValue={({ target }) => {
-                            setFormData({
-                                ...formData,
-                                date: target.value,
-                            });
-                        }}
-                    />
                 </div>
                 <button className={"btn btn-primary"}>Soumettre</button>
             </form>

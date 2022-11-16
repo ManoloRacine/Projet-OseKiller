@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import EvaluateStudentForm from "../../components/forms/EvaluateStudentForm";
 import { useLocation } from "react-router-dom";
 import { evaluateIntern } from "../../services/ContractService";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const EvaluateStudent = () => {
     const location = useLocation();
     const studentName = location?.state?.studentName;
     const companyName = location?.state?.companyName;
     const contractId = location?.state?.contractId;
+    const [errorMessage, setErrorMessage] = useState("");
+    const [severity, setSeverity] = useState("");
     const [formData, setFormData] = useState({
         studentName: studentName ? studentName : "",
         program: "",
@@ -47,7 +50,6 @@ const EvaluateStudent = () => {
         nbHoursPerWeekOfSupport: "",
         wouldLikeToRetakeStudent: "",
         formationWasAdequate: "",
-        date: "",
     });
 
     const handleSubmit = (e) => {
@@ -176,9 +178,9 @@ const EvaluateStudent = () => {
                 ],
                 comments: formData.section4Comment,
             },
+            hoursOfSupportPerWeek: formData.nbHoursPerWeekOfSupport,
             expectationsAchieved: formData.globalAppreciation,
             expectationsComment: formData.section5Comment,
-            hoursOdSupportPerWeek: formData.nbHoursPerWeekOfSupport,
             internInformed: formData.hasBeenDiscussed,
             keepIntern: formData.wouldLikeToRetakeStudent,
             internFormationComment: formData.formationWasAdequate,
@@ -186,19 +188,28 @@ const EvaluateStudent = () => {
         console.log(payload);
         evaluateIntern(contractId, payload)
             .then((response) => {
+                setSeverity("success");
+                setErrorMessage("Évaluation envoyée avec succès!");
                 console.log(response);
             })
             .catch((err) => {
+                setSeverity("error");
+                setErrorMessage("Évaluation non envoyée.");
                 console.log(err);
             });
     };
 
     return (
-        <EvaluateStudentForm
-            formData={formData}
-            setFormData={setFormData}
-            submit={handleSubmit}
-        />
+        <>
+            <EvaluateStudentForm
+                formData={formData}
+                setFormData={setFormData}
+                submit={handleSubmit}
+            />
+            {errorMessage && (
+                <ErrorMessage message={errorMessage} severity={severity} />
+            )}
+        </>
     );
 };
 

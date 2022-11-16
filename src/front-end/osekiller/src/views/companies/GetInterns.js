@@ -21,40 +21,39 @@ const GetInterns = () => {
 
     return (
         <div>
-            {interns.map((intern) => (
-                <div>
-                    <div
-                        className={
-                            "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
-                        }
-                        style={{ backgroundColor: "#2C324C" }}
-                        data-testid={"acceptedApplication-card"}
-                    >
-                        <div>
-                            <p className={"fs-4 text-decoration-underline"}>
-                                Nom de l'étudiant
-                            </p>
-                            <p>{intern.studentName}</p>
-                        </div>
-                        <div>
-                            <p className={"fs-4 text-decoration-underline"}>
-                                Position
-                            </p>
-                            <p>{intern.position}</p>
-                        </div>
-
-                        <Link
-                            to={"/evaluate-student"}
-                            className={"btn btn-primary"}
-                            state={{
-                                studentName: intern.studentName,
-                                companyName: intern.companyName,
-                                contractId: intern.contractId,
-                            }}
-                        >
-                            Évaluer
-                        </Link>
+            {interns.map((intern, index) => (
+                <div
+                    key={index}
+                    className={
+                        "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
+                    }
+                    style={{ backgroundColor: "#2C324C" }}
+                    data-testid={"acceptedApplication-card"}
+                >
+                    <div>
+                        <p className={"fs-4 text-decoration-underline"}>
+                            Nom de l'étudiant
+                        </p>
+                        <p>{intern.studentName}</p>
                     </div>
+                    <div>
+                        <p className={"fs-4 text-decoration-underline"}>
+                            Position
+                        </p>
+                        <p>{intern.position}</p>
+                    </div>
+
+                    <Link
+                        to={"/evaluate-student"}
+                        className={"btn btn-primary"}
+                        state={{
+                            studentName: intern.studentName,
+                            companyName: intern.companyName,
+                            contractId: intern.contractId,
+                        }}
+                    >
+                        Évaluer
+                    </Link>
                 </div>
             ))}
         </div>

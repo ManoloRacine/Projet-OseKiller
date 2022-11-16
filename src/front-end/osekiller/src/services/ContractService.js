@@ -34,7 +34,7 @@ export const signContract = async (contractId, data) => {
 };
 
 export const evaluateIntern = async (contractId, formData) => {
-    return axios.put(`/contracts/${contractId}/evaluate-intern`, formData, {
+    return axios.post(`/contracts/${contractId}/evaluate-intern`, formData, {
         headers: {
             "Content-Type": "application/json",
             Authorization: localStorage.getItem("accessToken"),
