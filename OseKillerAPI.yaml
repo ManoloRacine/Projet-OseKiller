@@ -505,7 +505,7 @@ paths:
                   name: companyId
                   schema:
                       type: integer
-                      required: true
+                  required: true
             summary: Obtenir les stagiaires d'une entreprise
             description: Obtenir les stagiaires d'une entreprise
             operationId: getInterns
@@ -902,6 +902,7 @@ paths:
                   name: contractId
                   schema:
                       type: integer
+                  required : true
             requestBody:
                 content:
                     application/json:
