@@ -6,6 +6,6 @@ import java.util.List;
 
 public record StudentEvaluationSection(
         @NotNull List<QuestionAnswerDto> questionsAnswers,
-        @NotBlank String comment
+        @NotBlank String comments
         ) {
 }

@@ -382,7 +382,7 @@ public class ContractServiceImpl implements ContractService {
             throw new ResponseStatusException(HttpStatus.CONFLICT) ;
         }
 
-        PDDocument pdfDocument = PDDocument.load(new File("Templates/êvaluation du milieu de stage.pdf"));
+        PDDocument pdfDocument = PDDocument.load(new File("Templates/Grille dévaluation du stagiaire_Entreprise.pdf"));
 
         writeValuesInStudentEvaluation(dto, contract, pdfDocument);
 
@@ -416,7 +416,7 @@ public class ContractServiceImpl implements ContractService {
         PDField fieldCompanyName = acroForm.getField( "companyName" );
         fieldCompanyName.setValue(contract.getOffer().getOwner().getName());
 
-        PDField fieldCompanyContact = acroForm.getField( "companyContact" );
+        PDField fieldCompanyContact = acroForm.getField( "supervisorName" );
         fieldCompanyContact.setValue(dto.supervisorName());
 
         PDField fieldProgram = acroForm.getField( "program" );
@@ -450,7 +450,7 @@ public class ContractServiceImpl implements ContractService {
             addParagraph(contentStream, width, 0, -FONT_SIZE, "-" + questionAnswerDto.question() + " : " + getAnswerString(questionAnswerDto.answer()), true);
         }
 
-        addParagraph(contentStream, width, 0, -FONT_SIZE, "COMMENTAIRES : " + section.comment(), true);
+        addParagraph(contentStream, width, 0, -FONT_SIZE, "COMMENTAIRES : " + section.comments(), true);
 
         contentStream.endText();
 
