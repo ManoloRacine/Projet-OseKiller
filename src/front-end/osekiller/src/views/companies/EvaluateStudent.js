@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import EvaluateStudentForm from "../../components/forms/EvaluateStudentForm";
+import { useLocation } from "react-router-dom";
 
 const EvaluateStudent = () => {
+    const location = useLocation();
+    const studentName = location?.state?.studentName;
+    const companyName = location?.state?.companyName;
+    const contractId = location?.state?.contractId;
     const [formData, setFormData] = useState({
-        studentName: "",
+        studentName: studentName ? studentName : "",
         program: "",
-        companyName: "",
+        companyName: companyName ? companyName : "",
         supervisorName: "",
         supervisorPosition: "",
         phone: "",

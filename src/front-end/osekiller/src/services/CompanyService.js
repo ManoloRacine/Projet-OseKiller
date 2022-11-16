@@ -65,3 +65,12 @@ export const acceptStudentApplication = async (
         }
     );
 };
+
+export const getInterns = async (companyId) => {
+    return axios.get(`/companies/${companyId}/interns`, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};

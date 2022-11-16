@@ -24,6 +24,7 @@ import InviteStudent from "./views/companies/InviteStudent";
 import OfferDetails from "./views/managers/OfferDetails";
 import AcceptedApplications from "./views/managers/AcceptedApplications";
 import EvaluateStudent from "./views/companies/EvaluateStudent";
+import GetInterns from "./views/companies/GetInterns";
 
 <link
     rel="stylesheet"
@@ -226,6 +227,17 @@ root.render(
                             allowedRoles={["COMPANY"]}
                         >
                             <EvaluateStudent />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="get-interns"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["COMPANY"]}
+                        >
+                            <GetInterns />
                         </ProtectedRoute>
                     }
                 />
