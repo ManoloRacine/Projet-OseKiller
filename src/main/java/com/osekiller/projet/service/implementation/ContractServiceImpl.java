@@ -430,6 +430,22 @@ public class ContractServiceImpl implements ContractService {
     public boolean hasSignature(long signatoryId) {
         return signatoryRepository.findByIdAndSignatureIsNotNull(signatoryId).isPresent();
     }
+
+    @Override
+    public List<ContractDto> getContractsByManagerId(long id) {
+        return contractRepository.findAllByManager_Id(id).stream().map(ContractDto::from).toList();
+    }
+
+    @Override
+    public List<ContractDto> getContractsByStudentId(long id) {
+        return contractRepository.findAllByStudent_Id(id).stream().map(ContractDto::from).toList();
+    }
+
+    @Override
+    public List<ContractDto> getContractsByCompanyId(long id) {
+        return contractRepository.findAllByOffer_Owner_Id(id).stream().map(ContractDto::from).toList();
+    }
+
     public List<ContractToEvaluateDto> getUnevaluatedContracts() {
         List<ContractToEvaluateDto> dtos = new ArrayList<>() ;
         contractRepository.findAllByEvaluationPdfIsNull().stream().forEach(contract -> dtos.add(ContractToEvaluateDto.from(contract)));
