@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import EvaluateStudentForm from "../../components/forms/EvaluateStudentForm";
 import { useLocation } from "react-router-dom";
+import { evaluateIntern } from "../../services/ContractService";
 
 const EvaluateStudent = () => {
     const location = useLocation();
@@ -183,6 +184,13 @@ const EvaluateStudent = () => {
             internFormationComment: formData.formationWasAdequate,
         };
         console.log(payload);
+        evaluateIntern(contractId, payload)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     return (
