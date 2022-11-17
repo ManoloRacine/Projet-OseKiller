@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AcceptedApplicationCard from "../../components/AcceptedApplicationCard";
 import { getAllAcceptedApplications } from "../../services/ApplicationService";
 
@@ -16,12 +16,16 @@ import ContractTask from "../../components/ContractTask";
 import LoadPdf from "../../components/LoadPdf";
 import Signature from "../../components/Signature";
 import dataURItoBlob from "../../utils/DataURLConverter";
+import { AuthenticatedUserContext } from "../../App";
 
 const AcceptedApplications = () => {
+    const authenticatedUser = useContext(
+        AuthenticatedUserContext
+    )?.authenticatedUser;
     const [acceptedApplications, setAcceptedApplications] = useState([]);
     const [currentApplication, setCurrentApplication] = useState({});
     const [currentContractPdf, setCurrentContractPdf] = useState("");
-    const [currentContractId, setCurrentContractId] = useState("");
+    const [currentIdx, setCurrentIdx] = useState(0);
     const [modalTitle, setModalTitle] = useState("");
     const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -43,7 +47,6 @@ const AcceptedApplications = () => {
         setShowModal(true);
     };
     const handleShowContractModalById = (contractId) => {
-        setCurrentContractId(contractId);
         getContract(contractId).then((response) => {
             const blob = new Blob([response.data], {
                 type: "application/pdf",
@@ -81,13 +84,6 @@ const AcceptedApplications = () => {
             .finally(() => {
                 getAllAcceptedApplications()
                     .then((response) => {
-                        Object.entries(response.data).forEach(
-                            ([key, value]) => {
-                                if (value.offerId === offerId) {
-                                    setCurrentContractId(value.contractId);
-                                }
-                            }
-                        );
                         setAcceptedApplications(response.data);
                     })
                     .catch((error) => {
@@ -101,16 +97,28 @@ const AcceptedApplications = () => {
         const payload = new FormData();
         const blob = dataURItoBlob(data);
         payload.append("image", blob);
-        signContract(currentContractId, payload)
+        console.log(currentIdx);
+        signContract(acceptedApplications[currentIdx].contractId, payload)
             .then((response) => {
                 console.log(response);
-                getContract(currentContractId).then((response) => {
-                    const blob2 = new Blob([response.data], {
-                        type: "application/pdf",
+                getContract(acceptedApplications[currentIdx].contractId).then(
+                    (response) => {
+                        const blob2 = new Blob([response.data], {
+                            type: "application/pdf",
+                        });
+                        const data_url = window.URL.createObjectURL(blob2);
+                        setCurrentContractPdf(data_url);
+                    }
+                );
+            })
+            .finally(() => {
+                getAllAcceptedApplications()
+                    .then((response) => {
+                        setAcceptedApplications(response.data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
                     });
-                    const data_url = window.URL.createObjectURL(blob2);
-                    setCurrentContractPdf(data_url);
-                });
             })
             .catch((err) => {
                 console.log(err);
@@ -120,6 +128,7 @@ const AcceptedApplications = () => {
     useEffect(() => {
         getAllAcceptedApplications()
             .then((response) => {
+                console.log(response.data);
                 setAcceptedApplications(response.data);
             })
             .catch((error) => {
@@ -127,17 +136,38 @@ const AcceptedApplications = () => {
             });
     }, []);
 
+    function isContractSigned() {
+        if (modalTitle === "Tâches et Responsabilités") {
+            return true;
+        } else if (
+            authenticatedUser?.role === "MANAGER" &&
+            acceptedApplications[currentIdx]?.managerSigningDate != null
+        ) {
+            return true;
+        } else if (
+            authenticatedUser?.role === "COMPANY" &&
+            acceptedApplications[currentIdx]?.companySigningDate != null
+        ) {
+            return true;
+        } else
+            return (
+                authenticatedUser?.role === "STUDENT" &&
+                acceptedApplications[currentIdx]?.studentSigningDate != null
+            );
+    }
+
     return (
         <>
             <div>
-                {acceptedApplications.map((acceptedApplication, key) => (
+                {acceptedApplications.map((acceptedApplication, index) => (
                     <AcceptedApplicationCard
                         application={acceptedApplication}
                         showContractGenerationModal={handleShowTasksModal}
                         handleShowContractModalById={
                             handleShowContractModalById
                         }
-                        key={key}
+                        key={index}
+                        setSelectedApplicationIdx={() => setCurrentIdx(index)}
                     />
                 ))}
             </div>
@@ -199,7 +229,7 @@ const AcceptedApplications = () => {
                             Soumettre
                         </button>
                     )}
-                    {modalTitle === "Entente de stage" && (
+                    {!isContractSigned() && (
                         <div className={"me-auto"}>
                             <p className={"fs-4"}>Signature</p>
                             <Signature saveData={handleSignContract} />
