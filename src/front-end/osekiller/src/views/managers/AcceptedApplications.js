@@ -137,9 +137,7 @@ const AcceptedApplications = () => {
     }, []);
 
     function isContractSigned() {
-        if (modalTitle === "Tâches et Responsabilités") {
-            return true;
-        } else if (
+        if (
             authenticatedUser?.role === "MANAGER" &&
             acceptedApplications[currentIdx]?.managerSigningDate != null
         ) {
@@ -153,6 +151,18 @@ const AcceptedApplications = () => {
             return (
                 authenticatedUser?.role === "STUDENT" &&
                 acceptedApplications[currentIdx]?.studentSigningDate != null
+            );
+    }
+
+    function showSignaturePad() {
+        if (modalTitle === "Tâches et Responsabilités") {
+            return false;
+        } else if (isContractSigned()) {
+            return false;
+        } else
+            return (
+                acceptedApplications[currentIdx]?.managerId ===
+                authenticatedUser?.id
             );
     }
 
@@ -229,7 +239,7 @@ const AcceptedApplications = () => {
                             Soumettre
                         </button>
                     )}
-                    {!isContractSigned() && (
+                    {showSignaturePad() && (
                         <div className={"me-auto"}>
                             <p className={"fs-4"}>Signature</p>
                             <Signature saveData={handleSignContract} />
