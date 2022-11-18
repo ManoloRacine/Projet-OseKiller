@@ -32,3 +32,12 @@ export const signContract = async (contractId, data) => {
         },
     });
 };
+
+export const getContracts = (userId) => {
+    return axios.get(`/contracts?signatoryId=${userId}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};

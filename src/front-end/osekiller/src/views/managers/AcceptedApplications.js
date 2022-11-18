@@ -6,6 +6,7 @@ import {
     signContract,
     generateContract,
     getContract,
+    getContracts,
 } from "../../services/ContractService";
 import Modal from "react-bootstrap/Modal";
 
@@ -126,14 +127,25 @@ const AcceptedApplications = () => {
     };
 
     useEffect(() => {
-        getAllAcceptedApplications()
-            .then((response) => {
-                console.log(response.data);
-                setAcceptedApplications(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        if (authenticatedUser?.role === "MANAGER") {
+            getAllAcceptedApplications()
+                .then((response) => {
+                    console.log(response.data);
+                    setAcceptedApplications(response.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        } else {
+            getContracts(authenticatedUser?.id)
+                .then((response) => {
+                    console.log(response.data);
+                    //setAcceptedApplications(response.data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     }, []);
 
     function isContractSigned() {
@@ -159,11 +171,12 @@ const AcceptedApplications = () => {
             return false;
         } else if (isContractSigned()) {
             return false;
-        } else
+        } else if (authenticatedUser?.role === "MANAGER") {
             return (
                 acceptedApplications[currentIdx]?.managerId ===
                 authenticatedUser?.id
             );
+        } else return true;
     }
 
     return (
