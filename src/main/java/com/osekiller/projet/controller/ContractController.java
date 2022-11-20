@@ -53,7 +53,9 @@ public class ContractController {
     }
 
     @PostMapping("/{id}/sign")
-    public ResponseEntity<Resource> signContract(@PathVariable(name = "id") Long contractId, @RequestHeader(HttpHeaders.AUTHORIZATION) String header, @RequestParam("image") MultipartFile image) throws IOException {
+    public ResponseEntity<Resource> signContract(@PathVariable(name = "id") Long contractId,
+                                                 @RequestHeader(HttpHeaders.AUTHORIZATION) String header,
+                                                 @RequestParam("image") MultipartFile image) throws IOException {
         String jwt = header.substring(7);
         UserDto userDto = authService.getUserFromToken(jwt);
 
