@@ -171,12 +171,11 @@ const AcceptedApplications = () => {
             return false;
         } else if (isContractSigned()) {
             return false;
-        } else if (authenticatedUser?.role === "MANAGER") {
+        } else
             return (
                 acceptedApplications[currentIdx]?.managerId ===
                 authenticatedUser?.id
             );
-        } else return true;
     }
 
     return (

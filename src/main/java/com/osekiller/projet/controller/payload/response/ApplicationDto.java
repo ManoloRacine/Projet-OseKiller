@@ -18,8 +18,7 @@ public record ApplicationDto(
         LocalDate studentSigningDate,
         LocalDate managerSigningDate,
         LocalDate companySigningDate,
-        Long managerId,
-        Long companyId
+        Long managerId
 ) {
     public static ApplicationDto from (Offer offer, Student student, Contract contract){
         return new ApplicationDto(
@@ -31,8 +30,7 @@ public record ApplicationDto(
                 (contract == null ? null : contract.getStudentSigningDate()),
                 (contract == null ? null : contract.getManagerSigningDate()),
                 (contract == null ? null : contract.getCompanySigningDate()),
-                (contract == null ? null : contract.getManager().getId()),
-                (contract == null ? null : offer.getOwner().getId())
+                (contract == null ? null : contract.getManager().getId())
                 );
     }
 }
