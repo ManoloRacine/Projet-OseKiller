@@ -1526,5 +1526,7 @@ components:
                     type: number
                 notificationMessage:
                     type : string
+                notificationDateTime:
+                    type : string
             xml:
                 name : Notification
