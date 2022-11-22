@@ -1,13 +1,9 @@
 package com.osekiller.projet.controller.payload.response;
 
-import com.osekiller.projet.controller.ContractController;
 import com.osekiller.projet.model.Contract;
-import com.osekiller.projet.model.Offer;
-import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.service.implementation.ContractServiceImpl;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 public record ContractDto(
         @NotNull Long studentId,
@@ -17,7 +13,10 @@ public record ContractDto(
         @NotBlank String studentName,
         @NotBlank String managerName,
         @NotBlank String companyName,
-        @NotBlank String position
+        @NotBlank String position,
+        LocalDate studentSigningDate,
+        LocalDate managerSigningDate,
+        LocalDate companySigningDate
 ) {
     public static ContractDto from(Contract contract){
         return new ContractDto(
@@ -28,6 +27,10 @@ public record ContractDto(
                 contract.getStudent().getName(),
                 contract.getManager().getName(),
                 contract.getOffer().getOwner().getName(),
-                contract.getOffer().getPosition());
+                contract.getOffer().getPosition(),
+                contract.getStudentSigningDate(),
+                contract.getManagerSigningDate(),
+                contract.getCompanySigningDate()
+                );
     }
 }

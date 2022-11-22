@@ -82,15 +82,7 @@ const AcceptedApplications = () => {
                 const data_url = window.URL.createObjectURL(blob);
                 handleShowContractModal(data_url);
             })
-            .finally(() => {
-                getAllAcceptedApplications()
-                    .then((response) => {
-                        setAcceptedApplications(response.data);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            });
+            .finally(() => fetchApplications());
         handleCloseModal();
     };
 
@@ -112,21 +104,14 @@ const AcceptedApplications = () => {
                     }
                 );
             })
-            .finally(() => {
-                getAllAcceptedApplications()
-                    .then((response) => {
-                        setAcceptedApplications(response.data);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+            .finally(() => fetchApplications());
     };
 
     useEffect(() => {
+        fetchApplications();
+    }, []);
+
+    function fetchApplications() {
         if (authenticatedUser?.role === "MANAGER") {
             getAllAcceptedApplications()
                 .then((response) => {
@@ -140,13 +125,13 @@ const AcceptedApplications = () => {
             getContracts(authenticatedUser?.id)
                 .then((response) => {
                     console.log(response.data);
-                    //setAcceptedApplications(response.data);
+                    setAcceptedApplications(response.data);
                 })
                 .catch((error) => {
                     console.error(error);
                 });
         }
-    }, []);
+    }
 
     function isContractSigned() {
         if (
@@ -171,11 +156,12 @@ const AcceptedApplications = () => {
             return false;
         } else if (isContractSigned()) {
             return false;
-        } else
+        } else if (authenticatedUser?.role === "MANAGER"){
             return (
                 acceptedApplications[currentIdx]?.managerId ===
                 authenticatedUser?.id
             );
+        } else return true;
     }
 
     return (
