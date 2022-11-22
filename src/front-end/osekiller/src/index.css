@@ -32,3 +32,7 @@ form .section {
     color: white;
     border-radius: 10px;
 }
+
+.react-time-picker input {
+    color: white;
+}
