@@ -52,6 +52,9 @@ public class OfferServiceTest {
     @Mock
     CompanyRepository companyRepository;
 
+    @Mock
+    NotificationsService notificationsService;
+
     @InjectMocks
     OfferServiceImpl offerService;
 
