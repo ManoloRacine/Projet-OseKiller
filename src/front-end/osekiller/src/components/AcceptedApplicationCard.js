@@ -1,18 +1,24 @@
-import { Button } from "react-bootstrap"
+import { Button } from "react-bootstrap";
 
-
-const AcceptedApplicationCard = ({application, showContractGenerationModal, handleShowContractModalById}) => {
+const AcceptedApplicationCard = ({
+    application,
+    showContractGenerationModal,
+    handleShowContractModalById,
+    setSelectedApplicationIdx,
+}) => {
     return (
         <>
             <div
-            className={
-                "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
-            }
-            style={{ backgroundColor: "#2C324C" }}
-            data-testid={"acceptedApplication-card"}
+                className={
+                    "offer d-flex justify-content-evenly align-items-center text-white my-4 py-4 rounded"
+                }
+                style={{ backgroundColor: "#2C324C" }}
+                data-testid={"acceptedApplication-card"}
             >
                 <div>
-                    <p className={"fs-4 text-decoration-underline"}>Compagnie</p>
+                    <p className={"fs-4 text-decoration-underline"}>
+                        Compagnie
+                    </p>
                     <p>{application.companyName}</p>
                 </div>
                 <div>
@@ -23,19 +29,30 @@ const AcceptedApplicationCard = ({application, showContractGenerationModal, hand
                     <p className={"fs-4 text-decoration-underline"}>Étudiant</p>
                     <p>{application.studentName}</p>
                 </div>
-                {
-                    application.contractId ? <Button variant="info" onClick={() => handleShowContractModalById(application.contractId)}>
+                {application.contractId ? (
+                    <Button
+                        variant="info"
+                        onClick={() => {
+                            handleShowContractModalById(application.contractId);
+                            setSelectedApplicationIdx();
+                        }}
+                    >
                         Voir l'entente de Stage
-                    </Button> :
-                    <button className={"btn btn-primary"} onClick={() => showContractGenerationModal(application)} >
+                    </Button>
+                ) : (
+                    <button
+                        className={"btn btn-primary"}
+                        onClick={() => {
+                            showContractGenerationModal(application);
+                            setSelectedApplicationIdx();
+                        }}
+                    >
                         Créer une entente de stage
-                    </button> 
-                }
-                
+                    </button>
+                )}
             </div>
-            
         </>
     );
-}
+};
 
 export default AcceptedApplicationCard;

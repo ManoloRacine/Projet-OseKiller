@@ -2,6 +2,7 @@ package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
+import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.service.AuthService;
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
 import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
@@ -33,7 +34,35 @@ public class ContractController {
 
     @GetMapping()
     //TODO ajust API to reflect the possibility of multiple different objects
-    public ResponseEntity<List<?>> getContracts(@RequestParam(required = false) Boolean toEvaluate) {
+    public ResponseEntity<List<?>> getContracts(
+            @RequestParam(required = false) Boolean toEvaluate,
+            @RequestParam(required = false) Long signatoryId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String header
+    ) {
+        if(toEvaluate != null && signatoryId != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if(signatoryId != null){
+            String jwt = header.substring(7);
+            UserDto signatoryFound = authService.getUserFromToken(jwt);
+
+            if(!signatoryId.equals(signatoryFound.id())){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
+            if (signatoryFound.role().equals(ERole.MANAGER.name())){
+                return ResponseEntity.ok(contractService.getContractsByManagerId(signatoryId));
+            }
+
+            if (signatoryFound.role().equals(ERole.COMPANY.name())){
+                return ResponseEntity.ok(contractService.getContractsByCompanyId(signatoryId));
+            }
+
+            if (signatoryFound.role().equals(ERole.STUDENT.name())){
+                return ResponseEntity.ok(contractService.getContractsByStudentId(signatoryId));
+            }
+
+        }
         if (toEvaluate == null) {
             return ResponseEntity.ok(contractService.getContracts()) ;
         }
@@ -54,7 +83,9 @@ public class ContractController {
     }
 
     @PostMapping("/{id}/sign")
-    public ResponseEntity<Resource> signContract(@PathVariable(name = "id") Long contractId, @RequestHeader(HttpHeaders.AUTHORIZATION) String header, @RequestParam("image") MultipartFile image) throws IOException {
+    public ResponseEntity<Resource> signContract(@PathVariable(name = "id") Long contractId,
+                                                 @RequestHeader(HttpHeaders.AUTHORIZATION) String header,
+                                                 @RequestParam("image") MultipartFile image) throws IOException {
         String jwt = header.substring(7);
         UserDto userDto = authService.getUserFromToken(jwt);
 

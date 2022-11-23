@@ -25,5 +25,7 @@ CREDENTIALS :
 - courriel : testcompany@osk.com, mot de passe : 123
 - courriel : testmanager@osk.com, mot de passe : 123
 - courriel : teststudent1@osk.com, mot de passe : 123
--  courriel : teststudent2@osk.com, mot de passe : 123
+- courriel : teststudent2@osk.com, mot de passe : 123
 - courriel : teststudent3@osk.com, mot de passe : 123
+- courriel : testteacher@osk.com, mot de passe : 123
+

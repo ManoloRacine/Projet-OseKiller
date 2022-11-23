@@ -19,6 +19,7 @@ import com.osekiller.projet.repository.user.ManagerRepository;
 import com.osekiller.projet.repository.user.SignatoryRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.ContractService;
+import com.osekiller.projet.service.NotificationsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.*;
@@ -50,6 +51,8 @@ public class ContractServiceImpl implements ContractService {
     StudentRepository studentRepository;
     ContractRepository contractRepository ;
     SignatoryRepository signatoryRepository;
+
+    NotificationsService notificationsService;
 
 
     private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
@@ -101,6 +104,12 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = new Contract(student, offer, manager) ;
         contract.setPdf(byteArrayOutputStream.toByteArray());
         contractRepository.save(contract) ;
+
+        notificationsService.addNotification(studentId,
+                "Un contrat pour l'offre de " + offer.getOwner().getName() + " a été généré");
+
+        notificationsService.addNotification(offer.getOwner().getId(),
+                "Un contrat pour l'offre de " + student.getName() + " a été généré");
 
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
     }
@@ -432,6 +441,22 @@ public class ContractServiceImpl implements ContractService {
     public boolean hasSignature(long signatoryId) {
         return signatoryRepository.findByIdAndSignatureIsNotNull(signatoryId).isPresent();
     }
+
+    @Override
+    public List<ContractDto> getContractsByManagerId(long id) {
+        return contractRepository.findAllByManager_Id(id).stream().map(ContractDto::from).toList();
+    }
+
+    @Override
+    public List<ContractDto> getContractsByStudentId(long id) {
+        return contractRepository.findAllByStudent_Id(id).stream().map(ContractDto::from).toList();
+    }
+
+    @Override
+    public List<ContractDto> getContractsByCompanyId(long id) {
+        return contractRepository.findAllByOffer_Owner_Id(id).stream().map(ContractDto::from).toList();
+    }
+
     public List<ContractToEvaluateDto> getUnevaluatedContracts() {
         List<ContractToEvaluateDto> dtos = new ArrayList<>() ;
         contractRepository.findAllByEvaluationPdfIsNull().stream().forEach(contract -> dtos.add(ContractToEvaluateDto.from(contract)));
@@ -465,6 +490,10 @@ public class ContractServiceImpl implements ContractService {
 
         contract.setEvaluationPdf(byteArrayOutputStream.toByteArray());
         contractRepository.save(contract) ;
+
+        notificationsService.addNotification(contract.getManager().getId(),
+                "Le milieu de stage pour le contrat entre " + contract.getOffer().getOwner().getName() +
+                "et " + contract.getStudent().getName() + " a été évalué");
     }
 
 
@@ -571,7 +600,7 @@ public class ContractServiceImpl implements ContractService {
 
         if (dto.variableWorkShifts()) {
             for (List<String> workShift : dto.workShifts()) {
-                if (!workShift.get(0).equals("") && !workShift.get(1).equals("")) {
+                if (workShift.get(0) != null && workShift.get(1) != null) {
                     addParagraph(contentStream, width, 0, -FONT_SIZE, workShift.get(0) + " - " + workShift.get(1), true);
                 }
             }

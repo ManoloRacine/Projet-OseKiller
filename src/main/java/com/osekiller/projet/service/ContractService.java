@@ -21,6 +21,9 @@ public interface ContractService {
     Resource signContract(long contractId, long signatoryId, MultipartFile signature) throws IOException;
     boolean hasSignature(long signatoryId);
 
+    List<ContractDto> getContractsByManagerId(long id);
+    List<ContractDto> getContractsByStudentId(long id);
+    List<ContractDto> getContractsByCompanyId(long id);
     List<ContractToEvaluateDto> getUnevaluatedContracts();
 
     void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException;
