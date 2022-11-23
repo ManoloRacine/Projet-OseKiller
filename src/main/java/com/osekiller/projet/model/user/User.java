@@ -1,6 +1,7 @@
 package com.osekiller.projet.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.osekiller.projet.model.Notification;
 import com.osekiller.projet.model.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +32,9 @@ public abstract class User implements UserDetails {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     private Role role;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    private List<Notification> notifications = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
