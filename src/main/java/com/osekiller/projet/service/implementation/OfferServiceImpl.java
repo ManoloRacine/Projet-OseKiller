@@ -4,12 +4,14 @@ import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
+import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
+import com.osekiller.projet.service.NotificationsService;
 import com.osekiller.projet.service.OfferService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -33,6 +35,8 @@ public class OfferServiceImpl implements OfferService {
     private OfferRepository offerRepository ;
     private CompanyRepository companyRepository ;
     private StudentRepository studentRepository;
+
+    private NotificationsService notificationsService;
 
     private final int LAST_MONTH = 5 ;
     private final int LAST_DAY = 31 ;
@@ -76,6 +80,10 @@ public class OfferServiceImpl implements OfferService {
         student.getAcceptedApplications().add(offer);
 
         offerRepository.save(offer);
+
+        notificationsService.addNotification(studentId,
+                "vous avez été choisis pour un stage avec " + offer.getOwner().getName() + " en tant que " +
+                offer.getPosition());
     }
 
     @Override
@@ -140,11 +148,9 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public void addOffer(long companyId, OfferDto offerDto, MultipartFile file) {
-        Optional<Company> companyOptional = companyRepository.findById(companyId) ;
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
 
-        if (companyOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
-
-        Offer offer = new Offer(companyOptional.get(), offerDto.position(), offerDto.salary(), LocalDate.parse(offerDto.startDate()), LocalDate.parse(offerDto.endDate())) ;
+        Offer offer = new Offer(company, offerDto.position(), offerDto.salary(), LocalDate.parse(offerDto.startDate()), LocalDate.parse(offerDto.endDate())) ;
 
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         offer.setPdfName(fileName);
@@ -156,6 +162,9 @@ public class OfferServiceImpl implements OfferService {
         }
 
         offerRepository.save(offer);
+
+        notificationsService.addNotificationForRole(ERole.STUDENT.name(), "Une offre de " + company.getName() +
+                "a été ajoutée");
     }
 
     public List<GeneralOfferDto> getAllInvalidOffersBySession(int session) {

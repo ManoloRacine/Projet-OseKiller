@@ -54,6 +54,8 @@ public class AuthServiceTest {
     CompanyRepository companyRepository ;
     @Mock
     TeacherRepository teacherRepository ;
+    @Mock
+    NotificationsService notificationsService;
 
     @Mock
     StudentService studentService ;

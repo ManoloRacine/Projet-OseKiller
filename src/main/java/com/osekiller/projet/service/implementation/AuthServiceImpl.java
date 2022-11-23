@@ -12,6 +12,7 @@ import com.osekiller.projet.repository.RefreshTokenRepository;
 import com.osekiller.projet.repository.user.*;
 import com.osekiller.projet.security.JwtUtils;
 import com.osekiller.projet.service.AuthService;
+import com.osekiller.projet.service.NotificationsService;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,8 @@ public class AuthServiceImpl implements AuthService {
         private StudentService studentService;
 
         private RoleRepository roleRepository;
+
+        private NotificationsService notificationsService ;
 
         private final int LAST_MONTH = 5 ;
         private final int LAST_DAY = 31 ;
@@ -80,6 +83,8 @@ public class AuthServiceImpl implements AuthService {
                         student.setRole(studentRole);
                         student.setSessionYear(studentService.getCurrentSession());
                         studentRepository.save(student);
+                        notificationsService.addNotificationForRole(ERole.MANAGER.name(),
+                                "L'utilisateur : " + dto.name() + ", est en attente d'approbation");
                         return;
                 }
                 if (dto.role().equals(ERole.MANAGER.name())) {
@@ -88,6 +93,8 @@ public class AuthServiceImpl implements AuthService {
                                         .orElseThrow(EntityNotFoundException::new);
                         manager.setRole(managerRole);
                         managerRepository.save(manager);
+                        notificationsService.addNotificationForRole(ERole.MANAGER.name(),
+                                "L'utilisateur : " + dto.name() + ", est en attente d'approbation");
                         return;
                 }
                 if (dto.role().equals(ERole.COMPANY.name())) {
@@ -96,6 +103,8 @@ public class AuthServiceImpl implements AuthService {
                                         .orElseThrow(EntityNotFoundException::new);
                         company.setRole(companyRole);
                         companyRepository.save(company);
+                        notificationsService.addNotificationForRole(ERole.MANAGER.name(),
+                                "L'utilisateur : " + dto.name() + ", est en attente d'approbation");
                         return;
                 }
                 if (dto.role().equals(ERole.TEACHER.name())) {
@@ -104,6 +113,8 @@ public class AuthServiceImpl implements AuthService {
                                         .orElseThrow(EntityNotFoundException::new) ;
                         teacher.setRole(teacherRole);
                         teacherRepository.save(teacher);
+                        notificationsService.addNotificationForRole(ERole.MANAGER.name(),
+                                "L'utilisateur : " + dto.name() + ", est en attente d'approbation");
                         return;
                 }
 

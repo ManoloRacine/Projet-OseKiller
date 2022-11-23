@@ -52,6 +52,9 @@ public class StudentServiceTest {
     @Mock
     InterviewRepository interviewRepository;
 
+    @Mock
+    NotificationsService notificationsService;
+
     @InjectMocks
     private StudentServiceImpl studentService ;
 
@@ -418,6 +421,7 @@ public class StudentServiceTest {
         interviewAfter.setChosenInterviewDate( LocalDate.of(2022,10,24));
 
         when(interviewRepository.findById(anyLong())).thenReturn(Optional.of(interview));
+        when(offer.getOwner()).thenReturn(mock(Company.class)) ;
 
         //Act
 
