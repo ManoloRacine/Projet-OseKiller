@@ -1090,6 +1090,14 @@ paths:
             responses:
                 "200":
                     description: L'évaluation à été trouvé
+                    content:
+                        multipart/form-data:
+                            schema:
+                                type: object
+                                properties:
+                                    file:
+                                        type: string
+                                        format: binary
                 "403":
                     description: Requête non autorisée
                 "404":
