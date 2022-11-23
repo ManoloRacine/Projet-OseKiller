@@ -1229,7 +1229,7 @@ paths:
                     description: la notification n'existe pas
                 "403":
                     description: Requête non autorisée
-    /students/{contractId}/report:
+    /contracts/{contractId}/report:
         put:
             parameters:
                 - in: path
@@ -1238,37 +1238,15 @@ paths:
                       type: integer
                   required: true
             tags:
-                - Student
+                - Contracts
             summary : Upload le rapport du stage de l'étudiant
             description : Upload le rapport du stage de l'étudiant
             operationId : putReport
             responses:
                 "200":
                     description : le rapport a été uploadé
-                "403":
-                    description : Requête non autorisée
-    /students/{studentId}/contracts:
-        get:
-            parameters:
-                - in: path
-                  name: studentId
-                  schema:
-                      type: integer
-                  required: true
-            tags:
-                - Student
-            summary: Retourne tous les contrats de l'étudiant
-            description : Retourne tous les contrats de l'étudiant
-            operationId: getContractsStudent
-            responses:
-                "200":
-                    description : les contrats ont étés retournés
-                    content :
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: "#/components/schemas/ContractToEvaluate"
+                "404":
+                    description: le contrat n'existe pas
                 "403":
                     description : Requête non autorisée
 
