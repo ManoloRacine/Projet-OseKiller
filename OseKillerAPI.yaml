@@ -1230,6 +1230,35 @@ paths:
                 "403":
                     description: Requête non autorisée
 
+    /students/{id}/report:
+        get:
+            parameters:
+                - in: path
+                  name: id
+                  schema:
+                      type: integer
+                  required: true
+            tags:
+                - Student
+            summary : Retourne le rapport de stage de l'étudiant
+            description : Retourne le rapport de stage de l'étudiant
+            operationId : getReport
+            responses:
+                "200":
+                    description : Le rapport a été retourné
+                    content:
+                        multipart/form-data:
+                            schema:
+                                type: object
+                                properties:
+                                    file:
+                                        type: string
+                                        format: binary
+                "404":
+                    description: Le rapport ou l'étudiant n'existe pas
+                "403":
+                    description: Requête non autorisée
+
 components:
     securitySchemes:
         bearerAuth:
