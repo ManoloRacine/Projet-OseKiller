@@ -46,8 +46,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     private ContractRepository contractRepository;
 
-    private ContractRepository contractRepository;
-
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
