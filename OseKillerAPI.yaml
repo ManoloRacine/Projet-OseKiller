@@ -1074,6 +1074,28 @@ paths:
 
             security:
                 - bearerAuth: [ ]
+    /contracts/{contractId}/intern-evaluation:
+        get:
+            tags: 
+                - Contracts
+            summary: Obtenir l'évaluation du stagiaire
+            description: Obtenir l'évaluation du stagiaire
+            operationId: getInternEvaluation
+            parameters:
+              - in: path
+                name: contractId
+                schema:
+                    type: integer
+                required: true
+            responses:
+                "200":
+                    description: L'évaluation à été trouvé
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Évaluation non trouvée
+              
+
     /contracts/{contractId}/sign-intern-evaluation:
         post:
             tags:
