@@ -55,7 +55,9 @@ export const Header = () => {
                             Valider des offres de stages
                         </Link>
                     )}
-                    {authenticatedUser.role === "MANAGER" && (
+                    {(authenticatedUser.role === "MANAGER" ||
+                        authenticatedUser.role === "STUDENT" ||
+                        authenticatedUser.role === "COMPANY") && (
                         <Link
                             to={"/accepted-applications"}
                             className="m-4 fs-2 d-flex align-items-center"
