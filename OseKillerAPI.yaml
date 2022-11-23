@@ -1209,7 +1209,7 @@ paths:
             security:
                 - bearerAuth: [ ]
 
-    /notifications/{notificationId}/delete-notification:
+    /notifications/{notificationId}:
         delete:
             parameters:
                 - in: path
