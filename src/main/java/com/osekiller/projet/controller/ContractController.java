@@ -82,6 +82,14 @@ public class ContractController {
                         contract.getFilename() + "\"").body(contract) ;
     }
 
+    @GetMapping("/{id}/intern-evaluation")
+    public ResponseEntity<Resource> getInternEvaluation(@PathVariable(name = "id") Long id) {
+        Resource contract = contractService.getContract(id) ;
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
+                        contract.getFilename() + "\"").body(contract) ;
+    }
+
     @PostMapping("/{id}/sign")
     public ResponseEntity<Resource> signContract(@PathVariable(name = "id") Long contractId,
                                                  @RequestHeader(HttpHeaders.AUTHORIZATION) String header,

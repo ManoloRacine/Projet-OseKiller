@@ -269,6 +269,12 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public Resource getInternEvaluation(long contractId) {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        return new ByteArrayResource(contract.getStudentEvaluationPdf()) ;
+    }
+
+    @Override
     public Resource signContract(long contractId, long signatoryId) throws IOException {
         Contract contract = contractSignatoryGuardClause(contractId, signatoryId);
 
