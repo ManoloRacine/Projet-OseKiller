@@ -1230,16 +1230,16 @@ paths:
                 "403":
                     description: Requête non autorisée
 
-    /students/{id}/report:
+    /contracts/{contractId}/report:
         get:
             parameters:
                 - in: path
-                  name: id
+                  name: contractId
                   schema:
                       type: integer
                   required: true
             tags:
-                - Student
+                - Contracts
             summary : Retourne le rapport de stage de l'étudiant
             description : Retourne le rapport de stage de l'étudiant
             operationId : getReport
