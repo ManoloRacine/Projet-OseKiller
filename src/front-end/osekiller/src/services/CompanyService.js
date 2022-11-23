@@ -69,7 +69,7 @@ export const acceptStudentApplication = async (
 export const getInterns = async (companyId) => {
     return axios.get(`/companies/${companyId}/interns`, {
         headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             Authorization: localStorage.getItem("accessToken"),
         },
     });
