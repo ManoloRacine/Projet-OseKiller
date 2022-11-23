@@ -42,7 +42,7 @@ public class NotificationControllerTest {
     void deleteNotificationHappyDay() throws Exception {
         when(authService.getUserFromToken(anyString())).thenReturn(mock(UserDto.class));
 
-        mockMvc.perform(delete("/notifications/{notificationId}/delete-notification", 6)
+        mockMvc.perform(delete("/notifications/{notificationId}", 6)
                         .header(HttpHeaders.AUTHORIZATION,"user-jwt"))
                 .andExpect(status().isOk()) ;
     }
@@ -53,7 +53,7 @@ public class NotificationControllerTest {
         when(authService.getUserFromToken(anyString())).thenReturn(mock(UserDto.class));
         doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(notificationsService).deleteNotification(anyLong(), eq(6L));
 
-        mockMvc.perform(delete("/notifications/{notificationId}/delete-notification", 6)
+        mockMvc.perform(delete("/notifications/{notificationId}", 6)
                         .header(HttpHeaders.AUTHORIZATION,"user-jwt"))
                 .andExpect(status().isNotFound()) ;
     }

@@ -31,7 +31,7 @@ public class NotificationController {
         return ResponseEntity.ok(notificationsService.getNotifications(userId)) ;
     }
 
-    @DeleteMapping("/{notificationId}/delete-notification")
+    @DeleteMapping("/{notificationId}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long notificationId,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String header) {
         String jwt = header.substring(7) ;
