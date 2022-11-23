@@ -1229,6 +1229,18 @@ paths:
                     description: la notification n'existe pas
                 "403":
                     description: Requête non autorisée
+    /students/report:
+        put:
+            tags:
+                - Student
+            summary : Upload le rapport du stage de l'étudiant
+            description : Upload le rapport du stage de l'étudiant
+            operationId : putReport
+            responses:
+                "200":
+                    description : le rapport a été uploadé
+                "403":
+                    description : Requête non autorisée
 
 components:
     securitySchemes:
