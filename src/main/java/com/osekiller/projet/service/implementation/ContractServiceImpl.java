@@ -17,6 +17,7 @@ import com.osekiller.projet.repository.user.ManagerRepository;
 import com.osekiller.projet.repository.user.SignatoryRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.ContractService;
+import com.osekiller.projet.service.NotificationsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.*;
@@ -48,6 +49,8 @@ public class ContractServiceImpl implements ContractService {
     StudentRepository studentRepository;
     ContractRepository contractRepository ;
     SignatoryRepository signatoryRepository;
+
+    NotificationsService notificationsService;
 
 
     private static final PDFont FONT = PDType1Font.TIMES_ROMAN;
@@ -99,6 +102,12 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = new Contract(student, offer, manager) ;
         contract.setPdf(byteArrayOutputStream.toByteArray());
         contractRepository.save(contract) ;
+
+        notificationsService.addNotification(studentId,
+                "Un contrat pour l'offre de " + offer.getOwner().getName() + " a été généré");
+
+        notificationsService.addNotification(offer.getOwner().getId(),
+                "Un contrat pour l'offre de " + student.getName() + " a été généré");
 
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
     }
@@ -463,6 +472,10 @@ public class ContractServiceImpl implements ContractService {
 
         contract.setEvaluationPdf(byteArrayOutputStream.toByteArray());
         contractRepository.save(contract) ;
+
+        notificationsService.addNotification(contract.getManager().getId(),
+                "Le milieu de stage pour le contrat entre " + contract.getOffer().getOwner().getName() +
+                "et " + contract.getStudent().getName() + " a été évalué");
     }
 
 

@@ -1,5 +1,6 @@
 package com.osekiller.projet.service.implementation;
 
+import com.osekiller.projet.controller.payload.response.NotificationDto;
 import com.osekiller.projet.model.Notification;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.User;
@@ -67,4 +68,15 @@ public class NotificationsServiceImpl implements NotificationsService {
 
 
     }
+
+    @Override
+    public List<NotificationDto> getNotifications(long studentId) {
+        User user = userRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        List<NotificationDto> notificationDtos = user.getNotifications().stream().map(NotificationDto::from).toList() ;
+
+        return notificationDtos ;
+    }
+
+
 }

@@ -7,6 +7,7 @@ import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.service.CompanyService;
+import com.osekiller.projet.service.NotificationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

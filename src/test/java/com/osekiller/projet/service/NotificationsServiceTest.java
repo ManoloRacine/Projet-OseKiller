@@ -1,5 +1,6 @@
 package com.osekiller.projet.service;
 
+import com.osekiller.projet.controller.payload.response.NotificationDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Notification;
 import com.osekiller.projet.model.Offer;
@@ -7,6 +8,7 @@ import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
+import com.osekiller.projet.model.user.User;
 import com.osekiller.projet.repository.user.RoleRepository;
 import com.osekiller.projet.repository.user.UserRepository;
 import com.osekiller.projet.service.implementation.NotificationsServiceImpl;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -193,6 +196,55 @@ public class NotificationsServiceTest {
 
         //Act & Assert
         assertThatThrownBy(() -> notificationsService.addNotificationForRole(ERole.MANAGER.name(), "message"))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status")
+                .isEqualTo(HttpStatus.NOT_FOUND) ;
+    }
+
+    @Test
+    void getNotificationsHappyDay() {
+        //Arrange
+        User user = mock(User.class) ;
+        when(userRepository.findById(5L)).thenReturn(Optional.ofNullable(user)) ;
+        Notification notification1 = mock(Notification.class) ;
+        Notification notification2 = mock(Notification.class) ;
+        Notification notification3 = mock(Notification.class) ;
+        List<Notification> notifications = List.of(notification1, notification2, notification3) ;
+        for (Notification notification: notifications
+             ) {
+            when(notification.getTimeStamp()).thenReturn(LocalDateTime.now()) ;
+        }
+        when(user.getNotifications()).thenReturn(notifications) ;
+
+        //Act
+        List<NotificationDto> notificationsDto = notificationsService.getNotifications(5L) ;
+
+        //Assert
+        assertThat(notificationsDto.size()).isEqualTo(3) ;
+    }
+
+    @Test
+    void getNotificationsEmpty() {
+        //Arrange
+        User user = mock(User.class) ;
+        when(userRepository.findById(5L)).thenReturn(Optional.ofNullable(user)) ;
+        when(user.getNotifications()).thenReturn(new ArrayList<>()) ;
+
+        //Act
+        List<NotificationDto> notifications = notificationsService.getNotifications(5L) ;
+
+        //Assert
+        assertThat(notifications).isNotNull() ;
+        assertThat(notifications.size()).isEqualTo(0) ;
+    }
+
+    @Test
+    void getNotificationNonExistentUser() {
+        //Arrange
+        when(userRepository.findById(5L)).thenReturn(Optional.empty()) ;
+
+        //Act & Assert
+        assertThatThrownBy(() -> notificationsService.getNotifications(5L))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status")
                 .isEqualTo(HttpStatus.NOT_FOUND) ;
