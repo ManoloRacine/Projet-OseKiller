@@ -1187,6 +1187,48 @@ paths:
 
             security:
                 - bearerAuth: [ ]
+    /notifications:
+        get:
+            tags:
+                - Notifications
+            summary : Recevoir toutes les notifications de l'utilisateur
+            description : Recevoir toutes les notifications de l'utilisateur
+            operationId: getNotifications
+            responses:
+                "200":
+                    description: les notifications ont étés envoyés
+                    content :
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Notification"
+                "403":
+                    description: Requête non autorisée
+
+            security:
+                - bearerAuth: [ ]
+
+    /notifications/{notificationId}:
+        delete:
+            parameters:
+                - in: path
+                  name: notificationId
+                  schema:
+                      type: integer
+                  required: true
+            tags:
+                - Notifications
+            summary : Supprimer la notification de l'utilisateur
+            description : Supprimer la notification de l'utilisateur
+            operationId : deleteNotification
+            responses:
+                "200":
+                    description : la notification a été supprimée
+                "404":
+                    description: la notification n'existe pas
+                "403":
+                    description: Requête non autorisée
 
 components:
     securitySchemes:
@@ -1474,3 +1516,17 @@ components:
                 endDate :
                     type: string
                     example: 2022-12-20
+            xml:
+                name : Evaluation
+
+        Notification:
+            type: object
+            properties:
+                notificationId:
+                    type: number
+                notificationMessage:
+                    type : string
+                notificationDateTime:
+                    type : string
+            xml:
+                name : Notification
