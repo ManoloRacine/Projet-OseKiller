@@ -5,6 +5,7 @@ import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.service.AuthService;
 import com.osekiller.projet.controller.payload.request.EvaluationDto;
+import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -101,6 +102,13 @@ public class ContractController {
     public ResponseEntity<Void> evaluateInternship(@PathVariable(name = "contractId") Long contractId,
                                                    @Valid @RequestBody EvaluationDto dto) throws IOException {
         contractService.evaluateIntership(contractId, dto) ;
+        return ResponseEntity.ok().build() ;
+    }
+
+    @PostMapping("/{contractId}/evaluate-intern")
+    public ResponseEntity<Void> evaluateIntern(@PathVariable(name = "contractId") Long contractId,
+                                               @Valid @RequestBody StudentEvaluationDto dto) throws IOException {
+        contractService.evaluateIntern(contractId, dto) ;
         return ResponseEntity.ok().build() ;
     }
 }

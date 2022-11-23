@@ -334,6 +334,28 @@ public class CompanyControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void getInternsHappyDay() throws Exception {
+        when(companyService.getInterns(anyLong())).thenReturn(new ArrayList<>());
+
+        //Act & Assert
+
+        mockMvc.perform(get("/companies/1/interns"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(authorities = {"COMPANY"})
+    void getInternsCompanyNotFound() throws Exception {
+        when(companyService.getInterns(anyLong())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        //Act & Assert
+
+        mockMvc.perform(get("/companies/1/interns"))
+                .andExpect(status().isNotFound());
+    }
+
 
     static String asJsonString(final Object obj) {
         try {
