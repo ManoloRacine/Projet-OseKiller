@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 @Data
-public class Student extends User {
+public class Student extends Signatory {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Cv cv = new Cv();

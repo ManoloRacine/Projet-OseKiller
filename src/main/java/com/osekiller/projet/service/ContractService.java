@@ -7,18 +7,23 @@ import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
 import com.osekiller.projet.controller.payload.response.EvaluationSimpleDto;
 import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface ContractService {
     Resource generateContract(List<String> contractTasks, long offerId, long studentId, long managerId) throws IOException;
-    List<ApplicationDto> getAcceptedApplications() ;
+    List<ApplicationDto> getAcceptedApplications();
+    List<ContractDto> getContracts();
+    Resource getContract(long contractId);
+    Resource signContract(long contractId, long signatoryId) throws IOException;
+    Resource signContract(long contractId, long signatoryId, MultipartFile signature) throws IOException;
+    boolean hasSignature(long signatoryId);
 
-    List<ContractDto> getContracts() ;
-
-    Resource getContract(long contractId) ;
-
+    List<ContractDto> getContractsByManagerId(long id);
+    List<ContractDto> getContractsByStudentId(long id);
+    List<ContractDto> getContractsByCompanyId(long id);
     List<ContractToEvaluateDto> getUnevaluatedContracts();
 
     void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException;
