@@ -32,4 +32,6 @@ public interface ContractService {
     List<EvaluationSimpleDto> getEvaluations();
 
     Resource getEvaluationPdf(Long contractId);
+
+    void saveReport(MultipartFile mockFile, long contractId, long studentId) throws IOException;
 }
