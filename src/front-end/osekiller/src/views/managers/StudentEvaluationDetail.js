@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import LoadPdf from "../../components/LoadPdf";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getEvaluationPdf } from "../../services/ManagerService";
+import { getStudentEvaluationPdf } from "../../services/ManagerService";
 
-const EvaluationDetail = () => {
+const StudentEvaluationDetail = () => {
     const [pdf, setPdf] = useState("");
 
     const navigate = useNavigate();
@@ -11,7 +11,7 @@ const EvaluationDetail = () => {
     const { contractId } = location.state;
 
     useEffect(() => {
-        getEvaluationPdf(contractId)
+        getStudentEvaluationPdf(contractId)
             .then((response) => {
                 const blob1 = new Blob([response.data], {
                     type: "application/pdf",
@@ -27,7 +27,7 @@ const EvaluationDetail = () => {
             <LoadPdf
                 src={pdf}
                 width={"50%"}
-                title={"internship-eval"}
+                title={"student-eval-pdf"}
                 type={"application/pdf"}
                 height={"800px"}
             />
@@ -35,4 +35,4 @@ const EvaluationDetail = () => {
     );
 };
 
-export default EvaluationDetail;
+export default StudentEvaluationDetail;
