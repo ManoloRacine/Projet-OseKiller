@@ -1074,6 +1074,36 @@ paths:
 
             security:
                 - bearerAuth: [ ]
+    /contracts/{contractId}/intern-evaluation:
+        get:
+            tags: 
+                - Contracts
+            summary: Obtenir l'évaluation du stagiaire
+            description: Obtenir l'évaluation du stagiaire
+            operationId: getInternEvaluation
+            parameters:
+              - in: path
+                name: contractId
+                schema:
+                    type: integer
+                required: true
+            responses:
+                "200":
+                    description: L'évaluation à été trouvé
+                    content:
+                        multipart/form-data:
+                            schema:
+                                type: object
+                                properties:
+                                    file:
+                                        type: string
+                                        format: binary
+                "403":
+                    description: Requête non autorisée
+                "404":
+                    description: Évaluation non trouvée
+              
+
     /contracts/{contractId}/sign-intern-evaluation:
         post:
             tags:
@@ -1229,6 +1259,26 @@ paths:
                     description: la notification n'existe pas
                 "403":
                     description: Requête non autorisée
+    /contracts/{contractId}/report:
+        put:
+            parameters:
+                - in: path
+                  name: contractId
+                  schema:
+                      type: integer
+                  required: true
+            tags:
+                - Contracts
+            summary : Upload le rapport du stage de l'étudiant
+            description : Upload le rapport du stage de l'étudiant
+            operationId : putReport
+            responses:
+                "200":
+                    description : le rapport a été uploadé
+                "404":
+                    description: le contrat n'existe pas
+                "403":
+                    description : Requête non autorisée
 
     /contracts/{contractId}/report:
         get:
