@@ -3,12 +3,14 @@ package com.osekiller.projet.service.implementation;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
 import com.osekiller.projet.controller.payload.response.InterviewDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
+import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Interview;
 import com.osekiller.projet.repository.InterviewRepository;
 import com.osekiller.projet.service.CurrentDateFactory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
+import com.osekiller.projet.service.NotificationsService;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -36,6 +38,8 @@ public class StudentServiceImpl implements StudentService {
 
     private InterviewRepository interviewRepository;
 
+    private NotificationsService notificationsService ;
+
     private final int LAST_MONTH = 5 ;
     private final int LAST_DAY = 31 ;
 
@@ -50,6 +54,7 @@ public class StudentServiceImpl implements StudentService {
         student.get().getCv().setValidated(true);
         student.get().getCv().setFeedback(feedback);
         studentRepository.save(student.get());
+        notificationsService.addNotification(studentId, "votre CV a été validé");
     }
 
     @Override
@@ -63,6 +68,7 @@ public class StudentServiceImpl implements StudentService {
         student.get().getCv().setValidated(false);
         student.get().getCv().setFeedback(feedback);
         studentRepository.save(student.get());
+        notificationsService.addNotification(studentId, "votre CV est invalide");
     }
 
     @Override
@@ -75,30 +81,26 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void saveCV(MultipartFile cv, long studentId) {
-        Optional<Student> student = studentRepository.findById(studentId);
-
-        if (student.isEmpty())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         String fileName = StringUtils.cleanPath(cv.getOriginalFilename());
-        student.get().getCv().setPdfName(fileName);
+        student.getCv().setPdfName(fileName);
 
         try {
-            student.get().getCv().setPdf(cv.getBytes());
+            student.getCv().setPdf(cv.getBytes());
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        studentRepository.save(student.get()) ;
-
+        studentRepository.save(student) ;
+        notificationsService.addNotificationForRole(ERole.MANAGER.name(), student.getName() + " a ajouté un CV");
     }
 
     public Resource getCV(long studentId) {
-        Optional<Student> student = studentRepository.findById(studentId) ;
-        if (student.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
-        if (cvRepository.findById(student.get().getCv().getId()).get().getPdf() == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        if (cvRepository.findById(student.getCv().getId()).get().getPdf() == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
 
-        return new ByteArrayResource(student.get().getCv().getPdf());
+        return new ByteArrayResource(student.getCv().getPdf());
     }
     public List<StudentWithCvStateDto> getStudents() {
         return studentRepository.findAll().stream().map(
@@ -155,6 +157,8 @@ public class StudentServiceImpl implements StudentService {
         }
         interview.setChosenInterviewDate(LocalDate.parse(chosenDate));
         interviewRepository.save(interview);
+        notificationsService.addNotification(interview.getOffer().getOwner().getId(),
+                interview.getInterviewee().getName() + " a acceptée une date d'interview");
     }
 
 }

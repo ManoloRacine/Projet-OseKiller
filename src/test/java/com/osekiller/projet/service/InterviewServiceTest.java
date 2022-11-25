@@ -34,6 +34,9 @@ public class InterviewServiceTest {
     OfferRepository offerRepository;
     @Mock
     InterviewRepository interviewRepository;
+
+    @Mock
+    NotificationsService notificationsService;
     @InjectMocks
     InterviewServiceImpl interviewService;
 
@@ -41,9 +44,10 @@ public class InterviewServiceTest {
     void inviteApplicantToInterviewHappyDay(){
 
         //Arrange
-
+        Offer offer = mock(Offer.class) ;
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(mock(Student.class)));
-        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(mock(Offer.class)));
+        when(offerRepository.findById(anyLong())).thenReturn(Optional.of(offer));
+        when(offer.getOwner()).thenReturn(mock(Company.class)) ;
 
         //Act
 
