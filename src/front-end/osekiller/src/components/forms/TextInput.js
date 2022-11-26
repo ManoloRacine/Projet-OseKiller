@@ -10,7 +10,7 @@ const TextInput = ({
 }) => {
     return (
         <>
-            <label htmlFor={inputName} className="form-label">
+            <label htmlFor={inputName} className="form-label px-2">
                 {label}
             </label>
             <input
