@@ -84,7 +84,7 @@ public class ContractController {
 
     @GetMapping("/{id}/intern-evaluation")
     public ResponseEntity<Resource> getInternEvaluation(@PathVariable(name = "id") Long id) {
-        Resource contract = contractService.getContract(id) ;
+        Resource contract = contractService.getInternEvaluation(id);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
                         contract.getFilename() + "\"").body(contract) ;
