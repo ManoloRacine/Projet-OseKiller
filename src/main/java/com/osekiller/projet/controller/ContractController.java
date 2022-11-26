@@ -113,4 +113,10 @@ public class ContractController {
         contractService.evaluateIntern(contractId, dto) ;
         return ResponseEntity.ok().build() ;
     }
+
+    @GetMapping("/{contractId}/report")
+    public ResponseEntity<Resource> getReport(@PathVariable(name = "contractId") Long contractId) {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION).body(contractService.getReport(contractId)) ;
+    }
 }

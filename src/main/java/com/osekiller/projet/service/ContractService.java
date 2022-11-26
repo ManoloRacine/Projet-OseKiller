@@ -32,4 +32,6 @@ public interface ContractService {
     List<EvaluationSimpleDto> getEvaluations();
 
     Resource getEvaluationPdf(Long contractId);
+
+    Resource getReport(long contractId);
 }
