@@ -470,6 +470,11 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public List<ContractDto> getContractWithInternEvaluations() {
+        return contractRepository.findAllByStudentEvaluationPdfIsNotNull().stream().map(ContractDto::from).toList();
+    }
+
+    @Override
     public void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
 

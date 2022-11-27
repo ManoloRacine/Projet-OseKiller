@@ -26,6 +26,8 @@ public interface ContractService {
     List<ContractDto> getContractsByStudentId(long id);
     List<ContractDto> getContractsByCompanyId(long id);
     List<ContractToEvaluateDto> getUnevaluatedContracts();
+    List<ContractDto> getContractWithInternEvaluations();
+
 
     void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException;
 
