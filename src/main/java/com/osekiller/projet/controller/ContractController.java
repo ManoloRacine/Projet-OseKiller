@@ -37,11 +37,13 @@ public class ContractController {
     public ResponseEntity<List<?>> getContracts(
             @RequestParam(required = false) Boolean toEvaluate,
             @RequestParam(required = false) Long signatoryId,
+            @RequestParam(required = false) Boolean hasInternEvaluation,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String header
     ) {
-        if(toEvaluate != null && signatoryId != null){
+        if(toEvaluate != null && signatoryId != null && hasInternEvaluation != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
         if(signatoryId != null){
             String jwt = header.substring(7);
             UserDto signatoryFound = authService.getUserFromToken(jwt);
@@ -61,22 +63,34 @@ public class ContractController {
             if (signatoryFound.role().equals(ERole.STUDENT.name())){
                 return ResponseEntity.ok(contractService.getContractsByStudentId(signatoryId));
             }
-
         }
-        if (toEvaluate == null) {
+
+        if (toEvaluate == null && hasInternEvaluation == null) {
             return ResponseEntity.ok(contractService.getContracts()) ;
         }
-        if (toEvaluate) {
+
+        if (Boolean.TRUE.equals(toEvaluate)) {
             return ResponseEntity.ok(contractService.getUnevaluatedContracts()) ;
         }
-        else  {
-            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED) ;
+
+        if (Boolean.TRUE.equals(hasInternEvaluation)) {
+            return ResponseEntity.ok(contractService.getContractWithInternEvaluations()) ;
         }
+
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED) ;
     }
 
     @GetMapping("/{id}/pdf")
     public ResponseEntity<Resource> getContractPdf(@PathVariable(name = "id") Long id) {
         Resource contract = contractService.getContract(id) ;
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
+                        contract.getFilename() + "\"").body(contract) ;
+    }
+
+    @GetMapping("/{id}/intern-evaluation")
+    public ResponseEntity<Resource> getInternEvaluation(@PathVariable(name = "id") Long id) {
+        Resource contract = contractService.getInternEvaluation(id);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +
                         contract.getFilename() + "\"").body(contract) ;
