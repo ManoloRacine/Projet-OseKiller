@@ -1,6 +1,7 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
+import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.service.AuthService;
 import com.osekiller.projet.service.implementation.ContractServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,9 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,5 +56,54 @@ public class ContractControllerTest {
         mockMvc.perform(get("/contracts?toEvaluate=true")
                         .header(HttpHeaders.AUTHORIZATION,"token"))
                 .andExpect(status().isOk()) ;
+    }
+
+    @Test
+    @WithMockUser()
+    void putReportHappyDay() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        when(authService.getUserFromToken(anyString())).thenReturn(mock(UserDto.class));
+
+        //Act & Assert
+        mockMvc.perform(multipart(HttpMethod.PUT, "/contracts/1/report")
+                        .file(mockMultipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION,"user-jwt"))
+                .andExpect(status().isOk()) ;
+
+        verify(contractService).saveReport(eq(mockMultipartFile), eq(1L), anyLong()) ;
+    }
+
+    @Test
+    @WithMockUser()
+    void putReportNotFound() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(contractService).saveReport(any(),anyLong(), anyLong());
+        when(authService.getUserFromToken(anyString())).thenReturn(mock(UserDto.class));
+
+        //Act & Assert
+        mockMvc.perform(multipart(HttpMethod.PUT, "/contracts/1/report")
+                        .file(mockMultipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION,"user-jwt"))
+                .andExpect(status().isNotFound()) ;
+    }
+
+    @Test
+    @WithMockUser()
+    void putReportUnauthorized() throws Exception {
+        //Arrange
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
+        doThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED)).when(contractService).saveReport(any(),anyLong(), anyLong());
+        when(authService.getUserFromToken(anyString())).thenReturn(mock(UserDto.class));
+
+        //Act & Assert
+        mockMvc.perform(multipart(HttpMethod.PUT, "/contracts/1/report")
+                        .file(mockMultipartFile)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header(HttpHeaders.AUTHORIZATION,"user-jwt"))
+                .andExpect(status().isUnauthorized()) ;
     }
 }

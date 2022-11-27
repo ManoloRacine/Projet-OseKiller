@@ -796,4 +796,13 @@ public class ContractServiceImpl implements ContractService {
             default -> "ERROR";
         };
     }
+
+    @Override
+    public void saveReport(MultipartFile file, long contractId, long studentId) throws IOException {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        if (contract.getStudent().getId() != studentId) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
+
+        contract.setReport(file.getBytes());
+        contractRepository.save(contract) ;
+    }
 }
