@@ -24,7 +24,7 @@ const Dashboard = () => {
     const handleRemoveNotif = (id) => {
         removeNotification(id).then(
             setNotifications(
-                notifications.filter((notif) => notif.notificationId != id)
+                notifications.filter((notif) => notif.notificationId !== id)
             )
         );
     };
@@ -36,7 +36,7 @@ const Dashboard = () => {
                 icon={faBell}
                 className="fa-2x"
                 style={
-                    notifications.length == 0
+                    notifications.length === 0
                         ? { color: "black" }
                         : { color: "red" }
                 }
