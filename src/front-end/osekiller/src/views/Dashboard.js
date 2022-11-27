@@ -15,10 +15,12 @@ const Dashboard = () => {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        getNotifications().then((response) => {
-            console.log(response.data);
-            setNotifications(response.data);
-        });
+        getNotifications()
+            .then((response) => {
+                console.log(response.data);
+                setNotifications(response.data);
+            })
+            .catch();
     }, [authenticatedUser.id]);
 
     const handleRemoveNotif = (id) => {
