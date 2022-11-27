@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { EvaluationCard } from "../../components/EvaluationCard";
+import { StudentEvaluationCard } from "../../components/StudentEvaluationCard";
 import { getStudentEvaluations } from "../../services/ManagerService";
 
 const StudentEvaluations = () => {
@@ -14,7 +14,7 @@ const StudentEvaluations = () => {
     return (
         <div>
             {evaluations.map((evaluation, index) => (
-                <EvaluationCard
+                <StudentEvaluationCard
                     contract={evaluation}
                     redirectTo={"/evaluation-detail"}
                 />
