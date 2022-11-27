@@ -19,10 +19,12 @@ export const App = () => {
                     color: "#2C324C",
                 }}
             >
-                <div className={"col-sm-2"}>
-                    <Header />
-                </div>
-                <div className={"col-sm-10"}>
+                {authenticatedUser && (
+                    <div className={"col-sm-2"}>
+                        <Header />
+                    </div>
+                )}
+                <div className={authenticatedUser ? "col-sm-10" : "col-sm 12"}>
                     <Outlet />
                 </div>
             </div>
