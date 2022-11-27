@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Notification {
 
