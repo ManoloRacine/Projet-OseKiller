@@ -336,6 +336,43 @@ public class ContractServiceTest {
     }
 
     @Test
+    void getReportPdfHappy() {
+        //Arrange
+        Contract contract = mock(Contract.class) ;
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.ofNullable(contract)) ;
+        when(contract.getReport()).thenReturn(new byte[16]) ;
+
+        //Act
+        Resource resource = contractService.getReport(1L) ;
+
+        //Assert
+        assertEquals(resource, new ByteArrayResource(new byte[16]));
+    }
+
+    @Test
+    void getReportNotFound() {
+        //Arrange
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
+
+        //Act && Assert
+        assertThatThrownBy(() -> contractService.getReport(1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getReportNull() {
+        //Arrange
+        Contract contract = mock(Contract.class) ;
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.ofNullable(contract)) ;
+        when(contract.getReport()).thenReturn(null) ;
+
+        //Act && Assert
+        assertThatThrownBy(() -> contractService.getReport(1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     void saveReportHappyDay() throws IOException {
         // Arrange
         Contract mockContract = mock(Contract.class) ;

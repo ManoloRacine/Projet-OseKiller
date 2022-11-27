@@ -798,6 +798,12 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public Resource getReport(long contractId) {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        if (contract.getReport() == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        return new ByteArrayResource(contract.getReport());
+    }
+    
     public void saveReport(MultipartFile file, long contractId, long studentId) throws IOException {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
         if (contract.getStudent().getId() != studentId) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;

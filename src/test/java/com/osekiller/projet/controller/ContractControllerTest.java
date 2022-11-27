@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,27 @@ public class ContractControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void getReportHappyDay() throws Exception {
+        //Arrange
+        when(contractService.getReport(1L)).thenReturn(new ByteArrayResource(new byte[16])) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/contracts/{contractId}/report", 1)).
+                andExpect(status().isOk()) ;
+    }
+
+    @Test
+    @WithMockUser(authorities = {"MANAGER"})
+    void getReportNotFound() throws Exception {
+        //Arrange
+        when(contractService.getReport(1L)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+
+        //Act & Assert
+        mockMvc.perform(get("/contracts/{contractId}/report", 1)).
+                andExpect(status().isNotFound()) ;
+    }
+    
     @WithMockUser()
     void putReportHappyDay() throws Exception {
         //Arrange

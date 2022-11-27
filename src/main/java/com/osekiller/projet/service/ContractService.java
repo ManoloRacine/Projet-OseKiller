@@ -36,5 +36,6 @@ public interface ContractService {
 
     Resource getEvaluationPdf(Long contractId);
 
+    Resource getReport(long contractId);
     void saveReport(MultipartFile file, long contractId, long studentId) throws IOException;
 }

@@ -42,5 +42,5 @@ public class Contract {
     private byte[] studentEvaluationPdf ;
 
     @Lob
-    private byte[] report ;
+    private byte[] report;
 }
