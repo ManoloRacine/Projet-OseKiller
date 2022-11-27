@@ -629,15 +629,6 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public void saveReport(MultipartFile mockFile, long contractId, long studentId) throws IOException {
-        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
-        if (contract.getStudent().getId() != studentId) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
-
-        contract.setReport(mockFile.getBytes());
-        contractRepository.save(contract) ;
-    }
-
-    @Override
     public void evaluateIntern(long contractId, StudentEvaluationDto dto) throws IOException {
         Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
 
@@ -793,5 +784,14 @@ public class ContractServiceImpl implements ContractService {
             case 4 -> "dépassent de beaucoup les attentes";
             default -> "ERROR";
         };
+    }
+
+    @Override
+    public void saveReport(MultipartFile file, long contractId, long studentId) throws IOException {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        if (contract.getStudent().getId() != studentId) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
+
+        contract.setReport(file.getBytes());
+        contractRepository.save(contract) ;
     }
 }
