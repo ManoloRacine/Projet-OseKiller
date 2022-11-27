@@ -57,7 +57,7 @@ public class ContractControllerTest {
     }
 
     @Test
-    @WithMockUser()
+    @WithMockUser(authorities = {"MANAGER"})
     void getReportHappyDay() throws Exception {
         //Arrange
         when(contractService.getReport(1L)).thenReturn(new ByteArrayResource(new byte[16])) ;
@@ -68,7 +68,7 @@ public class ContractControllerTest {
     }
 
     @Test
-    @WithMockUser()
+    @WithMockUser(authorities = {"MANAGER"})
     void getReportNotFound() throws Exception {
         //Arrange
         when(contractService.getReport(1L)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
