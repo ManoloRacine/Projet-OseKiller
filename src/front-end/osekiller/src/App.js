@@ -13,7 +13,7 @@ export const App = () => {
             value={{ authenticatedUser, setAuthenticatedUser }}
         >
             <div
-                className="App h-100 p-3 row"
+                className="App vh-100 p-3 row m-0"
                 style={{
                     backgroundColor: "#da8362",
                     color: "#2C324C",

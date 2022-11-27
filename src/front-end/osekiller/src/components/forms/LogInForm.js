@@ -2,10 +2,7 @@ import ErrorMessage from "../ErrorMessage";
 
 const LogInForm = (props) => {
     return (
-        <div
-            className="d-flex flex-column justify-content-evenly align-items-center"
-            style={{ minHeight: "95vh" }}
-        >
+        <div className="d-flex flex-column justify-content-evenly align-items-center h-100">
             <h1 className="display-1">{props.title}</h1>
             <form
                 className="d-flex justify-content-between align-items-center w-50 p-5 text-white rounded"
