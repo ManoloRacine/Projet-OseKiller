@@ -16,7 +16,7 @@ const StudentEvaluations = () => {
             {evaluations.map((evaluation, index) => (
                 <StudentEvaluationCard
                     contract={evaluation}
-                    redirectTo={"/evaluation-detail"}
+                    redirectTo={"/intern-evaluation-detail"}
                 />
             ))}
         </div>
