@@ -21,6 +21,7 @@ export const ValidateUsers = () => {
 
     return (
         <div>
+            <h2 className={"text-center"}>Validation des utilisateurs</h2>
             {users.map(
                 (user, key) =>
                     !user.enabled && (

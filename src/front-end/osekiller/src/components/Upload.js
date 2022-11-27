@@ -19,7 +19,7 @@ const Upload = ({
     const userId = useContext(AuthenticatedUserContext)?.authenticatedUser?.id;
 
     return (
-        <main className="d-flex justify-content-center align-items-center p-3 vh-100">
+        <main className="d-flex justify-content-center align-items-center p-3 h-100">
             <div
                 className="d-flex flex-column col-sm-10 p-4 rounded text-white"
                 style={{ backgroundColor: "#2C324C" }}

@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { getOffers } from "../../services/OfferService";
 import { OfferCard } from "../../components/OfferCard";
 import { getSessionFromDate } from "../../services/StudentService";
-import { Dropdown } from "bootstrap";
-import { ReactDOM } from "react";
 
 const OffersManager = () => {
     const [offers, setOffers] = useState([]);
@@ -53,6 +51,7 @@ const OffersManager = () => {
 
     return (
         <div>
+            <h2 className="text-center">Validation des offres de stages</h2>
             <button
                 onClick={changeValidationFilter}
                 className="btn btn-primary"

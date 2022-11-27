@@ -7,7 +7,7 @@ const Dashboard = () => {
     const { authenticatedUser } = useContext(AuthenticatedUserContext);
 
     return (
-        <div className="p-3">
+        <div>
             <h1>{`Bonjour, ${authenticatedUser.name}`}</h1>
 
             {authenticatedUser.role === "STUDENT" && <StudentDashboard />}

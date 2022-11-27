@@ -14,18 +14,22 @@ const UploadInternship = () => {
     const [position, setPosition] = useState(
         state?.position ? state.position : ""
     );
-    const [salary, setSalary] = useState(state?.salary ? String(state.salary) : "");
+    const [salary, setSalary] = useState(
+        state?.salary ? String(state.salary) : ""
+    );
     const [startDate, setStartDate] = useState(
         state?.startDate ? String(state.startDate) : ""
     );
-    const [endDate, setEndDate] = useState(state?.endDate ? String(state.endDate) : "");
+    const [endDate, setEndDate] = useState(
+        state?.endDate ? String(state.endDate) : ""
+    );
     const [selectedFile, setSelectedFile] = useState({});
     const [isOfferSubmitted, setIsOfferSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleSubmit = (userId) => {
         console.log(position);
-        console.log(typeof salary)
+        console.log(typeof salary);
         if (position.trim() === "") {
             setErrorMessage("La position ne doit pas être vide");
             return;
@@ -69,6 +73,7 @@ const UploadInternship = () => {
     };
     return (
         <div>
+            <h2 className="text-center">Téléverser une offre de stage</h2>
             <UploadInternshipForm
                 setStartDate={({ target }) => setStartDate(target.value)}
                 endDate={endDate}

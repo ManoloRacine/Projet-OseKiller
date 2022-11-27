@@ -213,7 +213,7 @@ const SignUpForm = ({
     return (
         <div
             className="d-flex flex-column justify-content-evenly align-items-center"
-            style={{ minHeight: "90vh" }}
+            style={{ minHeight: "95vh" }}
         >
             <div className="text-center">
                 <h1 className="display-1">{title}</h1>

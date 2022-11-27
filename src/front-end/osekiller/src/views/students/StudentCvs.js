@@ -13,6 +13,7 @@ const StudentCvs = () => {
 
     return (
         <div className="row">
+            <h2 className="text-center">Validation des CV</h2>
             <div className="col-4">
                 <ul className="text-center">
                     {students.map((student, index) =>

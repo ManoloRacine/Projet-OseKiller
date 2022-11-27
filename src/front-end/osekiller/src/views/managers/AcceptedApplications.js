@@ -156,7 +156,7 @@ const AcceptedApplications = () => {
             return false;
         } else if (isContractSigned()) {
             return false;
-        } else if (authenticatedUser?.role === "MANAGER"){
+        } else if (authenticatedUser?.role === "MANAGER") {
             return (
                 acceptedApplications[currentIdx]?.managerId ===
                 authenticatedUser?.id
@@ -166,6 +166,7 @@ const AcceptedApplications = () => {
 
     return (
         <>
+            <h2 className="text-center">Ententes de stages</h2>
             <div>
                 {acceptedApplications.map((acceptedApplication, index) => (
                     <AcceptedApplicationCard
