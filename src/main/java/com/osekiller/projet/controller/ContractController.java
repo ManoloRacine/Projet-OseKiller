@@ -127,4 +127,22 @@ public class ContractController {
         contractService.evaluateIntern(contractId, dto) ;
         return ResponseEntity.ok().build() ;
     }
+
+    @GetMapping("/{contractId}/report")
+    public ResponseEntity<Resource> getReport(@PathVariable(name = "contractId") Long contractId) {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION).body(contractService.getReport(contractId)) ;
+    }
+    
+    @PutMapping("/{contractId}/report")
+    public ResponseEntity<Void> putReport(@PathVariable(name = "contractId") Long contractId,
+                                          @RequestHeader(HttpHeaders.AUTHORIZATION) String header,
+                                          @Valid @RequestBody MultipartFile file) throws IOException {
+        String jwt = header.substring(7);
+        UserDto userDto = authService.getUserFromToken(jwt);
+
+        contractService.saveReport(file, contractId, userDto.id());
+
+        return ResponseEntity.ok().build() ;
+    }
 }
