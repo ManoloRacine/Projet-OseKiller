@@ -17,6 +17,7 @@ public interface ContractService {
     List<ApplicationDto> getAcceptedApplications();
     List<ContractDto> getContracts();
     Resource getContract(long contractId);
+    Resource getInternEvaluation(long contractId);
     Resource signContract(long contractId, long signatoryId) throws IOException;
     Resource signContract(long contractId, long signatoryId, MultipartFile signature) throws IOException;
     boolean hasSignature(long signatoryId);
@@ -25,6 +26,8 @@ public interface ContractService {
     List<ContractDto> getContractsByStudentId(long id);
     List<ContractDto> getContractsByCompanyId(long id);
     List<ContractToEvaluateDto> getUnevaluatedContracts();
+    List<ContractDto> getContractWithInternEvaluations();
+
 
     void evaluateIntership(Long contractId, EvaluationDto dto) throws IOException;
 
@@ -32,4 +35,7 @@ public interface ContractService {
     List<EvaluationSimpleDto> getEvaluations();
 
     Resource getEvaluationPdf(Long contractId);
+
+    Resource getReport(long contractId);
+    void saveReport(MultipartFile file, long contractId, long studentId) throws IOException;
 }

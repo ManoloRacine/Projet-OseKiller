@@ -8,8 +8,9 @@ import java.util.Optional;
 
 public interface ContractRepository extends CrudRepository<Contract, Long> {
     Optional<Contract> findByStudent_IdAndOffer_Id(Long student_id, Long offer_id);
-    List<Contract> findAllByEvaluationPdfIsNull() ;
-    List<Contract> findAllByEvaluationPdfIsNotNull() ;
+    List<Contract> findAllByEvaluationPdfIsNull();
+    List<Contract> findAllByEvaluationPdfIsNotNull();
+    List<Contract> findAllByStudentEvaluationPdfIsNotNull();
     List<Contract> findAllByManager_Id(Long id);
 
     List<Contract> findAllByStudent_Id(Long id);
