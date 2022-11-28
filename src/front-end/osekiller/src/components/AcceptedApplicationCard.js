@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { AuthenticatedUserContext } from "../App";
 
 const AcceptedApplicationCard = ({
@@ -56,6 +57,18 @@ const AcceptedApplicationCard = ({
                     >
                         Créer une entente de stage
                     </button>
+                    )
+                }
+                {
+                    userRole === "STUDENT" && application.contractId && (
+
+                    <Link to={"/upload-report"} state={{contractId: application.contractId}}>
+                        <button
+                            className={"btn btn-primary"}
+                        >
+                            Soumettre un rapport de stage
+                        </button>
+                    </Link>
                     )
                 }
             </div>

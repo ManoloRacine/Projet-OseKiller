@@ -25,7 +25,7 @@ const AcceptedApplications = () => {
     )?.authenticatedUser;
     const [acceptedApplications, setAcceptedApplications] = useState([]);
     const [currentApplication, setCurrentApplication] = useState({});
-    const [currentContractPdf, setCurrentContractPdf] = useState("");
+    const [currentPdf, setCurrentPdf] = useState("");
     const [currentIdx, setCurrentIdx] = useState(0);
     const [modalTitle, setModalTitle] = useState("");
     const [tasks, setTasks] = useState([]);
@@ -38,15 +38,16 @@ const AcceptedApplications = () => {
     const handleShowTasksModal = (application) => {
         setModalTitle("Tâches et Responsabilités");
         setCurrentApplication(application);
-        setCurrentContractPdf(undefined);
+        setCurrentPdf(undefined);
         setShowModal(true);
     };
     const handleShowContractModal = (contract) => {
         setModalTitle("Entente de stage");
-        setCurrentContractPdf(contract);
+        setCurrentPdf(contract);
         setCurrentApplication(undefined);
         setShowModal(true);
     };
+    
     const handleShowContractModalById = (contractId) => {
         getContract(contractId).then((response) => {
             const blob = new Blob([response.data], {
@@ -100,7 +101,7 @@ const AcceptedApplications = () => {
                             type: "application/pdf",
                         });
                         const data_url = window.URL.createObjectURL(blob2);
-                        setCurrentContractPdf(data_url);
+                        setCurrentPdf(data_url);
                     }
                 );
             })
@@ -208,9 +209,9 @@ const AcceptedApplications = () => {
                             </Button>
                         </div>
                     )}
-                    {currentContractPdf && (
+                    {currentPdf && (
                         <LoadPdf
-                            src={currentContractPdf}
+                            src={currentPdf}
                             width={"100%"}
                             title={"contract"}
                             type={"application/json"}

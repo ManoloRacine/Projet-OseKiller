@@ -50,3 +50,12 @@ export const evaluateIntern = async (contractId, formData) => {
         },
     });
 };
+
+export const uploadReport = async (contractId, data) => {
+    return axios.put(`/contracts/${contractId}/report`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+}

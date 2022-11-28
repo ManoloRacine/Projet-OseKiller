@@ -18,7 +18,8 @@ public record ContractDto(
         LocalDate studentSigningDate,
         LocalDate managerSigningDate,
         LocalDate companySigningDate,
-        Boolean hasContractPdf
+        Boolean hasContractPdf,
+        Boolean hasReport
 ) {
     public static ContractDto from(Contract contract){
         return new ContractDto(
@@ -33,7 +34,8 @@ public record ContractDto(
                 contract.getStudentSigningDate(),
                 contract.getManagerSigningDate(),
                 contract.getCompanySigningDate(),
-                contract.getPdf() != null
+                contract.getPdf() != null,
+                contract.getReport() != null
                 );
     }
 }
