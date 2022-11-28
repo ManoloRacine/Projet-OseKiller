@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                                 .antMatchers(HttpMethod.GET,"/contracts").permitAll()
                                 .antMatchers(HttpMethod.GET,"/contracts?signatoryId={signatoryId}").hasAnyAuthority(ERole.COMPANY.name(),ERole.MANAGER.name(),ERole.STUDENT.name())
                                 .antMatchers(HttpMethod.GET,"/contracts/{contractId}/evaluate-internship").hasAuthority(ERole.TEACHER.name())
+                                .antMatchers(HttpMethod.GET,"/contracts/{contractId}/report").hasAuthority(ERole.MANAGER.name())
                                 //Le reste doivent être autentifié
                                 .anyRequest().authenticated()
                 )

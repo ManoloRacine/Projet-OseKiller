@@ -5,7 +5,9 @@ import com.osekiller.projet.controller.payload.response.ContractDto;
 import com.osekiller.projet.controller.payload.response.ContractToEvaluateDto;
 import com.osekiller.projet.controller.payload.response.EvaluationSimpleDto;
 import com.osekiller.projet.model.Contract;
+import com.osekiller.projet.model.Cv;
 import com.osekiller.projet.model.Offer;
+import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
@@ -29,6 +31,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.assertj.core.api.Assertions.*;
@@ -330,5 +333,108 @@ public class ContractServiceTest {
         assertThatThrownBy(() -> contractService.getEvaluationPdf(1L))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getReportPdfHappy() {
+        //Arrange
+        Contract contract = mock(Contract.class) ;
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.ofNullable(contract)) ;
+        when(contract.getReport()).thenReturn(new byte[16]) ;
+
+        //Act
+        Resource resource = contractService.getReport(1L) ;
+
+        //Assert
+        assertEquals(resource, new ByteArrayResource(new byte[16]));
+    }
+
+    @Test
+    void getReportNotFound() {
+        //Arrange
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.empty()) ;
+
+        //Act && Assert
+        assertThatThrownBy(() -> contractService.getReport(1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getReportNull() {
+        //Arrange
+        Contract contract = mock(Contract.class) ;
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.ofNullable(contract)) ;
+        when(contract.getReport()).thenReturn(null) ;
+
+        //Act && Assert
+        assertThatThrownBy(() -> contractService.getReport(1L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    void saveReportHappyDay() throws IOException {
+        // Arrange
+        Contract mockContract = mock(Contract.class) ;
+        Student mockStudent = mock(Student.class) ;
+        when(mockContract.getStudent()).thenReturn(mockStudent) ;
+        when(mockStudent.getId()).thenReturn(2L) ;
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "test".getBytes()
+        ) ;
+
+        when(contractRepository.findById(any())).thenReturn(Optional.of(mockContract));
+
+        // Act
+        contractService.saveReport(mockFile, 1L, 2L);
+
+        // Assert
+        verify(contractRepository).save(any(Contract.class)) ;
+        verify(mockContract).setReport(mockFile.getBytes()) ;
+    }
+
+    @Test
+    void saveReportContractNotFound() {
+        //Arrange
+        when(contractRepository.findById(1L)).thenReturn(Optional.empty()) ;
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "test".getBytes()
+        ) ;
+
+        //Act & Assert
+        assertThatThrownBy(() -> contractService.saveReport(mockFile, 1L, 2L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
+
+
+    }
+
+    @Test
+    void saveReportNotStudent() {
+        //Arrange
+        Contract mockContract = mock(Contract.class) ;
+        when(contractRepository.findById(1L)).thenReturn(Optional.of(mockContract)) ;
+        Student mockStudent = mock(Student.class) ;
+        when(mockContract.getStudent()).thenReturn(mockStudent) ;
+        when(mockStudent.getId()).thenReturn(5L) ;
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "test".getBytes()
+        ) ;
+
+        //Act & Assert
+        assertThatThrownBy(() -> contractService.saveReport(mockFile, 1L, 2L))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("status").isEqualTo(HttpStatus.UNAUTHORIZED);
+
+
     }
 }
