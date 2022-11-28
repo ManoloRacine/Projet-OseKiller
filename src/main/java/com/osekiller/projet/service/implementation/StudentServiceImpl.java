@@ -76,6 +76,9 @@ public class StudentServiceImpl implements StudentService {
         Student student = studentRepository.findByIdAndFetchApplications(studentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+        System.out.println(student.getApplications().size());
+        System.out.println(student.getName());
+
         return student.getApplications().stream().map(GeneralOfferDto::from).toList();
     }
 
