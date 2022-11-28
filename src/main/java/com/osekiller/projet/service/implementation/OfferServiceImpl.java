@@ -2,8 +2,8 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.GeneralOfferDto;
-import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponse;
+import com.osekiller.projet.controller.payload.response.UserInfoDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Company;
@@ -18,16 +18,13 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

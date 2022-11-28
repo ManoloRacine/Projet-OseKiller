@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { Button } from "react-bootstrap";
+import { AuthenticatedUserContext } from "../App";
 
 const AcceptedApplicationCard = ({
     application,
@@ -6,6 +8,8 @@ const AcceptedApplicationCard = ({
     handleShowContractModalById,
     setSelectedApplicationIdx,
 }) => {
+    const userRole = useContext(AuthenticatedUserContext)?.authenticatedUser
+        ?.role;
     return (
         <>
             <div
@@ -29,7 +33,7 @@ const AcceptedApplicationCard = ({
                     <p className={"fs-4 text-decoration-underline"}>Étudiant</p>
                     <p>{application.studentName}</p>
                 </div>
-                {application.contractId ? (
+                {application.contractId && application.hasContractPdf && (
                     <Button
                         variant="info"
                         onClick={() => {
@@ -39,7 +43,10 @@ const AcceptedApplicationCard = ({
                     >
                         Voir l'entente de Stage
                     </Button>
-                ) : (
+                )}
+                {
+                    userRole === "MANAGER" && !application.hasContractPdf && (
+                    
                     <button
                         className={"btn btn-primary"}
                         onClick={() => {
@@ -49,7 +56,8 @@ const AcceptedApplicationCard = ({
                     >
                         Créer une entente de stage
                     </button>
-                )}
+                    )
+                }
             </div>
         </>
     );

@@ -1,7 +1,6 @@
 package com.osekiller.projet.service;
 
 import com.osekiller.projet.controller.payload.response.NotificationDto;
-import com.osekiller.projet.model.Notification;
 
 import java.util.List;
 

@@ -1,11 +1,10 @@
 package com.osekiller.projet.controller;
 
-import com.osekiller.projet.controller.payload.response.ContractDto;
+import com.osekiller.projet.controller.payload.request.EvaluationDto;
+import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
 import com.osekiller.projet.controller.payload.response.UserDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.service.AuthService;
-import com.osekiller.projet.controller.payload.request.EvaluationDto;
-import com.osekiller.projet.controller.payload.request.StudentEvaluationDto;
 import com.osekiller.projet.service.ContractService;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 
 import javax.validation.Valid;
 import java.io.IOException;

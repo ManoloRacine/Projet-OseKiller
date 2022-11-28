@@ -1,9 +1,7 @@
 package com.osekiller.projet.service;
 
-import com.osekiller.projet.controller.payload.request.OfferDto;
 import com.osekiller.projet.controller.payload.response.InternDto;
 import com.osekiller.projet.controller.payload.response.OfferDtoResponseNoPdf;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

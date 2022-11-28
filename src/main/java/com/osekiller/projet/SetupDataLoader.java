@@ -7,13 +7,11 @@ import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Manager;
 import com.osekiller.projet.model.user.Student;
-import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.model.user.Teacher;
+import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
 import com.osekiller.projet.repository.user.*;
-import com.osekiller.projet.service.CompanyService;
 import com.osekiller.projet.service.ContractService;
-import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -22,10 +20,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -54,11 +49,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         initializeRoles();
         initializeCompanies();
-        bootStrapOffers();
         initializeManagers();
         initializeStudents();
-        bootStrapContract();
         initializeTeachers();
+        bootStrapOffers();
+        //bootStrapContract();
+
 
         /*
         try {
@@ -78,10 +74,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Transactional
     void bootStrapContract() {
-        Optional<Manager> manager = managerRepository.findByEmail("testmanager@osk.com") ;
-        Optional<Student> student = studentRepository.findByEmail("teststudent1@osk.com") ;
-        Optional<Offer> offer = Optional.ofNullable(offerRepository.findAll().get(0));
-        Contract contract = new Contract(student.get(), offer.get(), manager.get()) ;
+        Manager manager = managerRepository.findByEmail("testmanager@osk.com").orElseThrow(EntityNotFoundException::new);
+        Student student = studentRepository.findByEmail("teststudent1@osk.com").orElseThrow(EntityNotFoundException::new);
+        Offer offer = offerRepository.findAllByAcceptedIsTrue().get(0);
+        Contract contract = new Contract(student, offer, manager) ;
         contractRepository.save(contract) ;
         System.out.println(contract.getId());
     }
@@ -92,7 +88,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         if (company.isPresent()) {
             Offer offer1 = new Offer(company.get(), "test1", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
             Offer offer2 = new Offer(company.get(), "test2", 1.0, LocalDate.of(2022, 12, 14), LocalDate.of(2023, 12, 16)) ;
+            Student student = studentRepository.findByEmail("teststudent1@osk.com").orElseThrow(EntityNotFoundException::new);
             offer2.setAccepted(true);
+            offer2.getApplicants().add(student);
+            offer2.getAcceptedApplicants().add(student);
             Offer offer3 = new Offer(company.get(), "test3", 1.0, LocalDate.of(2019, 12, 14), LocalDate.of(2020, 12, 16)) ;
             offer3.setAccepted(true);
             Offer offer4 = new Offer(company.get(), "test4", 1.0, LocalDate.of(2022, 12, 14), LocalDate.of(2023, 12, 16)) ;

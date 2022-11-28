@@ -1,6 +1,5 @@
 package com.osekiller.projet.controller.payload.response;
 
-import com.osekiller.projet.model.Interview;
 import com.osekiller.projet.model.Notification;
 
 import javax.validation.constraints.NotNull;

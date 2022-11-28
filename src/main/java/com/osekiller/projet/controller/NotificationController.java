@@ -1,8 +1,6 @@
 package com.osekiller.projet.controller;
 
 import com.osekiller.projet.controller.payload.response.NotificationDto;
-import com.osekiller.projet.controller.payload.response.UserDto;
-import com.osekiller.projet.model.Notification;
 import com.osekiller.projet.service.AuthService;
 import com.osekiller.projet.service.NotificationsService;
 import lombok.AllArgsConstructor;
