@@ -269,6 +269,12 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public Resource getInternEvaluation(long contractId) {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        return new ByteArrayResource(contract.getStudentEvaluationPdf()) ;
+    }
+
+    @Override
     public Resource signContract(long contractId, long signatoryId) throws IOException {
         Contract contract = contractSignatoryGuardClause(contractId, signatoryId);
 
@@ -461,6 +467,11 @@ public class ContractServiceImpl implements ContractService {
         List<ContractToEvaluateDto> dtos = new ArrayList<>() ;
         contractRepository.findAllByEvaluationPdfIsNull().stream().forEach(contract -> dtos.add(ContractToEvaluateDto.from(contract)));
         return dtos ;
+    }
+
+    @Override
+    public List<ContractDto> getContractWithInternEvaluations() {
+        return contractRepository.findAllByStudentEvaluationPdfIsNotNull().stream().map(ContractDto::from).toList();
     }
 
     @Override
@@ -784,5 +795,20 @@ public class ContractServiceImpl implements ContractService {
             case 4 -> "dépassent de beaucoup les attentes";
             default -> "ERROR";
         };
+    }
+
+    @Override
+    public Resource getReport(long contractId) {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        if (contract.getReport() == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND) ;
+        return new ByteArrayResource(contract.getReport());
+    }
+    
+    public void saveReport(MultipartFile file, long contractId, long studentId) throws IOException {
+        Contract contract = contractRepository.findById(contractId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)) ;
+        if (contract.getStudent().getId() != studentId) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED) ;
+
+        contract.setReport(file.getBytes());
+        contractRepository.save(contract) ;
     }
 }

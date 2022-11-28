@@ -41,3 +41,12 @@ export const getContracts = (userId) => {
         },
     });
 };
+
+export const evaluateIntern = async (contractId, formData) => {
+    return axios.post(`/contracts/${contractId}/evaluate-intern`, formData, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
