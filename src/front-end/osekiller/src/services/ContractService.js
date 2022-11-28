@@ -59,3 +59,13 @@ export const uploadReport = async (contractId, data) => {
         },
     });
 }
+
+export const getReport = (contractId) => {
+    return axios.get(`/contracts/${contractId}/report`, {
+        responseType: "arraybuffer",
+        headers: {
+            "Content-Type": "application/pdf",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};

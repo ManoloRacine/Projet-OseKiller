@@ -7,6 +7,7 @@ import {
     generateContract,
     getContract,
     getContracts,
+    getReport,
 } from "../../services/ContractService";
 import Modal from "react-bootstrap/Modal";
 
@@ -41,9 +42,9 @@ const AcceptedApplications = () => {
         setCurrentPdf(undefined);
         setShowModal(true);
     };
-    const handleShowContractModal = (contract) => {
-        setModalTitle("Entente de stage");
-        setCurrentPdf(contract);
+    const handleShowPdfModal = (pdf, title) => {
+        setModalTitle(title);
+        setCurrentPdf(pdf);
         setCurrentApplication(undefined);
         setShowModal(true);
     };
@@ -54,9 +55,20 @@ const AcceptedApplications = () => {
                 type: "application/pdf",
             });
             const data_url = window.URL.createObjectURL(blob);
-            handleShowContractModal(data_url);
+            handleShowPdfModal(data_url, "Entente de stage");
         });
     };
+
+    const handleShowReportModalById = (contractId) => {
+        getReport(contractId).then((response) => {
+            const blob = new Blob([response.data], {
+                type: "application/pdf",
+            });
+            const data_url = window.URL.createObjectURL(blob);
+            handleShowPdfModal(data_url, "Rapport de stage");
+        });
+    };
+
     const handleChangeTask = (index, newText) => {
         const newTaskState = [...tasks];
         newTaskState[index] = newText;
@@ -81,7 +93,7 @@ const AcceptedApplications = () => {
                     type: "application/pdf",
                 });
                 const data_url = window.URL.createObjectURL(blob);
-                handleShowContractModal(data_url);
+                handleShowPdfModal(data_url);
             })
             .finally(() => fetchApplications());
         handleCloseModal();
@@ -172,6 +184,9 @@ const AcceptedApplications = () => {
                     <AcceptedApplicationCard
                         application={acceptedApplication}
                         showContractGenerationModal={handleShowTasksModal}
+                        handleShowReportModalById={
+                            handleShowReportModalById
+                        }
                         handleShowContractModalById={
                             handleShowContractModalById
                         }

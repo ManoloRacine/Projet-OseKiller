@@ -19,7 +19,8 @@ public record ApplicationDto(
         LocalDate managerSigningDate,
         LocalDate companySigningDate,
         Long managerId,
-        Boolean hasContractPdf
+        Boolean hasContractPdf,
+        Boolean hasReport
 ) {
     public static ApplicationDto from (Offer offer, Student student, Contract contract){
         return new ApplicationDto(
@@ -32,7 +33,8 @@ public record ApplicationDto(
                 (contract == null ? null : contract.getManagerSigningDate()),
                 (contract == null ? null : contract.getCompanySigningDate()),
                 (contract == null ? null : contract.getManager().getId()),
-                (contract == null ? null : contract.getPdf() != null)
+                (contract == null ? null : contract.getPdf() != null),
+                (contract == null ? null : contract.getReport() != null)
                 );
     }
 }

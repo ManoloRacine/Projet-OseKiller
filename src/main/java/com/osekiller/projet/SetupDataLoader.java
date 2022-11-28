@@ -89,9 +89,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             Offer offer1 = new Offer(company.get(), "test1", 1.0, LocalDate.of(2002, 12, 14), LocalDate.of(2002, 12, 16)) ;
             Offer offer2 = new Offer(company.get(), "test2", 1.0, LocalDate.of(2022, 12, 14), LocalDate.of(2023, 12, 16)) ;
             Student student = studentRepository.findByEmail("teststudent1@osk.com").orElseThrow(EntityNotFoundException::new);
+            Student studentWithApplications = studentRepository.findByIdAndFetchApplications(student.getId()).orElseThrow(EntityNotFoundException::new);
             offer2.setAccepted(true);
             offer2.getApplicants().add(student);
             offer2.getAcceptedApplicants().add(student);
+            studentWithApplications.getApplications().add(offer2);
+            studentWithApplications.getAcceptedApplications().add(offer2);
             Offer offer3 = new Offer(company.get(), "test3", 1.0, LocalDate.of(2019, 12, 14), LocalDate.of(2020, 12, 16)) ;
             offer3.setAccepted(true);
             Offer offer4 = new Offer(company.get(), "test4", 1.0, LocalDate.of(2022, 12, 14), LocalDate.of(2023, 12, 16)) ;

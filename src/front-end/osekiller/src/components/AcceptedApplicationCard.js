@@ -8,6 +8,7 @@ const AcceptedApplicationCard = ({
     showContractGenerationModal,
     handleShowContractModalById,
     setSelectedApplicationIdx,
+    handleShowReportModalById,
 }) => {
     const userRole = useContext(AuthenticatedUserContext)?.authenticatedUser
         ?.role;
@@ -60,7 +61,20 @@ const AcceptedApplicationCard = ({
                     )
                 }
                 {
-                    userRole === "STUDENT" && application.contractId && (
+                    userRole === "MANAGER" && application.hasReport && (
+                    <Button
+                        variant="warning"
+                        onClick={() => {
+                            handleShowReportModalById(application.contractId);
+                            setSelectedApplicationIdx();
+                        }}
+                    >
+                        Voir le rapport de Stage
+                    </Button>
+                    )
+                }
+                {
+                    userRole === "STUDENT" && application.contractId && application.hasContractPdf && (
 
                     <Link to={"/upload-report"} state={{contractId: application.contractId}}>
                         <button
