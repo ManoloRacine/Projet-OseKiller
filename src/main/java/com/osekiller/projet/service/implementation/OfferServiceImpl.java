@@ -118,6 +118,8 @@ public class OfferServiceImpl implements OfferService {
         offer.setSalary(offerDto.salary());
         offer.setStartDate(LocalDate.parse(offerDto.startDate()));
         offer.setEndDate(LocalDate.parse(offerDto.endDate()));
+        offer.setFeedback(null);
+        offer.setAccepted(false);
 
         offerRepository.save(offer);
     }
