@@ -205,6 +205,14 @@ export const Header = () => {
                             Évaluer des milieux de stage
                         </Link>
                     )}
+                    {authenticatedUser.role === "MANAGER" && (
+                        <Link
+                            to={"/intern-evaluations"}
+                            className="m-4 fs-2 d-flex align-items-center"
+                        >
+                            Évaluation des stagiaires
+                        </Link>
+                    )}
                 </div>
 
                 <button className="btn btn-danger mt-auto" onClick={logout}>
