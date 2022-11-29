@@ -98,7 +98,7 @@ public class ContractControllerTest {
     }
 
     @Test
-    @WithMockUser()
+    @WithMockUser(authorities = { "STUDENT" })
     void putReportNotFound() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;
@@ -114,7 +114,7 @@ public class ContractControllerTest {
     }
 
     @Test
-    @WithMockUser()
+    @WithMockUser(authorities = { "STUDENT" })
     void putReportUnauthorized() throws Exception {
         //Arrange
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "test".getBytes()) ;

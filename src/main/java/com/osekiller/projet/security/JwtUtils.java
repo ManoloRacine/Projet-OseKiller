@@ -40,7 +40,7 @@ public class JwtUtils {
     }
 
     //check if the token has expired
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
@@ -62,7 +62,7 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    private Boolean isTokenExpiredForTokenExpirationTime(String token){
+    public Boolean isTokenExpiredForTokenExpirationTime(String token){
         return getExpirationDateFromToken(token).toInstant().isBefore(Instant.now().minusMillis(TOKEN_EXPIRATION));
     }
 
