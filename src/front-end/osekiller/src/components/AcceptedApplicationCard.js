@@ -74,7 +74,7 @@ const AcceptedApplicationCard = ({
                     )
                 }
                 {
-                    userRole === "STUDENT" && application.contractId && application.hasContractPdf && (
+                    userRole === "STUDENT" && application.contractId && application.hasContractPdf && application.studentSigningDate && (
 
                     <Link to={"/upload-report"} state={{contractId: application.contractId}}>
                         <button
