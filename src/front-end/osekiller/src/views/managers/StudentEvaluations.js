@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { StudentEvaluationCard } from "../../components/StudentEvaluationCard";
 import { getStudentEvaluations } from "../../services/ManagerService";
 
-const StudentEvaluations = () => {
+export const StudentEvaluations = () => {
     const [evaluations, setEvaluations] = useState([]);
 
     useEffect(() => {
@@ -13,6 +13,7 @@ const StudentEvaluations = () => {
 
     return (
         <div>
+            <h2 className="text-center">Évaluation des stagiaires</h2>
             {evaluations.map((evaluation, index) => (
                 <StudentEvaluationCard
                     contract={evaluation}

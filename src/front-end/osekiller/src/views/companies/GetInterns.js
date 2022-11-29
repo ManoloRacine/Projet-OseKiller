@@ -21,6 +21,7 @@ const GetInterns = () => {
 
     return (
         <div>
+            <h2 className="text-center">Évaluations des stagiaires</h2>
             {interns.map((intern, index) => (
                 <div
                     key={index}

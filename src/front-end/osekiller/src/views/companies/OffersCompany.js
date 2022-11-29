@@ -17,6 +17,7 @@ const OffersCompany = () => {
 
     return (
         <>
+            <h2 className="text-center">Offres de stages</h2>
             {offers.map((offer, index) => (
                 <OfferCard
                     key={index}

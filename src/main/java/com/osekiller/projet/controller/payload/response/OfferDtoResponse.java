@@ -1,6 +1,5 @@
 package com.osekiller.projet.controller.payload.response;
 
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
 import javax.validation.constraints.NotBlank;

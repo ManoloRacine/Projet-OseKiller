@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getNotifications, removeNotification } from "../services/UserService";
 import { Modal } from "react-bootstrap";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
-import { faX } from "@fortawesome/free-solid-svg-icons";
 
 const Dashboard = () => {
     const { authenticatedUser } = useContext(AuthenticatedUserContext);
@@ -30,18 +29,27 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="p-3">
-            <h1>{`Bonjour, ${authenticatedUser.name}`}</h1>
-            <FontAwesomeIcon
-                icon={faBell}
-                className="fa-2x"
-                style={
-                    notifications.length === 0
-                        ? { color: "black" }
-                        : { color: "red" }
-                }
-                onClick={() => setShowModal(true)}
-            />
+        <div>
+            <div className={"d-flex align-items-center"}>
+                <h1
+                    className={"m-0 me-3"}
+                >{`Bonjour, ${authenticatedUser.name}`}</h1>
+
+                <button
+                    className="btn ms-auto d-flex align-items-center"
+                    style={{ backgroundColor: "#2C324C" }}
+                    onClick={() => setShowModal(true)}
+                >
+                    <FontAwesomeIcon
+                        icon={faBell}
+                        className="fa-2x text-white me-3"
+                    />
+                    <p className={"fs-5 text-white m-0 me-1"}>Notifications</p>
+                    { notifications.length > 0 && <span className="badge bg-danger mt-auto">
+                        {notifications.length}
+                    </span>}
+                </button>
+            </div>
             {authenticatedUser.role === "STUDENT" && <StudentDashboard />}
             {authenticatedUser.role === "COMPANY" && <CompanyDashboard />}
             <Modal

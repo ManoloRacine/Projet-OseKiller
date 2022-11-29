@@ -11,7 +11,6 @@ import com.osekiller.projet.controller.payload.response.EvaluationSimpleDto;
 import com.osekiller.projet.model.Contract;
 import com.osekiller.projet.model.Offer;
 import com.osekiller.projet.model.user.Manager;
-import com.osekiller.projet.model.user.Signatory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.ContractRepository;
 import com.osekiller.projet.repository.OfferRepository;
@@ -36,7 +35,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -240,9 +241,11 @@ public class ContractServiceImpl implements ContractService {
 
     public List<ApplicationDto> getAcceptedApplications() {
         List<ApplicationDto> dtos = new ArrayList<>();
+        System.out.println("There is");
         offerRepository.findAllByHasAcceptedApplicants().forEach(
                 offer -> offer.getAcceptedApplicants().forEach(
                         student -> {
+                            System.out.println("There is");
                             Optional<Contract> contract = contractRepository.findByStudent_IdAndOffer_Id(student.getId(), offer.getId());
                             dtos.add(ApplicationDto.from(
                                     offer,

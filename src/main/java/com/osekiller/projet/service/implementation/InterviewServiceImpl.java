@@ -2,11 +2,9 @@ package com.osekiller.projet.service.implementation;
 
 import com.osekiller.projet.model.Interview;
 import com.osekiller.projet.model.Offer;
-import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.InterviewRepository;
 import com.osekiller.projet.repository.OfferRepository;
-import com.osekiller.projet.repository.user.CompanyRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
 import com.osekiller.projet.service.InterviewService;
 import com.osekiller.projet.service.NotificationsService;

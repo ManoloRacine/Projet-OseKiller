@@ -18,6 +18,7 @@ const AppliedOffers = () => {
 
     return (
         <div className="row">
+            <h2 className={"text-center"}>Offres appliquées</h2>
             <div className="col-12">
                 {offers.map((offer, index) => (
                     <OfferCard key={index} offer={offer}></OfferCard>

@@ -24,7 +24,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Service

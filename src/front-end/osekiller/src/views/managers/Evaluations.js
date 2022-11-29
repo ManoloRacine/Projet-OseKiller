@@ -13,6 +13,7 @@ const Evaluations = () => {
 
     return (
         <div>
+            <h2 className="text-center">Évaluations des milieux de stages</h2>
             {evaluations.map((evaluation, index) => (
                 <EvaluationCard
                     contract={evaluation}

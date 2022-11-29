@@ -7,6 +7,7 @@ import {
     generateContract,
     getContract,
     getContracts,
+    getReport,
 } from "../../services/ContractService";
 import Modal from "react-bootstrap/Modal";
 
@@ -25,7 +26,7 @@ const AcceptedApplications = () => {
     )?.authenticatedUser;
     const [acceptedApplications, setAcceptedApplications] = useState([]);
     const [currentApplication, setCurrentApplication] = useState({});
-    const [currentContractPdf, setCurrentContractPdf] = useState("");
+    const [currentPdf, setCurrentPdf] = useState("");
     const [currentIdx, setCurrentIdx] = useState(0);
     const [modalTitle, setModalTitle] = useState("");
     const [tasks, setTasks] = useState([]);
@@ -38,24 +39,36 @@ const AcceptedApplications = () => {
     const handleShowTasksModal = (application) => {
         setModalTitle("Tâches et Responsabilités");
         setCurrentApplication(application);
-        setCurrentContractPdf(undefined);
+        setCurrentPdf(undefined);
         setShowModal(true);
     };
-    const handleShowContractModal = (contract) => {
-        setModalTitle("Entente de stage");
-        setCurrentContractPdf(contract);
+    const handleShowPdfModal = (pdf, title) => {
+        setModalTitle(title);
+        setCurrentPdf(pdf);
         setCurrentApplication(undefined);
         setShowModal(true);
     };
+    
     const handleShowContractModalById = (contractId) => {
         getContract(contractId).then((response) => {
             const blob = new Blob([response.data], {
                 type: "application/pdf",
             });
             const data_url = window.URL.createObjectURL(blob);
-            handleShowContractModal(data_url);
+            handleShowPdfModal(data_url, "Entente de stage");
         });
     };
+
+    const handleShowReportModalById = (contractId) => {
+        getReport(contractId).then((response) => {
+            const blob = new Blob([response.data], {
+                type: "application/pdf",
+            });
+            const data_url = window.URL.createObjectURL(blob);
+            handleShowPdfModal(data_url, "Rapport de stage");
+        });
+    };
+
     const handleChangeTask = (index, newText) => {
         const newTaskState = [...tasks];
         newTaskState[index] = newText;
@@ -80,7 +93,7 @@ const AcceptedApplications = () => {
                     type: "application/pdf",
                 });
                 const data_url = window.URL.createObjectURL(blob);
-                handleShowContractModal(data_url);
+                handleShowPdfModal(data_url);
             })
             .finally(() => fetchApplications());
         handleCloseModal();
@@ -100,7 +113,7 @@ const AcceptedApplications = () => {
                             type: "application/pdf",
                         });
                         const data_url = window.URL.createObjectURL(blob2);
-                        setCurrentContractPdf(data_url);
+                        setCurrentPdf(data_url);
                     }
                 );
             })
@@ -156,7 +169,7 @@ const AcceptedApplications = () => {
             return false;
         } else if (isContractSigned()) {
             return false;
-        } else if (authenticatedUser?.role === "MANAGER"){
+        } else if (authenticatedUser?.role === "MANAGER") {
             return (
                 acceptedApplications[currentIdx]?.managerId ===
                 authenticatedUser?.id
@@ -166,11 +179,15 @@ const AcceptedApplications = () => {
 
     return (
         <>
+            <h2 className="text-center">Ententes de stages</h2>
             <div>
                 {acceptedApplications.map((acceptedApplication, index) => (
                     <AcceptedApplicationCard
                         application={acceptedApplication}
                         showContractGenerationModal={handleShowTasksModal}
+                        handleShowReportModalById={
+                            handleShowReportModalById
+                        }
                         handleShowContractModalById={
                             handleShowContractModalById
                         }
@@ -208,9 +225,9 @@ const AcceptedApplications = () => {
                             </Button>
                         </div>
                     )}
-                    {currentContractPdf && (
+                    {currentPdf && (
                         <LoadPdf
-                            src={currentContractPdf}
+                            src={currentPdf}
                             width={"100%"}
                             title={"contract"}
                             type={"application/json"}

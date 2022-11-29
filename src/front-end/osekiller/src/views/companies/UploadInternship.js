@@ -1,5 +1,5 @@
 import Upload from "../../components/Upload";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
     updateInternshipOffer,
     uploadInternshipOffer,
@@ -7,6 +7,7 @@ import {
 import UploadInternshipForm from "../../components/forms/UploadInternshipForm";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useLocation } from "react-router-dom";
+import { AuthenticatedUserContext } from "../../App";
 
 const UploadInternship = () => {
     const location = useLocation();
@@ -14,18 +15,23 @@ const UploadInternship = () => {
     const [position, setPosition] = useState(
         state?.position ? state.position : ""
     );
-    const [salary, setSalary] = useState(state?.salary ? String(state.salary) : "");
+    const [salary, setSalary] = useState(
+        state?.salary ? String(state.salary) : ""
+    );
     const [startDate, setStartDate] = useState(
         state?.startDate ? String(state.startDate) : ""
     );
-    const [endDate, setEndDate] = useState(state?.endDate ? String(state.endDate) : "");
+    const [endDate, setEndDate] = useState(
+        state?.endDate ? String(state.endDate) : ""
+    );
     const [selectedFile, setSelectedFile] = useState({});
     const [isOfferSubmitted, setIsOfferSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const userId = useContext(AuthenticatedUserContext)?.authenticatedUser?.id;
 
-    const handleSubmit = (userId) => {
+    const handleSubmit = () => {
         console.log(position);
-        console.log(typeof salary)
+        console.log(typeof salary);
         if (position.trim() === "") {
             setErrorMessage("La position ne doit pas être vide");
             return;
@@ -69,6 +75,7 @@ const UploadInternship = () => {
     };
     return (
         <div>
+            <h2 className="text-center">Téléverser une offre de stage</h2>
             <UploadInternshipForm
                 setStartDate={({ target }) => setStartDate(target.value)}
                 endDate={endDate}

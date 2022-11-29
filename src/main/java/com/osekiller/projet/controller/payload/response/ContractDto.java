@@ -1,6 +1,7 @@
 package com.osekiller.projet.controller.payload.response;
 
 import com.osekiller.projet.model.Contract;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -16,7 +17,9 @@ public record ContractDto(
         @NotBlank String position,
         LocalDate studentSigningDate,
         LocalDate managerSigningDate,
-        LocalDate companySigningDate
+        LocalDate companySigningDate,
+        Boolean hasContractPdf,
+        Boolean hasReport
 ) {
     public static ContractDto from(Contract contract){
         return new ContractDto(
@@ -30,7 +33,9 @@ public record ContractDto(
                 contract.getOffer().getPosition(),
                 contract.getStudentSigningDate(),
                 contract.getManagerSigningDate(),
-                contract.getCompanySigningDate()
+                contract.getCompanySigningDate(),
+                contract.getPdf() != null,
+                contract.getReport() != null
                 );
     }
 }
