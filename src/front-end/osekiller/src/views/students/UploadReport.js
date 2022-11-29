@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Upload from "../../components/Upload";
 import { uploadReport } from "../../services/ContractService";
 
-const UploadReport = () => {
+export const UploadReport = () => {
     const [selectedFile, setSelectedFile] = useState({});
     const [isReportSubmitted, setIsReportSubmitted] = useState(false);
     const location = useLocation();

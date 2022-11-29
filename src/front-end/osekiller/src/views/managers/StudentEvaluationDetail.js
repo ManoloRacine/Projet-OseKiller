@@ -3,7 +3,7 @@ import LoadPdf from "../../components/LoadPdf";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getStudentEvaluationPdf } from "../../services/ManagerService";
 
-const StudentEvaluationDetail = () => {
+export const StudentEvaluationDetail = () => {
     const [pdf, setPdf] = useState("");
 
     const navigate = useNavigate();

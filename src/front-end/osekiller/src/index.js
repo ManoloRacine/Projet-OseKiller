@@ -29,6 +29,9 @@ import InternshipEvaluation from "./views/teachers/InternshipEvaluation";
 import InternshipsToEvaluate from "./views/teachers/InternshipsToEvaluate";
 import EvaluateStudent from "./views/companies/EvaluateStudent";
 import GetInterns from "./views/companies/GetInterns";
+import UploadReport from "./views/students/UploadReport";
+import StudentEvaluations from "./views/managers/StudentEvaluations";
+import StudentEvaluationDetail from "./views/managers/StudentEvaluationDetail";
 
 <link
     rel="stylesheet"
