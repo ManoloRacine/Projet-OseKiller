@@ -18,3 +18,22 @@ export const getEvaluations = async () => {
         },
     });
 };
+
+export const getStudentEvaluations = async () => {
+    return axios.get("/contracts?hasInternEvaluation=true", {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};
+
+export const getStudentEvaluationPdf = async (contractId) => {
+    return axios.get(`/contracts/${contractId}/intern-evaluation`, {
+        responseType: "arraybuffer",
+        headers: {
+            "Content-Type": "application/pdf",
+            Authorization: localStorage.getItem("accessToken"),
+        },
+    });
+};

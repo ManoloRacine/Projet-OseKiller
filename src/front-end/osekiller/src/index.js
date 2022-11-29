@@ -29,7 +29,6 @@ import InternshipEvaluation from "./views/teachers/InternshipEvaluation";
 import InternshipsToEvaluate from "./views/teachers/InternshipsToEvaluate";
 import EvaluateStudent from "./views/companies/EvaluateStudent";
 import GetInterns from "./views/companies/GetInterns";
-import UploadReport from "./views/students/UploadReport";
 
 <link
     rel="stylesheet"
@@ -298,6 +297,28 @@ root.render(
                             allowedRoles={["STUDENT"]}
                         >
                             <UploadReport />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="intern-evaluations"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["MANAGER"]}
+                        >
+                            <StudentEvaluations />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="intern-evaluation-detail"
+                    element={
+                        <ProtectedRoute
+                            authenticated
+                            allowedRoles={["MANAGER"]}
+                        >
+                            <StudentEvaluationDetail />
                         </ProtectedRoute>
                     }
                 />
