@@ -15,6 +15,7 @@ import {
     faPersonCircleCheck,
     faPenNib,
     faBuildingUser,
+    faUserPen
 } from "@fortawesome/free-solid-svg-icons";
 
 export const Header = () => {
@@ -208,8 +209,13 @@ export const Header = () => {
                     {authenticatedUser.role === "MANAGER" && (
                         <Link
                             to={"/intern-evaluations"}
-                            className="m-4 fs-2 d-flex align-items-center"
+                            className={"btn mb-2"}
+                            style={{ backgroundColor: "#ee7600" }}
                         >
+                            <FontAwesomeIcon
+                                icon={faUserPen}
+                                className={"me-2"}
+                            />
                             Évaluation des stagiaires
                         </Link>
                     )}

@@ -13,6 +13,7 @@ export const StudentEvaluations = () => {
 
     return (
         <div>
+            <h2 className="text-center">Évaluation des stagiaires</h2>
             {evaluations.map((evaluation, index) => (
                 <StudentEvaluationCard
                     contract={evaluation}
