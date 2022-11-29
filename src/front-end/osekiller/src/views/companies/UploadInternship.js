@@ -63,15 +63,18 @@ const UploadInternship = () => {
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("offerDto", JSON.stringify(dto));
-        state.offerId
-            ? updateInternshipOffer(formData, userId, state.offerId)
-                  .then(() => setIsOfferSubmitted(true))
 
-                  .catch((err) => console.log("Error:", err))
-            : uploadInternshipOffer(formData, userId)
-                  .then(() => setIsOfferSubmitted(true))
+        if (state === null || state.offerId === null) {
+            uploadInternshipOffer(formData, userId)
+                .then(() => setIsOfferSubmitted(true))
 
-                  .catch((err) => console.log("Error:", err));
+                .catch((err) => console.log("Error:", err));
+        } else {
+            updateInternshipOffer(formData, userId, state.offerId)
+                .then(() => setIsOfferSubmitted(true))
+
+                .catch((err) => console.log("Error:", err));
+        }
     };
     return (
         <div>
