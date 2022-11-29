@@ -97,6 +97,7 @@ public class StudentServiceImpl implements StudentService {
 
         student.getCv().setValidated(false);
         student.getCv().setFeedback(null);
+        student.setCvRejected(false);
         studentRepository.save(student) ;
         notificationsService.addNotificationForRole(ERole.MANAGER.name(), student.getName() + " a ajouté un CV");
     }
