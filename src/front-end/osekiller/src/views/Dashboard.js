@@ -45,9 +45,9 @@ const Dashboard = () => {
                         className="fa-2x text-white me-3"
                     />
                     <p className={"fs-5 text-white m-0 me-1"}>Notifications</p>
-                    <span className="badge bg-danger mt-auto">
+                    { notifications.length > 0 && <span className="badge bg-danger mt-auto">
                         {notifications.length}
-                    </span>
+                    </span>}
                 </button>
             </div>
             {authenticatedUser.role === "STUDENT" && <StudentDashboard />}
