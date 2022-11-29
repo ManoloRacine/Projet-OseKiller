@@ -5,11 +5,11 @@ import com.osekiller.projet.controller.payload.response.InterviewDto;
 import com.osekiller.projet.controller.payload.response.StudentWithCvStateDto;
 import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Interview;
-import com.osekiller.projet.repository.InterviewRepository;
-import com.osekiller.projet.service.CurrentDateFactory;
 import com.osekiller.projet.model.user.Student;
 import com.osekiller.projet.repository.CvRepository;
+import com.osekiller.projet.repository.InterviewRepository;
 import com.osekiller.projet.repository.user.StudentRepository;
+import com.osekiller.projet.service.CurrentDateFactory;
 import com.osekiller.projet.service.NotificationsService;
 import com.osekiller.projet.service.StudentService;
 import lombok.AllArgsConstructor;
@@ -75,6 +75,9 @@ public class StudentServiceImpl implements StudentService {
     public List<GeneralOfferDto> getApplications(long studentId) {
         Student student = studentRepository.findByIdAndFetchApplications(studentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        System.out.println(student.getApplications().size());
+        System.out.println(student.getName());
 
         return student.getApplications().stream().map(GeneralOfferDto::from).toList();
     }

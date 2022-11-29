@@ -1,8 +1,9 @@
 package com.osekiller.projet.model;
 
-import com.osekiller.projet.model.user.Company;
 import com.osekiller.projet.model.user.Student;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.time.LocalDate;

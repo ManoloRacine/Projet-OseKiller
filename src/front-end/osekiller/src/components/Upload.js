@@ -16,7 +16,6 @@ const Upload = ({
     isSubmitted,
     successMessage,
 }) => {
-    const userId = useContext(AuthenticatedUserContext)?.authenticatedUser?.id;
 
     return (
         <main className="d-flex justify-content-center align-items-center p-3 h-100">
@@ -55,7 +54,7 @@ const Upload = ({
                         />
                         <button
                             className="btn"
-                            onClick={() => onSubmit(userId)}
+                            onClick={onSubmit}
                             style={{ backgroundColor: "#ee7600" }}
                         >
                             Soumettre

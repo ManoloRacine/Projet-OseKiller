@@ -1,5 +1,5 @@
 import Upload from "../../components/Upload";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
     updateInternshipOffer,
     uploadInternshipOffer,
@@ -7,6 +7,7 @@ import {
 import UploadInternshipForm from "../../components/forms/UploadInternshipForm";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useLocation } from "react-router-dom";
+import { AuthenticatedUserContext } from "../../App";
 
 const UploadInternship = () => {
     const location = useLocation();
@@ -26,8 +27,9 @@ const UploadInternship = () => {
     const [selectedFile, setSelectedFile] = useState({});
     const [isOfferSubmitted, setIsOfferSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const userId = useContext(AuthenticatedUserContext)?.authenticatedUser?.id;
 
-    const handleSubmit = (userId) => {
+    const handleSubmit = () => {
         console.log(position);
         console.log(typeof salary);
         if (position.trim() === "") {

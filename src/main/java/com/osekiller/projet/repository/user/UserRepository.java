@@ -1,6 +1,5 @@
 package com.osekiller.projet.repository.user;
 
-import com.osekiller.projet.model.ERole;
 import com.osekiller.projet.model.Role;
 import com.osekiller.projet.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;

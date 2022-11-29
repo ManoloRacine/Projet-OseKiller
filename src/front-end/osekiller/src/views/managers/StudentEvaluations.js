@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { StudentEvaluationCard } from "../../components/StudentEvaluationCard";
 import { getStudentEvaluations } from "../../services/ManagerService";
 
-const StudentEvaluations = () => {
+export const StudentEvaluations = () => {
     const [evaluations, setEvaluations] = useState([]);
 
     useEffect(() => {
