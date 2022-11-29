@@ -48,11 +48,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         //Si il y a des chose à setup au lancement du serveur c'est ici
 
         initializeRoles();
-        initializeCompanies();
+        //initializeCompanies();
         initializeManagers();
         initializeStudents();
-        initializeTeachers();
-        bootStrapOffers();
+        //initializeTeachers();
+        //bootStrapOffers();
         //bootStrapContract();
 
 
@@ -128,12 +128,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     void initializeStudents(){
         Student testStudent1 = new Student("Test Student 1","teststudent1@osk.com", passwordEncoder.encode("123"));
-        Student testStudent2 = new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("123"));
-        Student testStudent3 = new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("123"));
+        //Student testStudent2 = new Student("Test Student 2","teststudent2@osk.com", passwordEncoder.encode("123"));
+        //Student testStudent3 = new Student("Test Student 3","teststudent3@osk.com", passwordEncoder.encode("123"));
         testStudent1.setEnabled(true);
         createStudentIfNotFound(testStudent1);
-        createStudentIfNotFound(testStudent2);
-        createStudentIfNotFound(testStudent3);
+        //createStudentIfNotFound(testStudent2);
+        //createStudentIfNotFound(testStudent3);
     }
 
     @Transactional
