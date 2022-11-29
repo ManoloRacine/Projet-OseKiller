@@ -9,7 +9,7 @@ const OfferDetailsNoValidate = ({ pdf }) => {
                     width={"50%"}
                     title={"student-cv"}
                     type={"application/pdf"}
-                    height={"500px"}
+                    height={"900px"}
                 />
             </div>
         </>

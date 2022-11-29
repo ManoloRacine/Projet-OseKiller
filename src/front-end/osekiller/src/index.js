@@ -209,7 +209,7 @@ root.render(
                     element={
                         <ProtectedRoute
                             authenticated
-                            allowedRoles={["MANAGER"]}
+                            allowedRoles={["MANAGER", "STUDENT"]}
                         >
                             <OfferDetails />
                         </ProtectedRoute>
