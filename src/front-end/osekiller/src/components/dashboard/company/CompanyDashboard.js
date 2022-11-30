@@ -31,61 +31,75 @@ const CompanyDashboard = () => {
             {offers.map((offer, index) => (
                 <div
                     key={index}
-                    className={
-                        "d-flex justify-content-around text-white m-2 rounded align-items-center"
-                    }
+                    className={"text-white m-2 rounded"}
                     style={{ backgroundColor: "#2C324C" }}
                 >
-                    <div>
-                        <p className={"fs-4 text-decoration-underline"}>
-                            Nom du poste
-                        </p>
-                        <p>{offer.position}</p>
-                    </div>
+                    <div
+                        className={
+                            "d-flex justify-content-around align-items-center"
+                        }
+                    >
+                        <div>
+                            <p className={"fs-4 text-decoration-underline"}>
+                                Nom du poste
+                            </p>
+                            <p>{offer.position}</p>
+                        </div>
 
-                    <div className={"d-flex flex-column align-items-center"}>
-                        <p className={"fs-4 text-decoration-underline"}>État</p>
-                        {offer.accepted ? (
-                            <div className={"d-flex flex-column"}>
-                                <FontAwesomeIcon
-                                    icon={faCircleCheck}
-                                    className="fa-2x text-success"
-                                />
-                                <p>Valide</p>
-                            </div>
-                        ) : offer.feedback && !offer.accepted ? (
-                            <div className={"d-flex flex-column"}>
-                                <FontAwesomeIcon
-                                    icon={faCircleXmark}
-                                    className="fa-2x text-danger"
-                                />
-                                <p>Invalide</p>
-                            </div>
-                        ) : (
-                            <div className={"d-flex flex-column"}>
-                                <FontAwesomeIcon
-                                    icon={faClock}
-                                    className="fa-2x text-warning"
-                                />
-                                <p>Non validé</p>
-                            </div>
+                        <div
+                            className={"d-flex flex-column align-items-center"}
+                        >
+                            <p className={"fs-4 text-decoration-underline"}>
+                                État
+                            </p>
+                            {offer.accepted ? (
+                                <div className={"d-flex flex-column"}>
+                                    <FontAwesomeIcon
+                                        icon={faCircleCheck}
+                                        className="fa-2x text-success"
+                                    />
+                                    <p>Valide</p>
+                                </div>
+                            ) : offer.feedback && !offer.accepted ? (
+                                <div className={"d-flex flex-column"}>
+                                    <FontAwesomeIcon
+                                        icon={faCircleXmark}
+                                        className="fa-2x text-danger"
+                                    />
+                                    <p>Invalide</p>
+                                </div>
+                            ) : (
+                                <div className={"d-flex flex-column"}>
+                                    <FontAwesomeIcon
+                                        icon={faClock}
+                                        className="fa-2x text-warning"
+                                    />
+                                    <p>Non validé</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {!offer.accepted && (
+                            <Link
+                                to={"/upload-internship"}
+                                className={"btn btn-primary"}
+                                state={{
+                                    offerId: offer.offerId,
+                                    position: offer.position,
+                                    salary: offer.salary,
+                                    startDate: offer.startDate,
+                                    endDate: offer.endDate,
+                                }}
+                            >
+                                Modifier
+                            </Link>
                         )}
                     </div>
-
-                    {!(offer.accepted) && (
-                        <Link
-                            to={"/upload-internship"}
-                            className={"btn btn-primary"}
-                            state={{
-                                offerId: offer.offerId,
-                                position: offer.position,
-                                salary: offer.salary,
-                                startDate: offer.startDate,
-                                endDate: offer.endDate,
-                            }}
-                        >
-                            Modifier
-                        </Link>
+                    {offer.feedback && (
+                        <div className={"d-flex"}>
+                            <p className={"mx-2"}>Feedback:</p>
+                            <p>{offer.feedback}</p>
+                        </div>
                     )}
                 </div>
             ))}
