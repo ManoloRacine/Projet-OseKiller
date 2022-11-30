@@ -13,6 +13,7 @@ const InternshipsToEvaluate = () => {
 
     return (
         <div>
+            <h2 className="text-center">Évaluer des milieux de stage</h2>
             {internships.map((value, index) => (
                 <ContractEvalCard contractInfo={value} />
             ))}

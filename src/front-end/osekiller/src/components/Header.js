@@ -201,8 +201,13 @@ export const Header = () => {
                     {authenticatedUser.role === "TEACHER" && (
                         <Link
                             to={"/internships-to-evaluate"}
-                            className="m-4 fs-2 d-flex align-items-center"
+                            className={"btn mb-2"}
+                            style={{ backgroundColor: "#ee7600" }}
                         >
+                            <FontAwesomeIcon
+                                icon={faPenNib}
+                                className={"me-2"}
+                            />
                             Évaluer des milieux de stage
                         </Link>
                     )}
