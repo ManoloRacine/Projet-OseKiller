@@ -120,7 +120,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Transactional
     void initializeManagers(){
-        Manager testManager = new Manager("Test Manager","testmanager@osk.com", passwordEncoder.encode("123"));
+        Manager testManager = new Manager("Audrey Gagnon","audrey.gag@osk.com", passwordEncoder.encode("123"));
         testManager.setEnabled(true);
         createManagerIfNotFound(testManager);
     }
