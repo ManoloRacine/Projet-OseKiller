@@ -43,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +76,7 @@ public class ContractServiceTest {
     static Student student;
     static Offer offer;
     static Manager manager;
+    static List<Contract> contracts;
 
     @BeforeAll
     static void setupAll(){
@@ -84,6 +86,52 @@ public class ContractServiceTest {
         offer.setId(6L);
         manager = new Manager("manager","manager@email.com","123");
         manager.setId(7L);
+        contracts = List.of(
+                new Contract(
+                        student,
+                        new Offer(
+                                new Company(
+                                        "Bro",
+                                        "Bro@osk.com",
+                                        "123"
+                                ),
+                                "Dev Java",
+                                20,
+                                LocalDate.of(2022, 12, 12),
+                                LocalDate.of(2023, 1, 12)
+                        ),
+                        manager
+                ),
+                new Contract(
+                        student,
+                        new Offer(
+                                new Company(
+                                        "Bro",
+                                        "Bro@osk.com",
+                                        "123"
+                                ),
+                                "Dev JavaScript",
+                                20,
+                                LocalDate.of(2022, 12, 12),
+                                LocalDate.of(2023, 1, 12)
+                        ),
+                        manager
+                ),
+                new Contract(
+                        student,
+                        new Offer(
+                                new Company(
+                                        "Bro",
+                                        "Bro@osk.com",
+                                        "123"
+                                ),
+                                "IT",
+                                20,
+                                LocalDate.of(2022, 12, 12),
+                                LocalDate.of(2023, 1, 12)
+                        ),
+                        manager
+                ));
     }
 
     @Test
@@ -201,6 +249,8 @@ public class ContractServiceTest {
         assertThat(contract.getStudent()).isEqualTo(student);
     
     }
+
+    @Test
     void getContractsToEvaluateHappyDay() {
         //Arrange
         List<Contract> contracts = new ArrayList<>() ;
@@ -254,6 +304,8 @@ public class ContractServiceTest {
                 .extracting("status")
                 .isEqualTo(HttpStatus.FORBIDDEN);
     }
+
+    @Test
     void getContractsToEvaluateEmpty() {
         //Arrange
         List<Contract> contracts = new ArrayList<>() ;
@@ -373,6 +425,7 @@ public class ContractServiceTest {
                 .extracting("status").isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
     void saveReportHappyDay() throws IOException {
         // Arrange
         Contract mockContract = mock(Contract.class) ;
@@ -430,11 +483,118 @@ public class ContractServiceTest {
                 "test".getBytes()
         ) ;
 
-        //Act & Assert
+        //Arrange
         assertThatThrownBy(() -> contractService.saveReport(mockFile, 1L, 2L))
                 .isInstanceOf(ResponseStatusException.class)
                 .extracting("status").isEqualTo(HttpStatus.UNAUTHORIZED);
 
 
+    }
+
+    @Test
+    void getContractHappyDay() throws IOException {
+        //Arrange
+        Contract contract = mock(Contract.class);
+        MockMultipartFile mockFile = new MockMultipartFile(
+                "file",
+                "test.txt",
+                "text/plain",
+                "test".getBytes()
+        ) ;
+
+
+        when(contractRepository.findById(anyLong())).thenReturn(Optional.of(contract));
+        when(contract.getPdf()).thenReturn(mockFile.getBytes());
+
+        //Act
+
+        Resource pdfContract = contractService.getContract(1L);
+
+        //Assert
+
+        assertThat(pdfContract.getClass()).isEqualTo(ByteArrayResource.class) ;
+    }
+
+    @Test
+    void hasSignatureHappyDay() throws IOException {
+        //Arrange
+
+        when(signatoryRepository.findByIdAndSignatureIsNotNull(anyLong())).thenReturn(Optional.of(mock(Student.class)));
+
+        //Act
+
+        boolean result = contractService.hasSignature(2L);
+
+        //Assert
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void getContractsByManagerIdHappyDay() {
+        //Arrange
+
+        when(contractRepository.findAllByManager_Id(anyLong())).thenReturn(contracts);
+
+        //Act
+
+
+        List<ContractDto> contractDtos = contractService.getContractsByManagerId(2L);
+
+        //Assert
+
+        assertThat(contractDtos).isNotNull();
+        assertThat(contractDtos.size()).isEqualTo(contracts.size());
+    }
+
+    @Test
+    void getContractsByStudentIdHappyDay() {
+        //Arrange
+
+        when(contractRepository.findAllByStudent_Id(anyLong())).thenReturn(contracts);
+
+        //Act
+
+
+        List<ContractDto> contractDtos = contractService.getContractsByStudentId(2L);
+
+        //Assert
+
+        assertThat(contractDtos).isNotNull();
+        assertThat(contractDtos.size()).isEqualTo(contracts.size());
+    }
+
+    @Test
+    void getContractsByCompanyIdHappyDay() {
+        //Arrange
+
+        when(contractRepository.findAllByOffer_Owner_Id(anyLong())).thenReturn(contracts);
+
+        //Act
+
+
+        List<ContractDto> contractDtos = contractService.getContractsByCompanyId(2L);
+
+        //Assert
+
+        assertThat(contractDtos).isNotNull();
+        assertThat(contractDtos.size()).isEqualTo(contracts.size());
+    }
+
+
+    @Test
+    void getContractWithInternEvaluationsHappyDay() {
+        //Arrange
+
+        when(contractRepository.findAllByStudentEvaluationPdfIsNotNull()).thenReturn(contracts);
+
+        //Act
+
+        List<ContractDto> contractDtos = contractService.getContractWithInternEvaluations();
+
+        //Assert
+
+        assertThat(contractDtos).isNotNull();
+        assertThat(contractDtos.size()).isEqualTo(contracts.size());
     }
 }
