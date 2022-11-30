@@ -95,6 +95,9 @@ public class StudentServiceImpl implements StudentService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        student.getCv().setValidated(false);
+        student.getCv().setFeedback(null);
+        student.setCvRejected(false);
         studentRepository.save(student) ;
         notificationsService.addNotificationForRole(ERole.MANAGER.name(), student.getName() + " a ajouté un CV");
     }

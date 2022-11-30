@@ -21,7 +21,11 @@ const AppliedOffers = () => {
             <h2 className={"text-center"}>Offres appliquées</h2>
             <div className="col-12">
                 {offers.map((offer, index) => (
-                    <OfferCard key={index} offer={offer}></OfferCard>
+                    <OfferCard
+                        redirectTo={"/offer-details"}
+                        key={index}
+                        offer={offer}
+                    ></OfferCard>
                 ))}
             </div>
         </div>

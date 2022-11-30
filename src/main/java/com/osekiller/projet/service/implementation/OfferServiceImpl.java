@@ -118,6 +118,8 @@ public class OfferServiceImpl implements OfferService {
         offer.setSalary(offerDto.salary());
         offer.setStartDate(LocalDate.parse(offerDto.startDate()));
         offer.setEndDate(LocalDate.parse(offerDto.endDate()));
+        offer.setFeedback(null);
+        offer.setAccepted(false);
 
         offerRepository.save(offer);
     }
@@ -158,6 +160,8 @@ public class OfferServiceImpl implements OfferService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        offer.setAccepted(false);
+        offer.setFeedback(null);
         offerRepository.save(offer);
 
         notificationsService.addNotificationForRole(ERole.STUDENT.name(), "Une offre de " + company.getName() +
