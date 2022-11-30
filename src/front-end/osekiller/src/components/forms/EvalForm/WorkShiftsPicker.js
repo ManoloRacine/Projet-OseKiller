@@ -7,7 +7,7 @@ const WorkShiftsPicker = ({ setFormData, formData, position }) => {
                 <TimePicker
                     onChange={(value) => {
                         let updatedworkShifts = [...formData.workShifts];
-                        updatedworkShifts[0][0] = value;
+                        updatedworkShifts[position][0] = value;
                         setFormData({
                             ...formData,
                             workShifts: updatedworkShifts,
@@ -18,9 +18,10 @@ const WorkShiftsPicker = ({ setFormData, formData, position }) => {
             </div>
             <div className="col-3">
                 <TimePicker
+                    className={"text-white"}
                     onChange={(value) => {
                         let updatedworkShifts = [...formData.workShifts];
-                        updatedworkShifts[0][0] = value;
+                        updatedworkShifts[position][1] = value;
                         setFormData({
                             ...formData,
                             workShifts: updatedworkShifts,

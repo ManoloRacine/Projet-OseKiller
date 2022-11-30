@@ -1,4 +1,4 @@
-html{
+html {
     background-color: #da8362;
 }
 
@@ -35,4 +35,8 @@ form .section {
     padding: 10px;
     color: white;
     border-radius: 10px;
+}
+
+.react-time-picker {
+    color: white;
 }
